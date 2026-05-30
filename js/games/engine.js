@@ -17,7 +17,7 @@
 // 每个方法返回 Promise，Engine await 后进入下一状态。
 // ============================================================
 
-import { normalize, clamp, log, logWarn } from '../core/utils.js';
+import { normalize, clamp, log, logWarn, logError } from '../core/utils.js';
 import { save } from '../core/store.js';
 
 // ---------- 阶段枚举 ----------
@@ -131,8 +131,13 @@ export class GameEngine {
 
     // Phase 3: 计算 + 保存 + 完成页
     const output = this._calculateOutput();
-    save(this.config.gameId, output);
-    log(`${this.config.gameId} 全部完成，结果已保存`);
+    try {
+      save(this.config.gameId, output);
+      log(`${this.config.gameId} 全部完成，结果已保存`);
+    } catch (err) {
+      logError(`${this.config.gameId} 保存失败: ${err.message}`);
+      // 不阻断流程，用户仍可看到完成页（数据仅在内存中）
+    }
 
     await this._runCompletion(output);
 
