@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMatch — 帮你看到自己不曾察觉的地方</title>
+  <meta name="description" content="通过 4 个投射式小游戏，10-15 分钟，生成你的专属思维肖像与岗位匹配分析。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<main class="page-landing">
+
+  <!-- ========== Hero ========== -->
+  <section class="hero">
+    <h1 class="hero__brand">Mind<span>Match</span></h1>
+    <p class="hero__tagline">帮你看到自己不曾察觉的地方</p>
+
+    <div class="hero__intro">
+      这不是测试，是帮你了解自己。<br>
+      通过 4 个小游戏，观察你在压力下的真实倾向，<br>
+      生成你的专属思维肖像。
+    </div>
+
+    <div class="hero__time">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      预计 10–15 分钟
+    </div>
+  </section>
+
+  <!-- ========== Progress Overview ========== -->
+  <nav class="progress-overview" aria-label="游戏完成进度">
+    <!-- 由 JS 动态渲染 -->
+  </nav>
+
+  <!-- ========== Game Cards ========== -->
+  <div class="game-grid" id="gameGrid">
+    <!-- 由 JS 动态渲染 -->
+  </div>
+
+  <!-- ========== Results CTA ========== -->
+  <div class="results-cta" id="resultsCta" style="display: none;">
+    <a href="results.html" class="results-cta__btn">
+      查看我的思维肖像
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <!-- ========== Footer ========== -->
+  <footer class="page-footer">
+    <div class="page-footer__item">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      数据仅存于你的浏览器本地，不上传任何服务器
+    </div>
+    <div class="page-footer__item">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      基于学术心理学框架设计（McClelland · Schein · Riding · Steger）
+    </div>
+  </footer>
+
+</main>
+
+<!-- ========== JS ========== -->
+<script type="module">
+import { completedCount, completedGames, load } from './js/core/store.js';
+
+/* ---------- Game Config ---------- */
+const GAMES = [
+  {
+    id: 'game1',
+    key: 'game1',
+    file: 'games/game1-core-drive.html',
+    number: 'G1',
+    title: '核心驱动力',
+    subtitle: '你的动力来源',
+    description: '你为什么做事',
+    time: '3–5 分钟',
+  },
+  {
+    id: 'game2',
+    key: 'game2',
+    file: 'games/game2-career-anchor.html',
+    number: 'G2',
+    title: '不可放弃的锚点',
+    subtitle: '你最无法妥协的是什么',
+    description: '放弃才扣分的反向博弈',
+    time: '3–5 分钟',
+  },
+  {
+    id: 'game3',
+    key: 'game3',
+    file: 'games/game3-cognitive.html',
+    number: 'G3',
+    title: '认知处理风格',
+    subtitle: '你习惯怎么理解世界',
+    description: '信息处理偏好测试',
+    time: '约 3 分钟',
+  },
+  {
+    id: 'game4',
+    key: 'game4',
+    file: 'games/game4-meaning.html',
+    number: 'G4',
+    title: '意义建构取向',
+    subtitle: '你在工作中寻找什么意义',
+    description: '价值冲突下的真实选择',
+    time: '约 3 分钟',
+  },
+];
+
+/* ---------- SVG Icons ---------- */
+const ICON_CHECK = '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+const ICON_ARROW = '<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+
+/* ---------- Render Progress Overview ---------- */
+function renderProgress() {
+  const count = completedCount();
+  const completed = completedGames();
+  const container = document.querySelector('.progress-overview');
+
+  let html = '';
+  GAMES.forEach((game, i) => {
+    const isDone = completed.includes(game.key);
+    const isNext = !isDone && (i === 0 || completed.includes(GAMES[i - 1].key));
+    const dotClass = isDone ? 'progress-dot--completed' : isNext ? 'progress-dot--current' : '';
+
+    html += `<span class="progress-dot ${dotClass}" aria-label="${game.number} ${isDone ? '已完成' : isNext ? '当前' : '未开始'}">${isDone ? '✓' : game.number.replace('G', '')}</span>`;
+
+    if (i < GAMES.length - 1) {
+      const connDone = completed.includes(GAMES[i].key);
+      html += `<span class="progress-connector ${connDone ? 'progress-connector--filled' : ''}"></span>`;
+    }
+  });
+
+  html += `<span class="progress-count">${count}/4</span>`;
+  container.innerHTML = html;
+}
+
+/* ---------- Render Game Cards ---------- */
+function renderCards() {
+  const count = completedCount();
+  const completed = completedGames();
+  const grid = document.getElementById('gameGrid');
+
+  let html = '';
+  GAMES.forEach((game, i) => {
+    const isDone = completed.includes(game.key);
+    const isFirstUndone = !isDone && completed.length === i;
+    const cardClass = isDone ? 'game-card--completed' : '';
+
+    // Badge text & class
+    let badgeClass, badgeText, badgeIcon;
+    if (isDone) {
+      badgeClass = 'game-card__badge--completed';
+      badgeText = '已完成';
+      badgeIcon = ICON_CHECK;
+    } else if (isFirstUndone) {
+      badgeClass = 'game-card__badge--recommended';
+      badgeText = '从这里开始';
+      badgeIcon = ICON_ARROW;
+    } else {
+      badgeClass = 'game-card__badge--start';
+      badgeText = '开始';
+      badgeIcon = ICON_ARROW;
+    }
+
+    html += `
+      <a href="${game.file}" class="game-card ${cardClass}" tabindex="0" aria-label="${game.title}：${game.description}，${isDone ? '已完成' : '未完成'}">
+        <span class="game-card__number">${game.number}</span>
+        <h2 class="game-card__title">${game.title}</h2>
+        <p class="game-card__subtitle">${game.subtitle}</p>
+        <span class="game-card__time">${game.time}</span>
+        <span class="game-card__badge ${badgeClass}">
+          ${badgeIcon}
+          ${badgeText}
+        </span>
+      </a>
+    `;
+  });
+
+  grid.innerHTML = html;
+}
+
+/* ---------- Render Results CTA ---------- */
+function renderResultsCta() {
+  const allDone = completedCount() === 4;
+  document.getElementById('resultsCta').style.display = allDone ? '' : 'none';
+}
+
+/* ---------- Init ---------- */
+function init() {
+  renderProgress();
+  renderCards();
+  renderResultsCta();
+}
+
+init();
+</script>
+
+</body>
+</html>
