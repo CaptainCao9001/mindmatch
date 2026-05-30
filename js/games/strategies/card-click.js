@@ -13,7 +13,7 @@
 //   └── ARIA: progress 区域 + option list role
 // ============================================================
 
-import { log } from '../core/utils.js';
+import { log } from '../../core/utils.js';
 
 // ---------- 常量 ----------
 const SELECTED_DELAY_MS = 600; // 选中确认延迟
