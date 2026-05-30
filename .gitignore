@@ -1,0 +1,25 @@
+# Python (dev server)
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Editor
+.idea/
+.vscode/
+
+# Project workbuddy (non-source)
+.workbuddy/
+.agents/

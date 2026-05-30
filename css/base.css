@@ -1,0 +1,150 @@
+/* ============================================================
+ * base.css — 设计系统基础
+ * CSS 变量、重置、排版、暗色主题
+ * ============================================================ */
+
+/* ---------- Design Tokens ---------- */
+:root {
+  /* 颜色 - 暗色主题 */
+  --color-bg: hsl(232, 30%, 8%);
+  --color-surface: hsl(232, 24%, 14%);
+  --color-surface-hover: hsl(232, 24%, 18%);
+  --color-card: hsl(232, 20%, 12%);
+  --color-border: hsl(232, 15%, 22%);
+  --color-border-hover: hsl(232, 15%, 35%);
+
+  /* 主色 */
+  --color-primary: hsl(239, 84%, 67%);
+  --color-primary-dim: hsl(239, 84%, 47%);
+  --color-primary-glow: hsla(239, 84%, 67%, 0.25);
+
+  /* 辅色 */
+  --color-accent: hsl(188, 86%, 53%);
+  --color-accent-dim: hsl(188, 86%, 33%);
+
+  /* 功能色 */
+  --color-success: hsl(160, 84%, 39%);
+  --color-warning: hsl(38, 92%, 50%);
+  --color-error: hsl(0, 84%, 60%);
+
+  /* 文字 */
+  --color-text: hsl(214, 32%, 91%);
+  --color-text-secondary: hsl(215, 20%, 65%);
+  --color-text-muted: hsl(215, 14%, 46%);
+
+  /* 排版 */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* 字号 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+
+  /* 间距 */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* 圆角 */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px var(--color-primary-glow);
+
+  /* 动效 */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* ---------- 重置 ---------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  min-height: 100vh;
+}
+
+/* ---------- 排版 ---------- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: var(--text-4xl); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+
+p { margin-bottom: var(--space-4); }
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover { color: var(--color-accent); }
+
+/* ---------- 基础布局 ---------- */
+.container {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+/* ---------- 滚动条 ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+/* ---------- 选中 ---------- */
+::selection {
+  background: var(--color-primary-glow);
+  color: var(--color-text);
+}
