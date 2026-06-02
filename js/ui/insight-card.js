@@ -148,41 +148,11 @@ const INSIGHT_CSS = `
   50% { opacity: 0.6; transform: scale(0.95); }
 }
 
-.insight-progress-wrap {
-  width: 100%;
-  height: 4px;
-  background: rgba(124, 58, 237, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.insight-progress-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--color-primary, #7c3aed), #a78bfa, var(--color-primary, #7c3aed));
-  background-size: 200% 100%;
-  border-radius: 2px;
-  transition: width 0.6s ease;
-  animation: insightShimmer 1.5s linear infinite;
-}
-
-@keyframes insightShimmer {
-  from { background-position: 200% 0; }
-  to { background-position: 0 0; }
-}
-
-.insight-stage-icon {
-  text-align: center;
-  font-size: var(--text-2xl);
-  margin-bottom: var(--space-1);
-}
-
-.insight-stage-text {
+.insight-loading-text {
   text-align: center;
   color: var(--color-text-secondary, #a0a0b8);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   line-height: 1.5;
-  transition: opacity 0.3s ease;
 }
 
 /* 失败态 */
@@ -301,21 +271,13 @@ export function renderInsightTrigger(containerId, onClick) {
 }
 
 /**
- * 渲染加载态（分阶段进度条）
+ * 渲染加载态（静态等待界面）
  * @param {string} [containerId] - 默认 'insightCardContainer'
  */
 export function renderInsightLoading(containerId) {
   ensureCss();
   const container = document.getElementById(containerId || 'insightCardContainer');
   if (!container) return;
-
-  const stages = [
-    { pct: 20, icon: '🎯', text: '正在分析核心驱动力…' },
-    { pct: 40, icon: '⚓', text: '正在评估职业锚点…' },
-    { pct: 60, icon: '🧩', text: '正在理解认知风格…' },
-    { pct: 80, icon: '💡', text: '正在解读意义建构…' },
-    { pct: 95, icon: '✨', text: '正在汇总洞察…' },
-  ];
 
   container.innerHTML = `
     <div class="insight-section">
@@ -325,47 +287,11 @@ export function renderInsightLoading(containerId) {
             <span class="insight-loading-icon">🧠</span>
             <span>AI 正在深度解读</span>
           </div>
-          <div class="insight-progress-wrap">
-            <div class="insight-progress-bar" id="insightProgressBar" style="width:0%"></div>
-          </div>
-          <div>
-            <div class="insight-stage-icon" id="insightStageIcon">🎯</div>
-            <div class="insight-stage-text" id="insightStageText">正在分析核心驱动力…</div>
-          </div>
+          <div class="insight-loading-text">正在调用AI对你的行为进行分析</div>
         </div>
       </div>
     </div>
   `;
-
-  // 分阶段推进进度条（4s × 5 阶段）
-  const bar = document.getElementById('insightProgressBar');
-  const icon = document.getElementById('insightStageIcon');
-  const text = document.getElementById('insightStageText');
-  if (!bar || !icon || !text) return;
-
-  let stageIdx = 0;
-  const intervalMs = 4000;
-
-  function nextStage() {
-    if (stageIdx >= stages.length) return;
-    const s = stages[stageIdx];
-    bar.style.width = `${s.pct}%`;
-    icon.textContent = s.icon;
-    text.textContent = s.text;
-    stageIdx++;
-  }
-
-  nextStage(); // 第 0 秒立即显示第一阶段
-  const timer = setInterval(() => {
-    if (stageIdx >= stages.length) {
-      clearInterval(timer);
-      return;
-    }
-    nextStage();
-  }, intervalMs);
-
-  // 将 timer 存到 DOM 上，成功态渲染时清除
-  container._insightTimer = timer;
 }
 
 /**
@@ -377,9 +303,6 @@ export function renderInsightSuccess(containerId, data) {
   ensureCss();
   const container = document.getElementById(containerId || 'insightCardContainer');
   if (!container) return;
-
-  // 清除加载态计时器
-  if (container._insightTimer) { clearInterval(container._insightTimer); container._insightTimer = null; }
 
   const gameIcons = { 'G1': '🎯', 'G2': '⚓', 'G3': '🧩', 'G4': '💡' };
 
@@ -438,9 +361,6 @@ export function renderInsightError(containerId, onRetry, lastError) {
   ensureCss();
   const container = document.getElementById(containerId || 'insightCardContainer');
   if (!container) return;
-
-  // 清除加载态计时器
-  if (container._insightTimer) { clearInterval(container._insightTimer); container._insightTimer = null; }
 
   const errorDetail = lastError ? `<p style="font-size:12px;color:#6b6b80;margin-top:8px;">错误详情: ${lastError}</p>` : '';
 
