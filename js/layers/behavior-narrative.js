@@ -11,7 +11,7 @@ import { SCENARIOS as G4_SCENARIOS } from '../games/game4-data.js?v=20260602e';
 // ---------- 阈值常量（Phase 3 精调） ----------
 
 const G1_FAST_MS = 2000;       // 慢于这个算审慎
-const G1_SLOW_MS = 4000;       // 快于这个算直觉
+const G1_SLOW_MS = 3600;       // 快于 G1_FAST 算直觉，慢于此算审慎
 const G1_VAR_HIGH = 2.5;       // max/avg > 这个算高波动
 const G1_TREND_RATIO = 0.7;    // 前/后 < 这个算变速
 
