@@ -1,0 +1,608 @@
+/* ============================================================
+ * match.css — 岗位匹配页专用样式
+ * 依赖: base.css 设计变量
+ * ============================================================ */
+
+/* ---------- Page Layout ---------- */
+.page-match {
+  min-height: 100vh;
+  padding-bottom: var(--space-16);
+}
+
+/* ---------- Top Bar ---------- */
+.match-topbar {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.btn-back:hover {
+  border-color: var(--color-primary-dim);
+  color: var(--color-text);
+}
+
+/* ---------- Hero ---------- */
+.match-hero {
+  text-align: center;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+}
+
+.match-hero h1 {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-2);
+}
+
+.match-hero .match-subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ---------- Content Area ---------- */
+.match-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+/* ---------- Loading State ---------- */
+.match-loading {
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.match-loading .spinner {
+  margin: 0 auto var(--space-4);
+}
+
+.match-loading p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+/* ---------- Error / Empty States ---------- */
+.match-empty {
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  background: var(--color-card);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.match-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-4);
+}
+
+.match-empty h3 {
+  font-size: var(--text-xl);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.match-empty p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+/* ========== Match Results ========== */
+.match-results {
+  /* container class added by match-ui.js */
+}
+
+.match-header {
+  margin-bottom: var(--space-8);
+}
+
+.match-header h2 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-2);
+}
+
+.match-subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+/* Ranking container */
+.match-ranking {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Individual job card */
+.match-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  gap: var(--space-4);
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+
+.match-card:hover {
+  border-color: var(--color-border-hover);
+  transform: translateY(-1px);
+}
+
+.match-card--rank1 {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06), var(--color-card));
+}
+
+.match-card-rank {
+  font-size: var(--text-2xl);
+  min-width: 40px;
+  text-align: center;
+  padding-top: var(--space-1);
+}
+
+.match-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.match-card-header-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.match-card-icon {
+  font-size: var(--text-2xl);
+}
+
+.match-card-titles {
+  flex: 1;
+}
+
+.match-card-titles h3 {
+  font-size: var(--text-lg);
+  margin: 0 0 var(--space-1);
+}
+
+.match-card-slogan {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+/* Score ring */
+.match-card-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 64px;
+}
+
+.match-score-ring {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--color-primary) calc(var(--pct, 0) * 3.6deg),
+    rgba(255,255,255,0.08) 0deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.match-score-ring::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--color-card);
+}
+
+.match-score-num {
+  position: relative;
+  z-index: 1;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.match-score-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+/* Description */
+.match-card-desc {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  margin-bottom: var(--space-4);
+}
+
+/* Breakdown bars */
+.match-breakdown {
+  margin-bottom: var(--space-3);
+}
+
+.match-breakdown-title {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.match-breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.match-breakdown-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.match-breakdown-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.match-breakdown-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s ease;
+}
+
+.match-breakdown-val {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  width: 32px;
+  text-align: right;
+  font-family: var(--font-mono);
+}
+
+/* Main bar */
+.match-card-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-2);
+}
+
+.match-card-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 1s ease;
+}
+
+/* Meta info */
+.match-card-meta {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* Footer methodology */
+.match-footer {
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+}
+
+.match-methodology {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---------- Bottom Bar ---------- */
+.match-bottom {
+  max-width: 800px;
+  margin: var(--space-8) auto 0;
+  padding: 0 var(--space-4);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+}
+
+.match-bottom .btn-secondary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.match-bottom .btn-secondary:hover {
+  border-color: var(--color-primary-dim);
+  color: var(--color-text);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .match-card {
+    flex-direction: column;
+  }
+
+  .match-card-rank {
+    text-align: left;
+    padding-top: 0;
+  }
+
+  .match-card-header-row {
+    flex-wrap: wrap;
+  }
+
+  .match-card-score {
+    margin-left: auto;
+  }
+
+  .match-breakdown-label {
+    width: 60px;
+  }
+}
+
+/* ============================================================
+ * v2.0 新增：方向卡片 + 职业列表 + 折叠交互样式
+ * ============================================================ */
+
+/* ---------- Direction Cards (v2.0 新增) ---------- */
+
+.match-direction-card {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+  transition: box-shadow 0.2s;
+}
+
+.match-direction-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* 方向卡片 rank1 高亮 — 与折叠态视觉区分 */
+.match-direction-card--rank1 {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+/* 展开区域 */
+.match-expanded-section {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  animation: matchExpandIn 0.3s ease;
+}
+
+@keyframes matchExpandIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 折叠按钮 */
+.match-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.match-toggle-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.match-toggle-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Job List (v2.0 新增) ---------- */
+
+.match-job-list-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.match-job-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.match-job-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+
+.match-job-item:hover {
+  background: var(--color-surface);
+}
+
+.match-job-rank {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.match-job-rank--secondary {
+  background: var(--color-text-muted);
+}
+
+.match-job-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.match-job-name {
+  flex: 1;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-job-bar {
+  width: 80px;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.match-job-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.match-job-score {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+  min-width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* 职业空状态 */
+.match-job-empty {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-4);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+/* ---------- Mode Tabs (v2.0 新增) ---------- */
+
+.match-mode-tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  justify-content: center;
+}
+
+.match-mode-tab {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.match-mode-tab:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.match-mode-tab.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* ---------- v2.0 Responsive ---------- */
+@media (max-width: 640px) {
+  .match-direction-card {
+    flex-direction: column;
+  }
+
+  .match-job-item {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .match-job-bar {
+    width: 60px;
+  }
+
+  .match-job-score {
+    min-width: 28px;
+  }
+}

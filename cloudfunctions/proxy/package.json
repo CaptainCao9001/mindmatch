@@ -1,0 +1,10 @@
+{
+  "name": "mindmatch-api-proxy",
+  "version": "1.0.0",
+  "description": "MindMatch 云函数 API 代理 — 转发前端请求到混元/DeepSeek API",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}

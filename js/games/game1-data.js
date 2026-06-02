@@ -239,6 +239,8 @@ export const GAME1_CONFIG = {
   completion: {
     title: '核心驱动力 · 完成',
     message: '你对压力下的选择已经记录完毕。\n完成全部 4 个游戏后，才能生成你的思维肖像。',
+    nextGameLabel: '职业锚',
+    nextGameUrl:  './game2-career-anchor.html',
   },
 };
 

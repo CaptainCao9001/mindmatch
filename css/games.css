@@ -458,4 +458,60 @@
   .game-footer {
     padding: var(--space-3) var(--space-4);
   }
+
+  .game-header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .game-header .game-title {
+    font-size: var(--text-base);
+  }
+
+  .option-card {
+    padding: var(--space-4);
+  }
+
+  .option-card__label {
+    min-width: 28px;
+    height: 28px;
+    font-size: var(--text-xs);
+  }
+
+  .option-card__text {
+    font-size: var(--text-sm);
+  }
+
+  .feedback-card {
+    padding: var(--space-6) var(--space-5);
+    margin: 0 var(--space-3);
+  }
+
+  .feedback-text {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-6);
+  }
+
+  .game-complete__nav .btn {
+    min-width: 160px;
+    font-size: var(--text-sm);
+  }
+}
+
+/* 更小屏幕 (375px) */
+@media (max-width: 400px) {
+  .game-container {
+    padding: var(--space-4) var(--space-3) var(--space-20);
+  }
+
+  .scenario-title {
+    font-size: var(--text-xl);
+  }
+
+  .option-card {
+    padding: var(--space-3);
+  }
+
+  .game-header .game-title {
+    font-size: var(--text-sm);
+  }
 }

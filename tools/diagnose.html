@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMatch 诊断</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #0f0f1a; color: #e0e0e0; padding: 40px; max-width: 800px; margin: 0 auto; }
+    h1 { color: #7c3aed; margin-bottom: 20px; }
+    .section { background: #1a1a2e; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    .section h3 { color: #a78bfa; margin-bottom: 12px; }
+    .ok { color: #4ade80; }
+    .warn { color: #f59e0b; }
+    .err { color: #f87171; }
+    pre { background: #0a0a1a; padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 13px; margin-top: 8px; white-space: pre-wrap; word-break: break-all; }
+    .dim { display: inline-block; background: #2d2d4e; padding: 4px 10px; border-radius: 6px; margin: 2px; font-size: 13px; }
+    .dim-value { color: #7c3aed; font-weight: 600; }
+    .btn { background: #7c3aed; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; margin: 4px; }
+    .btn:hover { background: #6d28d9; }
+    .btn-sm { padding: 6px 14px; font-size: 12px; }
+    .btn-d { background: #ef4444; }
+    .btn-d:hover { background: #dc2626; }
+  </style>
+</head>
+<body>
+  <h1>🧪 MindMatch 诊断工具</h1>
+
+  <div class="section">
+    <h3>1. localStorage 原始数据</h3>
+    <button class="btn btn-sm" onclick="scan()">🔍 扫描</button>
+    <pre id="rawData"></pre>
+  </div>
+
+  <div class="section">
+    <h3>2. Store 模块加载测试</h3>
+    <button class="btn btn-sm" onclick="testStore()">📦 测试 Store</button>
+    <pre id="storeResult"></pre>
+  </div>
+
+  <div class="section">
+    <h3>3. Integrator 测试</h3>
+    <button class="btn btn-sm" onclick="testIntegrate()">🔗 测试 integrate()</button>
+    <pre id="integrateResult"></pre>
+  </div>
+
+  <div class="section">
+    <h3>4. Translator 测试</h3>
+    <button class="btn btn-sm" onclick="testTranslate()">📝 测试 translate()</button>
+    <pre id="translateResult"></pre>
+  </div>
+
+  <div class="section">
+    <h3>5. 模块导入链测试</h3>
+    <button class="btn btn-sm" onclick="testImports()">📥 测试动态导入</button>
+    <pre id="importResult"></pre>
+  </div>
+
+  <div class="section">
+    <h3>6. 清理</h3>
+    <button class="btn btn-d btn-sm" onclick="clearAll()">🗑️ 清空所有数据</button>
+  </div>
+
+  <script type="module">
+    // 暴露到全局
+    window._scan = function() {
+      const el = document.getElementById('rawData');
+      const keys = [];
+      const data = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        keys.push(key);
+        try {
+          const val = localStorage.getItem(key);
+          try { data[key] = JSON.parse(val); } catch { data[key] = val.substring(0, 500); }
+        } catch (e) {
+          data[key] = '[读取失败]';
+        }
+      }
+
+      const totalBytes = new Blob([JSON.stringify(localStorage)]).size;
+      el.innerHTML = `<span class="ok">✅ ${keys.length} 个 key，总计约 ${(totalBytes/1024).toFixed(1)} KB</span>\n\n`;
+
+      for (const [k, v] of Object.entries(data)) {
+        el.innerHTML += `\n📌 <strong>${k}</strong>:\n` + JSON.stringify(v, null, 2);
+      }
+
+      if (keys.length === 0) {
+        el.innerHTML += '<span class="warn">⚠️ localStorage 为空！没有游戏数据。</span>';
+      }
+    };
+
+    window._testStore = async function() {
+      const el = document.getElementById('storeResult');
+      try {
+        const mod = await import('../js/core/store.js');
+        const all = mod.loadAll();
+        const completed = mod.completedGames();
+        el.innerHTML = `<span class="ok">✅ Store 模块加载成功</span>\n\n`;
+        el.innerHTML += `loadAll() 返回 ${Object.keys(all).length} 个游戏:\n`;
+        for (const [k, v] of Object.entries(all)) {
+          const dims = v && v.dimensions ? Object.entries(v.dimensions).map(([d, s]) => `${d}=${s}`).join(', ') : '无维度';
+          el.innerHTML += `  📌 ${k}: dimensions = {${dims}}\n`;
+        }
+        el.innerHTML += `\ncompletedGames() = [${completed.join(', ')}]`;
+        if (completed.length === 0) el.innerHTML += '\n\n<span class="warn">⚠️ 没有完成的游戏！请先注入数据。</span>';
+        if (completed.length === 4) el.innerHTML += '\n\n<span class="ok">✅ 4 个游戏全部完成！</span>';
+      } catch (e) {
+        el.innerHTML = `<span class="err">❌ Store 加载失败: ${e.message}\n${e.stack}</span>`;
+      }
+    };
+
+    window._testIntegrate = async function() {
+      const el = document.getElementById('integrateResult');
+      try {
+        const mod = await import('../js/layers/integrator.js');
+        const profile = mod.integrate();
+        el.innerHTML = `<span class="ok">✅ integrate() 成功</span>\n\n`;
+        el.innerHTML += `完成游戏数: ${profile.meta.completedCount}/4\n`;
+        el.innerHTML += `已完成: [${profile.meta.completedGames.join(', ')}]\n\n`;
+        el.innerHTML += '维度原始值:\n';
+        for (const [dim, val] of Object.entries(profile.raw)) {
+          const cls = val === null ? 'warn' : '';
+          el.innerHTML += `  ${dim}: <span class="${cls}">${val === null ? 'null' : val}</span>\n`;
+        }
+        el.innerHTML += '\n维度标准化值:\n';
+        for (const [dim, val] of Object.entries(profile.dimensions)) {
+          const cls = val === null ? 'warn' : '';
+          el.innerHTML += `  ${dim}: <span class="${cls}">${val === null ? 'null' : val?.toFixed(4)}</span>\n`;
+        }
+      } catch (e) {
+        el.innerHTML = `<span class="err">❌ integrate() 失败: ${e.message}\n${e.stack}</span>`;
+      }
+    };
+
+    window._testTranslate = async function() {
+      const el = document.getElementById('translateResult');
+      try {
+        const [inteMod, transMod] = await Promise.all([
+          import('../js/layers/integrator.js'),
+          import('../js/layers/translator.js?v=2'),
+        ]);
+        const profile = inteMod.integrate();
+        const result = transMod.translate(profile);
+        el.innerHTML = `<span class="ok">✅ translate() 成功</span>\n\n`;
+        el.innerHTML += `sections 数量: ${result.sections.length}\n`;
+        for (const sec of result.sections) {
+          el.innerHTML += `\n📌 ${sec.gameName} (${sec.gameId}):\n`;
+          el.innerHTML += `  dims: [${sec.dimensions.map(d => `${d.id}=${d.score}(${d.level})`).join(', ')}]\n`;
+          el.innerHTML += `  summary: ${sec.summary?.substring(0, 100)}...\n`;
+        }
+      } catch (e) {
+        el.innerHTML = `<span class="err">❌ translate() 失败: ${e.message}\n${e.stack}</span>`;
+      }
+    };
+
+    window._testImports = async function() {
+      const el = document.getElementById('importResult');
+      const modules = [
+        '../js/core/utils.js',
+        '../js/core/store.js',
+        '../js/layers/integrator.js',
+        '../js/layers/translator.js?v=2',
+        '../js/ui/portrait.js',
+        '../js/ui/charts.js',
+        '../js/core/api.js',
+        '../js/layers/insight.js',
+        '../js/ui/insight-card.js',
+      ];
+      el.innerHTML = '逐个测试...\n';
+      for (const m of modules) {
+        try {
+          await import(m);
+          el.innerHTML += `<span class="ok">✅ ${m}</span>\n`;
+        } catch (e) {
+          el.innerHTML += `<span class="err">❌ ${m}: ${e.message}</span>\n`;
+        }
+      }
+    };
+
+    window._clearAll = function() {
+      if (confirm('确认清空所有 localStorage 数据？')) {
+        localStorage.clear();
+        document.getElementById('rawData').innerHTML = '<span class="ok">✅ 已清空</span>';
+      }
+    };
+
+    // 暴露所有函数
+    window.scan = window._scan;
+    window.testStore = window._testStore;
+    window.testIntegrate = window._testIntegrate;
+    window.testTranslate = window._testTranslate;
+    window.testImports = window._testImports;
+    window.clearAll = window._clearAll;
+
+    // 自动扫描
+    setTimeout(() => window._scan(), 300);
+  </script>
+</body>
+</html>

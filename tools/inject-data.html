@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMatch — 测试数据注入</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    /* ===== 注入工具专用样式 ===== */
+    body {
+      padding: var(--space-8) var(--space-4);
+      max-width: 1100px;
+      margin: 0 auto;
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .tool-header h1 {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      margin: 0;
+    }
+    .tool-header h1 span { color: var(--color-primary); }
+
+    .header-links {
+      display: flex;
+      gap: var(--space-3);
+    }
+    .header-links a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+    .header-links a:hover {
+      border-color: var(--color-accent);
+      background: hsla(188, 86%, 53%, 0.08);
+    }
+
+    /* 状态卡片 */
+    .status-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-6);
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+    }
+
+    .status-label { font-size: var(--text-sm); color: var(--color-text-secondary); }
+    .status-count {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .status-count.all-done { color: var(--color-success); }
+
+    .game-indicators {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .game-indicator {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--color-border);
+      transition: background 0.3s;
+    }
+    .game-indicator.has-data {
+      background: var(--color-success);
+      box-shadow: 0 0 6px hsla(160, 84%, 39%, 0.5);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .btn-clear {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-sm);
+      background: transparent;
+      color: var(--color-error);
+      border: 1px solid var(--color-error);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+    }
+    .btn-clear:hover {
+      background: hsla(0, 84%, 60%, 0.12);
+    }
+
+    .btn-view {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-sm);
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-view:hover { background: var(--color-primary-dim); }
+
+    /* 预设网格 */
+    .section-title {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+    .section-title small {
+      font-weight: 400;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: var(--space-4);
+      margin-bottom: var(--space-8);
+    }
+
+    .preset-card {
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+    }
+    .preset-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px hsla(239, 84%, 67%, 0.12);
+    }
+    .preset-card.selected {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-glow);
+    }
+    .preset-card.injected {
+      border-color: var(--color-success);
+    }
+    .preset-card.injected::after {
+      content: '✔ 已注入';
+      position: absolute;
+      top: var(--space-2);
+      right: var(--space-3);
+      font-size: var(--text-xs);
+      color: var(--color-success);
+      font-weight: 600;
+    }
+
+    .preset-emoji { font-size: 2rem; margin-bottom: var(--space-2); display: block; }
+    .preset-name { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-1); }
+    .preset-desc { font-size: var(--text-xs); color: var(--color-text-secondary); margin-bottom: var(--space-3); line-height: 1.4; }
+
+    .preset-dims {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      margin-bottom: var(--space-3);
+    }
+    .preset-dim {
+      font-size: var(--text-xs);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      background: hsla(239, 84%, 67%, 0.12);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+    .preset-dim.high {
+      background: hsla(239, 84%, 67%, 0.2);
+      color: var(--color-primary);
+    }
+    .preset-dim.low {
+      background: hsla(188, 86%, 53%, 0.12);
+      color: var(--color-accent);
+    }
+
+    .preset-mini-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: var(--space-3);
+    }
+    .mini-bar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .mini-bar-label {
+      width: 28px;
+      font-size: 10px;
+      color: var(--color-text-muted);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .mini-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--color-bg);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--color-primary);
+    }
+
+    .preset-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+    .btn-inject {
+      flex: 1;
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-sm);
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+    }
+    .btn-inject:hover { background: var(--color-primary-dim); }
+    .btn-inject.injected {
+      background: var(--color-success);
+      cursor: default;
+    }
+
+    /* 自定义模式 */
+    .custom-section {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-bottom: var(--space-8);
+    }
+    .custom-section summary {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      padding: var(--space-2) 0;
+    }
+    .custom-section summary:hover { color: var(--color-primary); }
+
+    .custom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+    .custom-game {
+      background: var(--color-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+    }
+    .custom-game h4 {
+      margin: 0 0 var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .custom-game h4 span { color: var(--color-primary); }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+    .slider-label {
+      width: 40px;
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .slider-input {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      outline: none;
+    }
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      border: 2px solid white;
+    }
+    .slider-val {
+      width: 28px;
+      font-size: var(--text-xs);
+      color: var(--color-text);
+      text-align: center;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .btn-custom-inject {
+      display: block;
+      width: 100%;
+      margin-top: var(--space-4);
+      padding: var(--space-3);
+      font-size: var(--text-base);
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: var(--font-sans);
+    }
+    .btn-custom-inject:hover { background: var(--color-primary-dim); }
+
+    /* Toast 通知 */
+    .toast {
+      position: fixed;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      background: var(--color-success);
+      color: #000;
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      z-index: 1000;
+      animation: toastIn 0.3s, toastOut 0.3s 2.5s forwards;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <div class="tool-header">
+    <h1>🧪 MindMatch <span>测试数据注入</span></h1>
+    <div class="header-links">
+      <a href="../results.html" target="_blank">📊 查看结果页</a>
+      <a href="../match.html" target="_blank">🎯 查看匹配页</a>
+    </div>
+  </div>
+
+  <!-- ===== 状态卡片 ===== -->
+  <div class="status-card" id="statusCard">
+    <div style="display:flex;align-items:center;gap:var(--space-6)">
+      <div>
+        <div class="status-label">已注入游戏</div>
+        <div class="status-count" id="statusCount">0 / 4</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;align-items:center;gap:var(--space-2)">
+          <div class="game-indicator" id="gi1" title="G1 核心驱动力"></div>
+          <span style="font-size:11px;color:var(--color-text-muted)">G1 驱动力</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-2)">
+          <div class="game-indicator" id="gi2" title="G2 职业锚"></div>
+          <span style="font-size:11px;color:var(--color-text-muted)">G2 职业锚</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-2)">
+          <div class="game-indicator" id="gi3" title="G3 认知风格"></div>
+          <span style="font-size:11px;color:var(--color-text-muted)">G3 认知风格</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-2)">
+          <div class="game-indicator" id="gi4" title="G4 意义建构"></div>
+          <span style="font-size:11px;color:var(--color-text-muted)">G4 意义建构</span>
+        </div>
+      </div>
+      <div id="currentPresetLabel" style="display:none;border-left:1px solid var(--color-border);padding-left:var(--space-4)">
+        <div class="status-label">当前预设</div>
+        <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-accent)" id="currentPresetName">-</div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="btn-clear" onclick="clearAll()">🗑 清空全部</button>
+      <a class="btn-view" href="../results.html" target="_blank">📊 查看结果页</a>
+    </div>
+  </div>
+
+  <!-- ===== 预设 ===== -->
+  <div class="section-title">📦 预设数据组合 <small>— 点击卡片选中，然后点击「注入」按钮</small></div>
+  <div class="preset-grid" id="presetGrid">
+    <!-- JS 渲染 -->
+  </div>
+
+  <!-- ===== 自定义模式 ===== -->
+  <details class="custom-section" id="customSection">
+    <summary>🎛 自定义维度值 <small>— 手动调整每个游戏的分值</small></summary>
+    <div class="custom-grid" id="customGrid">
+      <!-- JS 渲染 -->
+    </div>
+    <button class="btn-custom-inject" onclick="injectCustom()">💉 注入自定义值</button>
+  </details>
+
+  <script>
+    const PREFIX = 'mindmatch_';
+    const GAMES = ['game1', 'game2', 'game3', 'game4'];
+    const PRESETS = [
+      {
+        id: 'achiever',
+        emoji: '🎯', name: '成就导向型',
+        desc: '追求卓越，目标驱动，技术精进是核心满足来源。适合研究岗、技术专家。',
+        highlights: ['nAch 极高', 'TF 极高', '分析型'],
+        game1: { nAch: 9, nPow: 4, nAff: 3,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_a',decisionTime:2800 },
+            { scenarioId:'s2',optionId:'s2_c',decisionTime:3500 },
+            { scenarioId:'s3',optionId:'s3_a',decisionTime:4100 },
+            { scenarioId:'s4',optionId:'s4_a',decisionTime:3200 },
+            { scenarioId:'s5',optionId:'s5_c',decisionTime:2900 }
+          ],
+          behaviorSummary: { primaryDriver:'nAch',secondaryDriver:'nPow',consistencyScore:0.82 } },
+        game2: { TF: 9, GM: 3, AU: 5, SE: 2, EC: 4, SV: 2, CH: 3, LS: 4,
+          decisions: [
+            { stage:1,cardId:'c1',action:'join',anchor:'TF' },
+            { stage:2,cardId:'c1',action:'keep',anchor:'TF' },
+            { stage:3,cardId:'c1',action:'select',anchor:'TF' }
+          ],
+          behaviorSummary: { primaryAnchor:'TF',secondaryAnchor:'AU',bottomAnchor:'SE' } },
+        game3: { wholistAnalytic: 0.6,
+          mbtiIntermediate: { E:1,I:-1,S:3,N:-2,T:5,F:-3,J:2,P:-1 },
+          behaviorSummary: { dominantStyle:'分析型',flexibility:4,impulseScore:3 },
+          decisions: [
+            { stage:1,cardId:'m1',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m4',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m7',group:'green',groupLabel:'这就是我' },
+            { stage:2,cardId:'m1',rank:1 },
+            { stage:2,cardId:'m4',rank:2 },
+            { stage:2,cardId:'m7',rank:3 }
+          ] },
+        game4: { presence: 5, search: 3,
+          behaviorSummary: { profileType:'安定型',meaningSource:'技术精进' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f2',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f3',reaction1:'P+',reaction2:'S+' },
+            { sceneId:'f4',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f5',reaction1:'P-',reaction2:'S-' },
+            { sceneId:'f6',reaction1:'P-',reaction2:'S+' }
+          ] }
+      },
+      {
+        id: 'people',
+        emoji: '🤝', name: '人际导向型',
+        desc: '关系驱动，在意他人感受，服务与赋能是核心动力。适合HR、客户成功。',
+        highlights: ['nAff 极高', 'EC 极高', '平衡偏感性'],
+        game1: { nAch: 4, nPow: 2, nAff: 9,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_d',decisionTime:4200 },
+            { scenarioId:'s2',optionId:'s2_b',decisionTime:3800 },
+            { scenarioId:'s3',optionId:'s3_d',decisionTime:4500 },
+            { scenarioId:'s4',optionId:'s4_c',decisionTime:5100 },
+            { scenarioId:'s5',optionId:'s5_a',decisionTime:3600 }
+          ],
+          behaviorSummary: { primaryDriver:'nAff',secondaryDriver:'nAch',consistencyScore:0.88 } },
+        game2: { TF: 3, GM: 2, AU: 4, SE: 2, EC: 9, SV: 6, CH: 4, LS: 5,
+          decisions: [
+            { stage:1,cardId:'c9',action:'join',anchor:'EC' },
+            { stage:2,cardId:'c9',action:'keep',anchor:'EC' },
+            { stage:3,cardId:'c9',action:'select',anchor:'EC' }
+          ],
+          behaviorSummary: { primaryAnchor:'EC',secondaryAnchor:'SV',bottomAnchor:'GM' } },
+        game3: { wholistAnalytic: -0.2,
+          mbtiIntermediate: { E:4,I:-2,S:2,N:-1,T:-1,F:4,J:0,P:1 },
+          behaviorSummary: { dominantStyle:'平衡型',flexibility:7,impulseScore:5 },
+          decisions: [
+            { stage:1,cardId:'m2',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m5',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m8',group:'green',groupLabel:'这就是我' },
+            { stage:2,cardId:'m5',rank:1 },
+            { stage:2,cardId:'m2',rank:2 },
+            { stage:2,cardId:'m8',rank:3 }
+          ] },
+        game4: { presence: 7, search: 2,
+          behaviorSummary: { profileType:'满足型',meaningSource:'人际关系' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f2',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f3',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f4',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f5',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f6',reaction1:'P-',reaction2:'S-' }
+          ] }
+      },
+      {
+        id: 'influencer',
+        emoji: '👑', name: '影响驱动型',
+        desc: '权力与影响力驱动，享受掌控和竞争。适合管理岗、创业、销售。',
+        highlights: ['nPow 极高', 'GM 极高', '整体型认知'],
+        game1: { nAch: 5, nPow: 9, nAff: 4,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_b',decisionTime:2200 },
+            { scenarioId:'s2',optionId:'s2_a',decisionTime:3100 },
+            { scenarioId:'s3',optionId:'s3_c',decisionTime:2800 },
+            { scenarioId:'s4',optionId:'s4_b',decisionTime:3400 },
+            { scenarioId:'s5',optionId:'s5_b',decisionTime:2600 }
+          ],
+          behaviorSummary: { primaryDriver:'nPow',secondaryDriver:'nAch',consistencyScore:0.79 } },
+        game2: { TF: 4, GM: 9, AU: 6, SE: 2, EC: 5, SV: 3, CH: 7, LS: 3,
+          decisions: [
+            { stage:1,cardId:'c3',action:'join',anchor:'GM' },
+            { stage:2,cardId:'c3',action:'keep',anchor:'GM' },
+            { stage:3,cardId:'c3',action:'select',anchor:'GM' }
+          ],
+          behaviorSummary: { primaryAnchor:'GM',secondaryAnchor:'CH',bottomAnchor:'SE' } },
+        game3: { wholistAnalytic: -0.4,
+          mbtiIntermediate: { E:5,I:-3,S:1,N:0,T:3,F:-1,J:4,P:-2 },
+          behaviorSummary: { dominantStyle:'整体型',flexibility:5,impulseScore:6 },
+          decisions: [
+            { stage:1,cardId:'m2',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m3',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m8',group:'green',groupLabel:'这就是我' },
+            { stage:2,cardId:'m3',rank:1 },
+            { stage:2,cardId:'m2',rank:2 },
+            { stage:2,cardId:'m8',rank:3 }
+          ] },
+        game4: { presence: 3, search: 7,
+          behaviorSummary: { profileType:'成长型',meaningSource:'掌控感' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f2',reaction1:'P+',reaction2:'S+' },
+            { sceneId:'f3',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f4',reaction1:'P+',reaction2:'S+' },
+            { sceneId:'f5',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f6',reaction1:'P-',reaction2:'S+' }
+          ] }
+      },
+      {
+        id: 'explorer',
+        emoji: '🌊', name: '探索成长型',
+        desc: '好奇心驱动，追求多样性和新体验。适合创意、产品、咨询。',
+        highlights: ['search 极高', 'CH 极高', '整体型'],
+        game1: { nAch: 7, nPow: 3, nAff: 5,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_c',decisionTime:3800 },
+            { scenarioId:'s2',optionId:'s2_c',decisionTime:2900 },
+            { scenarioId:'s3',optionId:'s3_b',decisionTime:4200 },
+            { scenarioId:'s4',optionId:'s4_d',decisionTime:3500 },
+            { scenarioId:'s5',optionId:'s5_c',decisionTime:3100 }
+          ],
+          behaviorSummary: { primaryDriver:'nAch',secondaryDriver:'nAff',consistencyScore:0.71 } },
+        game2: { TF: 5, GM: 4, AU: 7, SE: 1, EC: 3, SV: 2, CH: 9, LS: 8,
+          decisions: [
+            { stage:1,cardId:'c15',action:'join',anchor:'CH' },
+            { stage:2,cardId:'c15',action:'keep',anchor:'CH' },
+            { stage:3,cardId:'c15',action:'select',anchor:'CH' }
+          ],
+          behaviorSummary: { primaryAnchor:'CH',secondaryAnchor:'LS',bottomAnchor:'SE' } },
+        game3: { wholistAnalytic: -0.6,
+          mbtiIntermediate: { E:3,I:-1,S:-3,N:4,T:1,F:2,J:-2,P:3 },
+          behaviorSummary: { dominantStyle:'整体型',flexibility:8,impulseScore:5 },
+          decisions: [
+            { stage:1,cardId:'m6',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m8',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m2',group:'green',groupLabel:'这就是我' },
+            { stage:2,cardId:'m6',rank:1 },
+            { stage:2,cardId:'m8',rank:2 },
+            { stage:2,cardId:'m2',rank:3 }
+          ] },
+        game4: { presence: 2, search: 9,
+          behaviorSummary: { profileType:'探索型',meaningSource:'发现未知' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f2',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f3',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f4',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f5',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f6',reaction1:'P-',reaction2:'S+' }
+          ] }
+      },
+      {
+        id: 'balanced',
+        emoji: '⚖️', name: '均衡中庸型',
+        desc: '各方面发展均衡，无明显极端。适合综合管理、协调类岗位。',
+        highlights: ['全维度中等', '平衡型'],
+        game1: { nAch: 5, nPow: 5, nAff: 5,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_c',decisionTime:3500 },
+            { scenarioId:'s2',optionId:'s2_b',decisionTime:4000 },
+            { scenarioId:'s3',optionId:'s3_b',decisionTime:3800 },
+            { scenarioId:'s4',optionId:'s4_c',decisionTime:4200 },
+            { scenarioId:'s5',optionId:'s5_b',decisionTime:3600 }
+          ],
+          behaviorSummary: { primaryDriver:'nAch',secondaryDriver:'nAff',consistencyScore:0.55 } },
+        game2: { TF: 5, GM: 5, AU: 5, SE: 5, EC: 5, SV: 5, CH: 5, LS: 5,
+          decisions: [
+            { stage:1,cardId:'c1',action:'join',anchor:'TF' },
+            { stage:2,cardId:'c7',action:'keep',anchor:'LS' },
+            { stage:3,cardId:'c1',action:'select',anchor:'TF' }
+          ],
+          behaviorSummary: { primaryAnchor:'TF',secondaryAnchor:'LS',bottomAnchor:'-' } },
+        game3: { wholistAnalytic: 0.0,
+          mbtiIntermediate: { E:1,I:0,S:1,N:0,T:1,F:0,J:1,P:0 },
+          behaviorSummary: { dominantStyle:'平衡型',flexibility:9,impulseScore:3 },
+          decisions: [
+            { stage:1,cardId:'m1',group:'yellow',groupLabel:'有点像我' },
+            { stage:1,cardId:'m2',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m4',group:'yellow',groupLabel:'有点像我' },
+            { stage:2,cardId:'m2',rank:1 },
+            { stage:2,cardId:'m1',rank:2 },
+            { stage:2,cardId:'m4',rank:3 }
+          ] },
+        game4: { presence: 5, search: 5,
+          behaviorSummary: { profileType:'平衡型',meaningSource:'多元价值' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P+',reaction2:'S+' },
+            { sceneId:'f2',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f3',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f4',reaction1:'P+',reaction2:'S+' },
+            { sceneId:'f5',reaction1:'P-',reaction2:'S-' },
+            { sceneId:'f6',reaction1:'P+',reaction2:'S-' }
+          ] }
+      },
+      {
+        id: 'analytical',
+        emoji: '🔬', name: '严谨分析型',
+        desc: '极致理性，数据导向，厌恶模糊。适合数据分析、算法工程。',
+        highlights: ['分析型极端', 'TF 极高', 'SV 极低'],
+        game1: { nAch: 8, nPow: 2, nAff: 2,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_a',decisionTime:2500 },
+            { scenarioId:'s2',optionId:'s2_a',decisionTime:3000 },
+            { scenarioId:'s3',optionId:'s3_a',decisionTime:2800 },
+            { scenarioId:'s4',optionId:'s4_a',decisionTime:3300 },
+            { scenarioId:'s5',optionId:'s5_c',decisionTime:2700 }
+          ],
+          behaviorSummary: { primaryDriver:'nAch',secondaryDriver:'nPow',consistencyScore:0.91 } },
+        game2: { TF: 9, GM: 2, AU: 3, SE: 4, EC: 3, SV: 1, CH: 2, LS: 3,
+          decisions: [
+            { stage:1,cardId:'c1',action:'join',anchor:'TF' },
+            { stage:2,cardId:'c1',action:'keep',anchor:'TF' },
+            { stage:3,cardId:'c1',action:'select',anchor:'TF' }
+          ],
+          behaviorSummary: { primaryAnchor:'TF',secondaryAnchor:'SE',bottomAnchor:'SV' } },
+        game3: { wholistAnalytic: 0.8,
+          mbtiIntermediate: { E:-3,I:4,S:5,N:-4,T:6,F:-5,J:4,P:-3 },
+          behaviorSummary: { dominantStyle:'分析型',flexibility:2,impulseScore:1 },
+          decisions: [
+            { stage:1,cardId:'m1',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m4',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m7',group:'green',groupLabel:'这就是我' },
+            { stage:2,cardId:'m1',rank:1 },
+            { stage:2,cardId:'m4',rank:2 },
+            { stage:2,cardId:'m7',rank:3 }
+          ] },
+        game4: { presence: 3, search: 4,
+          behaviorSummary: { profileType:'分析型',meaningSource:'逻辑自洽' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f2',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f3',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f4',reaction1:'P-',reaction2:'S-' },
+            { sceneId:'f5',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f6',reaction1:'P-',reaction2:'S-' }
+          ] }
+      },
+      {
+        id: 'reflective',
+        emoji: '💭', name: '内省感悟型',
+        desc: '感性、整体思维，在意意义和内在体验。适合写作、艺术、心理咨询。',
+        highlights: ['整体型极端', 'presence 极高', 'nAff 高'],
+        game1: { nAch: 3, nPow: 2, nAff: 7,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_d',decisionTime:4800 },
+            { scenarioId:'s2',optionId:'s2_d',decisionTime:5200 },
+            { scenarioId:'s3',optionId:'s3_d',decisionTime:4600 },
+            { scenarioId:'s4',optionId:'s4_d',decisionTime:5000 },
+            { scenarioId:'s5',optionId:'s5_a',decisionTime:4400 }
+          ],
+          behaviorSummary: { primaryDriver:'nAff',secondaryDriver:'nAch',consistencyScore:0.85 } },
+        game2: { TF: 2, GM: 2, AU: 6, SE: 3, EC: 5, SV: 8, CH: 4, LS: 3,
+          decisions: [
+            { stage:1,cardId:'c11',action:'join',anchor:'SV' },
+            { stage:2,cardId:'c11',action:'keep',anchor:'SV' },
+            { stage:3,cardId:'c11',action:'select',anchor:'SV' }
+          ],
+          behaviorSummary: { primaryAnchor:'SV',secondaryAnchor:'AU',bottomAnchor:'GM' } },
+        game3: { wholistAnalytic: -0.7,
+          mbtiIntermediate: { E:-2,I:3,S:-4,N:5,T:-5,F:6,J:-3,P:3 },
+          behaviorSummary: { dominantStyle:'整体型',flexibility:7,impulseScore:6 },
+          decisions: [
+            { stage:1,cardId:'m5',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m6',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m2',group:'green',groupLabel:'这就是我' },
+            { stage:2,cardId:'m5',rank:1 },
+            { stage:2,cardId:'m6',rank:2 },
+            { stage:2,cardId:'m2',rank:3 }
+          ] },
+        game4: { presence: 8, search: 2,
+          behaviorSummary: { profileType:'安定型',meaningSource:'内在体验' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f2',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f3',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f4',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f5',reaction1:'P+',reaction2:'S-' },
+            { sceneId:'f6',reaction1:'P-',reaction2:'S-' }
+          ] }
+      },
+      {
+        id: 'security',
+        emoji: '🛡️', name: '安全感型',
+        desc: '追求稳定和安全，厌恶风险。适合行政、财务、运营。',
+        highlights: ['SE 极高', 'LS 极高', 'search 高'],
+        game1: { nAch: 2, nPow: 1, nAff: 6,
+          decisions: [
+            { scenarioId:'s1',optionId:'s1_d',decisionTime:5500 },
+            { scenarioId:'s2',optionId:'s2_d',decisionTime:6100 },
+            { scenarioId:'s3',optionId:'s3_d',decisionTime:5200 },
+            { scenarioId:'s4',optionId:'s4_d',decisionTime:5800 },
+            { scenarioId:'s5',optionId:'s5_a',decisionTime:4900 }
+          ],
+          behaviorSummary: { primaryDriver:'nAff',secondaryDriver:'nAch',consistencyScore:0.9 } },
+        game2: { TF: 3, GM: 1, AU: 2, SE: 9, EC: 6, SV: 7, CH: 2, LS: 8,
+          decisions: [
+            { stage:1,cardId:'c7',action:'join',anchor:'SE' },
+            { stage:2,cardId:'c7',action:'keep',anchor:'SE' },
+            { stage:3,cardId:'c7',action:'select',anchor:'SE' }
+          ],
+          behaviorSummary: { primaryAnchor:'SE',secondaryAnchor:'LS',bottomAnchor:'GM' } },
+        game3: { wholistAnalytic: 0.3,
+          mbtiIntermediate: { E:-2,I:2,S:3,N:-2,T:1,F:1,J:4,P:-3 },
+          behaviorSummary: { dominantStyle:'平衡偏分析',flexibility:5,impulseScore:2 },
+          decisions: [
+            { stage:1,cardId:'m4',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m7',group:'green',groupLabel:'这就是我' },
+            { stage:1,cardId:'m1',group:'yellow',groupLabel:'有点像我' },
+            { stage:2,cardId:'m4',rank:1 },
+            { stage:2,cardId:'m7',rank:2 },
+            { stage:2,cardId:'m1',rank:3 }
+          ] },
+        game4: { presence: 2, search: 8,
+          behaviorSummary: { profileType:'成长型',meaningSource:'寻找确定感' },
+          decisions: [
+            { sceneId:'f1',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f2',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f3',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f4',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f5',reaction1:'P-',reaction2:'S+' },
+            { sceneId:'f6',reaction1:'P-',reaction2:'S+' }
+          ] }
+      }
+    ];
+
+    // ===== 当前选中 / 已注入 =====
+    let selectedPreset = null;
+    let lastInjectedPreset = null;
+
+    // ===== 构建预设 gameOutput 对象 =====
+    function buildGameOutput(gameId, dims, preset) {
+      const pd = (preset && (preset['game' + gameId.slice(-1)] || preset[gameId])) || {};
+      const now = Date.now();
+      return {
+        gameId: gameId,
+        version: '1.0.0',
+        dimensions: dims,
+        behaviorSummary: pd.behaviorSummary || {},
+        decisions: pd.decisions || [],
+        meta: {
+          totalTime: 30000 + Math.floor(Math.random() * 20000),
+          elapsedMs: 200000 + Math.floor(Math.random() * 100000),
+          decisionCount: (pd.decisions || []).length || 5,
+          completedAt: now
+        }
+      };
+    }
+
+    function getPresetData(preset) {
+      return {
+        game1: buildGameOutput('game1', { nAch: preset.game1.nAch, nPow: preset.game1.nPow, nAff: preset.game1.nAff }, preset),
+        game2: buildGameOutput('game2', { TF: preset.game2.TF, GM: preset.game2.GM, AU: preset.game2.AU, SE: preset.game2.SE, EC: preset.game2.EC, SV: preset.game2.SV, CH: preset.game2.CH, LS: preset.game2.LS }, preset),
+        game3: buildGameOutput('game3', { wholistAnalytic: preset.game3.wholistAnalytic }, preset),
+        game4: buildGameOutput('game4', { presence: preset.game4.presence, search: preset.game4.search }, preset)
+      };
+    }
+
+    // ===== 注入单个游戏 =====
+    function injectGame(gameId, data) {
+      localStorage.setItem(PREFIX + gameId, JSON.stringify(data));
+      let meta = JSON.parse(localStorage.getItem(PREFIX + 'meta') || '{}');
+      if (!meta.completedGames) meta.completedGames = [];
+      if (!meta.completedGames.includes(gameId)) {
+        meta.completedGames.push(gameId);
+      }
+      localStorage.setItem(PREFIX + 'meta', JSON.stringify(meta));
+    }
+
+    // ===== 注入整个预设 =====
+    function injectPreset(presetId) {
+      const preset = PRESETS.find(p => p.id === presetId);
+      if (!preset) return;
+      const data = getPresetData(preset);
+      GAMES.forEach(g => injectGame(g, data[g]));
+      lastInjectedPreset = presetId;
+      updateStatus();
+
+      // 显示当前预设名
+      const label = document.getElementById('currentPresetLabel');
+      const nameEl = document.getElementById('currentPresetName');
+      label.style.display = 'block';
+      nameEl.textContent = preset.emoji + ' ' + preset.name;
+
+      // 高亮注入的卡片
+      document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('injected'));
+      const card = document.getElementById('card-' + presetId);
+      if (card) card.classList.add('injected');
+
+      // 移除 AI 缓存，确保重新生成
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('insight_')) {
+          localStorage.removeItem(key);
+        }
+      }
+
+      showToast(`已注入「${preset.name}」`);
+    }
+
+    // ===== 清空 =====
+    function clearAll() {
+      if (!confirm('确定要清空全部测试数据吗？')) return;
+      GAMES.forEach(g => localStorage.removeItem(PREFIX + g));
+      localStorage.removeItem(PREFIX + 'meta');
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('insight_')) {
+          localStorage.removeItem(key);
+        }
+      }
+      lastInjectedPreset = null;
+      document.getElementById('currentPresetLabel').style.display = 'none';
+      document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('injected'));
+      updateStatus();
+      showToast('已清空全部数据');
+    }
+
+    // ===== 注入预设并跳转 =====
+    function injectAndView(presetId) {
+      injectPreset(presetId);
+      // 短暂延迟确保 localStorage 写入完成
+      setTimeout(() => {
+        window.open('../results.html', '_blank');
+      }, 100);
+    }
+
+    // ===== 状态更新 =====
+    function updateStatus() {
+      const meta = JSON.parse(localStorage.getItem(PREFIX + 'meta') || '{}');
+      const completed = meta.completedGames || [];
+
+      document.getElementById('statusCount').textContent = completed.length + ' / 4';
+      if (completed.length === 4) {
+        document.getElementById('statusCount').classList.add('all-done');
+      } else {
+        document.getElementById('statusCount').classList.remove('all-done');
+      }
+
+      // 游戏指示器
+      GAMES.forEach((g, i) => {
+        const el = document.getElementById('gi' + (i + 1));
+        if (!el) return;
+        if (completed.includes(g)) {
+          el.classList.add('has-data');
+        } else {
+          el.classList.remove('has-data');
+        }
+      });
+    }
+
+    // ===== Toast =====
+    function showToast(msg) {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = msg;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    }
+
+    // ===== 渲染预设卡片 =====
+    function renderPresetCards() {
+      const grid = document.getElementById('presetGrid');
+      grid.innerHTML = PRESETS.map(p => {
+        const dims = [];
+        // G1 dims
+        ['nAch','nPow','nAff'].forEach(d => {
+          const v = p.game1[d];
+          const cls = v >= 7 ? 'high' : v <= 3 ? 'low' : '';
+          dims.push({ label: d, value: v, cls });
+        });
+        // G2 top 2
+        const g2d = ['TF','GM','AU','SE','EC','SV','CH','LS'];
+        g2d.forEach(d => {
+          const v = p.game2[d];
+          if (v >= 8 || v <= 2) {
+            const cls = v >= 8 ? 'high' : 'low';
+            dims.push({ label: d, value: v, cls });
+          }
+        });
+        // G3
+        const wa = p.game3.wholistAnalytic;
+        dims.push({ label: 'WA', value: wa, cls: Math.abs(wa) > 0.5 ? (wa > 0 ? 'high' : 'low') : '' });
+        // G4
+        ['presence','search'].forEach(d => {
+          const v = p.game4[d];
+          const cls = v >= 7 ? 'high' : v <= 3 ? 'low' : '';
+          dims.push({ label: d.slice(0,4), value: v, cls });
+        });
+
+        // Mini bars for G1
+        const barRows = [
+          { label: 'nAc', val: p.game1.nAch },
+          { label: 'nPo', val: p.game1.nPow },
+          { label: 'nAf', val: p.game1.nAff },
+          { label: 'TF', val: p.game2.TF },
+          { label: 'P/S', val: Math.round((p.game4.presence + p.game4.search) / 2) }
+        ];
+
+        return `
+          <div class="preset-card" id="card-${p.id}" onclick="selectPreset('${p.id}')">
+            <span class="preset-emoji">${p.emoji}</span>
+            <div class="preset-name">${p.name}</div>
+            <div class="preset-desc">${p.desc}</div>
+            <div class="preset-dims">
+              ${p.highlights.map(h => `<span class="preset-dim high">${h}</span>`).join('')}
+            </div>
+            <div class="preset-mini-bars">
+              ${barRows.map(r => `
+                <div class="mini-bar-row">
+                  <div class="mini-bar-label">${r.label}</div>
+                  <div class="mini-bar"><div class="mini-bar-fill" style="width:${r.val * 10}%"></div></div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="preset-actions">
+              <button class="btn-inject" onclick="event.stopPropagation(); injectPreset('${p.id}')">💉 注入</button>
+              <button class="btn-inject" style="flex:0.5;background:var(--color-accent)" onclick="event.stopPropagation(); injectAndView('${p.id}')">▶</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectPreset(presetId) {
+      selectedPreset = presetId;
+      document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('card-' + presetId).classList.add('selected');
+    }
+
+    // ===== 渲染自定义编辑器 =====
+    function renderCustomEditor() {
+      const grid = document.getElementById('customGrid');
+      const games = [
+        {
+          id: 'game1', name: 'G1 核心驱动力',
+          dims: [
+            { id:'nAch', name:'成就驱动 nAch', min:0, max:10, step:1, default:5 },
+            { id:'nPow', name:'权力驱动 nPow', min:0, max:10, step:1, default:5 },
+            { id:'nAff', name:'亲和驱动 nAff', min:0, max:10, step:1, default:5 }
+          ]
+        },
+        {
+          id: 'game2', name: 'G2 职业锚',
+          dims: [
+            { id:'TF', name:'技术职能 TF', min:0, max:10, step:1, default:5 },
+            { id:'GM', name:'综合管理 GM', min:0, max:10, step:1, default:5 },
+            { id:'AU', name:'自主独立 AU', min:0, max:10, step:1, default:5 },
+            { id:'SE', name:'安全稳定 SE', min:0, max:10, step:1, default:5 },
+            { id:'EC', name:'创业创新 EC', min:0, max:10, step:1, default:5 },
+            { id:'SV', name:'服务奉献 SV', min:0, max:10, step:1, default:5 },
+            { id:'CH', name:'挑战冒险 CH', min:0, max:10, step:1, default:5 },
+            { id:'LS', name:'生活平衡 LS', min:0, max:10, step:1, default:5 }
+          ]
+        },
+        {
+          id: 'game3', name: 'G3 认知风格',
+          dims: [
+            { id:'wholistAnalytic', name:'整体-分析 WA', min:-1, max:1, step:0.1, default:0 }
+          ]
+        },
+        {
+          id: 'game4', name: 'G4 意义建构',
+          dims: [
+            { id:'presence', name:'意义拥有感', min:0, max:10, step:1, default:5 },
+            { id:'search', name:'寻求意义倾向', min:0, max:10, step:1, default:5 }
+          ]
+        }
+      ];
+
+      grid.innerHTML = games.map(game => `
+        <div class="custom-game">
+          <h4><span>${game.name}</span></h4>
+          ${game.dims.map(d => `
+            <div class="slider-row">
+              <div class="slider-label">${d.id}</div>
+              <input class="slider-input" type="range" min="${d.min}" max="${d.max}" step="${d.step}"
+                value="${d.default}" id="cust_${game.id}_${d.id}"
+                oninput="document.getElementById('val_${game.id}_${d.id}').textContent = this.value">
+              <div class="slider-val" id="val_${game.id}_${d.id}">${d.default}</div>
+            </div>
+          `).join('')}
+          <div style="font-size:10px;color:var(--color-text-muted);margin-top:4px">${game.dims.map(d=>d.name).join(' · ')}</div>
+        </div>
+      `).join('');
+    }
+
+    function injectCustom() {
+      const collect = (gameId, dimDefs) => {
+        const dims = {};
+        dimDefs.forEach(d => {
+          const el = document.getElementById('cust_' + gameId + '_' + d.id);
+          dims[d.id] = parseFloat(el.value);
+        });
+        return buildGameOutput(gameId, dims, null);
+      };
+
+      const data = {
+        game1: collect('game1', [{id:'nAch'},{id:'nPow'},{id:'nAff'}]),
+        game2: collect('game2', [
+          {id:'TF'},{id:'GM'},{id:'AU'},{id:'SE'},
+          {id:'EC'},{id:'SV'},{id:'CH'},{id:'LS'}
+        ]),
+        game3: collect('game3', [{id:'wholistAnalytic'}]),
+        game4: collect('game4', [{id:'presence'},{id:'search'}])
+      };
+
+      GAMES.forEach(g => injectGame(g, data[g]));
+      // 清除 AI 缓存
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('insight_')) {
+          localStorage.removeItem(key);
+        }
+      }
+      updateStatus();
+      showToast('已注入自定义值');
+    }
+
+    // ===== 初始化 =====
+    renderPresetCards();
+    renderCustomEditor();
+    updateStatus();
+  </script>
+
+</body>
+</html>

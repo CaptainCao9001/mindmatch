@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMatch — 服务状态</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #1a1a2e;
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 520px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      color: #6b6b80;
+      font-size: 0.85rem;
+      margin-bottom: 32px;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: #a0a0b8;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #e0e0f0;
+      font-size: 0.9rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      outline: none;
+      border-color: rgba(124, 58, 237, 0.6);
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    button {
+      flex: 1;
+      padding: 10px 16px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 8px;
+      background: rgba(124, 58, 237, 0.1);
+      color: #a78bfa;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: rgba(124, 58, 237, 0.5);
+    }
+    button.primary {
+      background: #7c3aed;
+      color: #fff;
+      border-color: #7c3aed;
+    }
+    button.primary:hover {
+      background: #6d28d9;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .result-box {
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      display: none;
+      white-space: pre-wrap;
+    }
+    .result-box.show { display: block; }
+    .result-box.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+    .result-box.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    .result-box.testing {
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      color: #a78bfa;
+    }
+    .key-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .key-status.has-key {
+      background: rgba(16, 185, 129, 0.08);
+      color: #10b981;
+    }
+    .key-status.no-key {
+      background: rgba(245, 158, 11, 0.08);
+      color: #f59e0b;
+    }
+    .proxy-status {
+      font-size: 0.8rem;
+      margin-bottom: 20px;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .proxy-status.online {
+      background: rgba(16, 185, 129, 0.08);
+      color: #10b981;
+    }
+    .proxy-status.offline {
+      background: rgba(239, 68, 68, 0.08);
+      color: #ef4444;
+    }
+    .proxy-status.checking {
+      background: rgba(245, 158, 11, 0.08);
+      color: #f59e0b;
+    }
+    .help-link {
+      display: block;
+      font-size: 0.78rem;
+      color: #6b6b80;
+      margin-top: -12px;
+      margin-bottom: 20px;
+    }
+    .help-link a {
+      color: #7c3aed;
+      text-decoration: none;
+    }
+    .help-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>🔧 MindMatch 服务状态</h1>
+  <p class="subtitle" id="modeLabel">正在检测环境...</p>
+
+  <!-- 代理状态 -->
+  <div id="proxyStatus" class="proxy-status checking">🔍 检测中...</div>
+
+  <!-- 云端：额外显示 API Key 配置状态 -->
+  <div id="apiKeyStatus" style="display:none;font-size:0.8rem;margin-bottom:20px;padding:8px 12px;border-radius:6px"></div>
+
+  <!-- 本地模式：API Key 输入区 -->
+  <div id="localInput" style="display:none">
+    <div id="keyStatus" class="key-status no-key">⚠️ 未检测到 API Key</div>
+    <label for="hunyuanKey">混元 API Key</label>
+    <input type="password" id="hunyuanKey" placeholder="输入 sk-..." autocomplete="off">
+    <div class="help-link">没有 Key？<a href="https://console.cloud.tencent.com/hunyuan/api-key" target="_blank">去腾讯云申请 →</a></div>
+    <label for="deepseekKey">DeepSeek API Key（可选备用）</label>
+    <input type="password" id="deepseekKey" placeholder="留空则不使用备用模型">
+  </div>
+
+  <!-- 按钮行 -->
+  <div class="btn-row">
+    <button id="btnSave" onclick="saveKeys()" style="display:none">💾 保存配置</button>
+    <button class="primary" id="btnTest" onclick="testConnection()">🧪 测试连接</button>
+  </div>
+
+  <!-- 结果展示 -->
+  <div id="resultBox" class="result-box"></div>
+</div>
+
+<script>
+  // ---------- 环境检测 ----------
+  const IS_LOCALHOST = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+  function autoDetectCloudFunctionUrl() {
+    if (IS_LOCALHOST) return '';
+    const host = location.hostname;
+    const match = host.match(/^([a-zA-Z0-9-]+)-\d+\.tcloudbaseapp\.com$/);
+    if (match) return `https://${match[1]}.service.tcloudbase.com/proxy`;
+    return '';
+  }
+
+  const CLOUD_FUNCTION_URL = autoDetectCloudFunctionUrl();
+  const PROXY_URL = IS_LOCALHOST ? 'http://localhost:8100' : (CLOUD_FUNCTION_URL || '');
+
+  // ---------- 初始化 ----------
+  function init() {
+    document.getElementById('modeLabel').textContent = IS_LOCALHOST
+      ? '本地开发模式 — 需要配置 API Key 并启动代理'
+      : '生产环境 — API Key 由云函数统一管理';
+
+    if (IS_LOCALHOST) {
+      // 本地：显示 Key 输入区 + 保存按钮
+      document.getElementById('localInput').style.display = 'block';
+      document.getElementById('btnSave').style.display = '';
+      loadStatus();
+    }
+    checkProxy();
+  }
+
+  // ---------- 检查代理服务器 ----------
+  async function checkProxy() {
+    const el = document.getElementById('proxyStatus');
+    const healthUrl = IS_LOCALHOST ? `${PROXY_URL}/health` : `${PROXY_URL}/health`;
+
+    el.className = 'proxy-status checking';
+    el.textContent = '🔍 正在检测...';
+
+    try {
+      const res = await fetch(healthUrl, { signal: AbortSignal.timeout(5000) });
+      if (res.ok) {
+        const info = await res.json();
+        let msg = '';
+        if (IS_LOCALHOST) {
+          msg = '✅ 本地代理运行中（localhost:8100）';
+        } else {
+          msg = '✅ 云函数代理在线';
+        }
+        // 显示 API Key 配置状态
+        if (info.providers) {
+          const apiStatus = document.getElementById('apiKeyStatus');
+          apiStatus.style.display = 'block';
+          if (info.providers.hunyuan) {
+            apiStatus.className = 'proxy-status online';
+            apiStatus.textContent = '✅ 混元 API Key 已配置（服务器端）';
+          } else if (info.providers.deepseek) {
+            apiStatus.className = 'proxy-status online';
+            apiStatus.textContent = '✅ DeepSeek API Key 已配置（服务器端）';
+          } else {
+            apiStatus.className = 'proxy-status offline';
+            apiStatus.textContent = '⚠️ 云函数未配置 API Key 环境变量';
+          }
+        }
+        el.className = 'proxy-status online';
+        el.textContent = msg;
+        return true;
+      }
+    } catch {}
+    el.className = 'proxy-status offline';
+    if (IS_LOCALHOST) {
+      el.innerHTML = '❌ 本地代理未启动 — 请运行 <code>node server/proxy.js</code>';
+    } else {
+      el.textContent = '❌ 云函数代理未响应';
+    }
+    return false;
+  }
+
+  // ---------- 本地：读取已保存的 Key ----------
+  function loadStatus() {
+    if (!IS_LOCALHOST) return;
+    try {
+      const raw = localStorage.getItem('mindmatch_api_keys');
+      if (raw) {
+        const keys = JSON.parse(raw);
+        const statusEl = document.getElementById('keyStatus');
+        if (keys.hunyuanKey) {
+          statusEl.className = 'key-status has-key';
+          statusEl.innerHTML = '✅ 已保存混元 Key（结尾 ' + keys.hunyuanKey.slice(-6) + '）';
+          document.getElementById('hunyuanKey').placeholder = '已保存（结尾 ' + keys.hunyuanKey.slice(-6) + '）';
+        }
+        if (keys.deepseekKey) {
+          document.getElementById('deepseekKey').placeholder = '已保存（结尾 ' + keys.deepseekKey.slice(-6) + '）';
+        }
+      }
+    } catch {}
+  }
+
+  function getKeys() {
+    let keys = {};
+    if (IS_LOCALHOST) {
+      try {
+        const raw = localStorage.getItem('mindmatch_api_keys');
+        if (raw) keys = JSON.parse(raw);
+      } catch {}
+      const hk = document.getElementById('hunyuanKey').value.trim();
+      const dk = document.getElementById('deepseekKey').value.trim();
+      if (hk) keys.hunyuanKey = hk;
+      if (dk) keys.deepseekKey = dk;
+    }
+    return keys;
+  }
+
+  function saveKeys() {
+    if (!IS_LOCALHOST) return;
+    const keys = getKeys();
+    if (!keys.hunyuanKey && !keys.deepseekKey) {
+      showResult('error', '❌ 请至少输入一个 API Key');
+      return;
+    }
+    localStorage.setItem('mindmatch_api_keys', JSON.stringify(keys));
+    showResult('success', '✅ 配置已保存。');
+    loadStatus();
+  }
+
+  // ---------- 测试连接 ----------
+  async function testConnection() {
+    const resultBox = document.getElementById('resultBox');
+    const btnTest = document.getElementById('btnTest');
+
+    // 保存（本地模式）
+    if (IS_LOCALHOST) {
+      const keys = getKeys();
+      if (keys.hunyuanKey || keys.deepseekKey) {
+        localStorage.setItem('mindmatch_api_keys', JSON.stringify(keys));
+        loadStatus();
+      }
+    }
+
+    // 检查代理
+    const proxyOk = await checkProxy();
+    if (!proxyOk) {
+      if (IS_LOCALHOST) {
+        showResult('error', '❌ 本地代理未启动\n\n请运行: node server/proxy.js');
+      } else {
+        showResult('error', '❌ 云函数代理未响应\n\n请检查 CloudBase 云函数状态。');
+      }
+      return;
+    }
+
+    // 开始测试
+    btnTest.disabled = true;
+    btnTest.textContent = '⏳ 测试中...';
+    resultBox.className = 'result-box show testing';
+    const envLabel = IS_LOCALHOST ? '本地代理' : '云函数代理';
+    resultBox.textContent = `⏳ 通过${envLabel}测试混元 API...\n（最多等待 15 秒）`;
+
+    const prompt = '请用一句话介绍你自己，不超过 30 个字。';
+
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+
+      const apiUrl = IS_LOCALHOST ? `${PROXY_URL}/api/chat` : PROXY_URL;
+
+      const body = { provider: 'hunyuan', model: 'hunyuan-lite', prompt, temperature: 0.7, maxTokens: 64 };
+      // 本地：传 apiKey；云端：不传（服务器环境变量管理）
+      if (IS_LOCALHOST) {
+        const keys = getKeys();
+        if (!keys.hunyuanKey) {
+          showResult('error', '❌ 请先输入混元 API Key');
+          btnTest.disabled = false;
+          btnTest.textContent = '🧪 测试连接';
+          return;
+        }
+        body.apiKey = keys.hunyuanKey;
+      }
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timer);
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errMsg = data.error || `HTTP ${response.status}`;
+        showResult('error', `❌ 调用失败：${errMsg}\n\n${IS_LOCALHOST ? '可能原因：\n1) Key 无效\n2) 未开通混元服务' : '可能原因：\n1) 云函数未配置 HUNYUAN_API_KEY 环境变量\n2) Key 无效或已过期'}`);
+      } else if (data.content) {
+        showResult('success', `✅ 混元 API 连接成功！\n\n回复：「 ${data.content} 」\n\n🎉 AI 功能正常运行。`);
+      } else {
+        showResult('error', '❌ API 返回了空内容。');
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        showResult('error', '❌ 请求超时（15 秒）');
+      } else {
+        showResult('error', `❌ 网络错误：${err.message}`);
+      }
+    } finally {
+      btnTest.disabled = false;
+      btnTest.textContent = '🧪 测试连接';
+    }
+  }
+
+  function showResult(type, text) {
+    const box = document.getElementById('resultBox');
+    box.className = `result-box show ${type}`;
+    box.textContent = text;
+  }
+
+  // ---------- 启动 ----------
+  init();
+</script>
+
+</body>
+</html>

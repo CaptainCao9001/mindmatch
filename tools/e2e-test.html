@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>MindMatch 端到端连通测试</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #0f0f1a; color: #e0e0f0; padding: 32px; }
+    .container { max-width: 700px; margin: 0 auto; }
+    h1 { font-size: 1.2rem; margin-bottom: 8px; color: #a78bfa; }
+    .sub { color: #6b6b80; font-size: 0.85rem; margin-bottom: 28px; }
+    .step { background: #1a1a2e; border: 1px solid #2a2a40; border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; background: rgba(124,58,237,0.15); color: #a78bfa; flex-shrink: 0; }
+    .step-body { flex: 1; }
+    .step-label { font-size: 13px; font-weight: 600; }
+    .step-detail { font-size: 11px; color: #6b6b80; margin-top: 2px; }
+    .step-status { font-size: 12px; font-weight: 600; flex-shrink: 0; min-width: 70px; text-align: right; }
+    .pass { color: #4ade80; }
+    .fail { color: #f87171; }
+    .pending { color: #6b6b80; }
+    .running { color: #f59e0b; }
+    .result { margin-top: 24px; padding: 16px; border-radius: 10px; font-size: 14px; display: none; }
+    .result.success { display: block; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #4ade80; }
+    .result.fail { display: block; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+    .result pre { margin-top: 8px; font-size: 11px; color: #a78bfa; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow-y: auto; }
+    #error-log { margin-top: 16px; padding: 12px; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); border-radius: 8px; font-size: 12px; color: #f87171; display: none; white-space: pre-wrap; }
+    .js-check { color: #4ade80; font-size: 12px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>MindMatch 端到端连通测试</h1>
+  <p class="sub">逐环验证：数据 <span style="color:#4ade80;">→</span> Prompt <span style="color:#4ade80;">→</span> Proxy <span style="color:#4ade80;">→</span> 混元API</p>
+
+  <div id="jsCheck" class="js-check" style="display:none;">✅ JavaScript 已启动</div>
+
+  <div class="step" id="s1">
+    <div class="step-num">1</div>
+    <div class="step-body"><div class="step-label">integrator.js</div><div class="step-detail">加载 14 维 UnifiedProfile</div></div>
+    <div class="step-status pending" id="s1-status">等待...</div>
+  </div>
+  <div class="step" id="s2">
+    <div class="step-num">2</div>
+    <div class="step-body"><div class="step-label">translator.js</div><div class="step-detail">规则翻译摘要</div></div>
+    <div class="step-status pending" id="s2-status">等待...</div>
+  </div>
+  <div class="step" id="s3">
+    <div class="step-num">3</div>
+    <div class="step-body"><div class="step-label">insight.js</div><div class="step-detail">AI 模块加载</div></div>
+    <div class="step-status pending" id="s3-status">等待...</div>
+  </div>
+  <div class="step" id="s4">
+    <div class="step-num">4</div>
+    <div class="step-body"><div class="step-label">api.js + Proxy:8100</div><div class="step-detail">代理健康检查 + API 连通</div></div>
+    <div class="step-status pending" id="s4-status">等待...</div>
+  </div>
+  <div class="step" id="s5">
+    <div class="step-num">5</div>
+    <div class="step-body"><div class="step-label">完整链路</div><div class="step-detail">integrate → translate → generateInsight → API</div></div>
+    <div class="step-status pending" id="s5-status">等待...</div>
+  </div>
+
+  <div id="result" class="result"></div>
+  <div id="error-log"></div>
+</div>
+
+<!-- 先用普通脚本确认JS能跑 -->
+<script>
+document.getElementById('jsCheck').style.display = 'block';
+
+function setStatus(id, state, text) {
+  var el = document.getElementById(id + '-status');
+  if (el) { el.className = 'step-status ' + state; el.textContent = text; }
+}
+
+function showResult(success, detail) {
+  var r = document.getElementById('result');
+  r.className = 'result ' + (success ? 'success' : 'fail');
+  r.innerHTML = success
+    ? '✅ 所有环节连通正常！现在可以在 results.html 中点击「生成 AI 深度解读」了。'
+    : '❌ 有环节失败，请查看下方详情：';
+  if (detail) r.innerHTML += '<pre>' + detail + '</pre>';
+}
+
+function logError(msg) {
+  var el = document.getElementById('error-log');
+  el.style.display = 'block';
+  el.textContent += (el.textContent ? '\n' : '') + '[Error] ' + msg;
+}
+</script>
+
+<!-- 用动态 import 加载模块（在普通脚本中调用） -->
+<script type="module">
+
+// ── Step 1 ──
+setStatus('s1', 'running', '加载中...');
+try {
+  const { integrate } = await import('../js/layers/integrator.js?v=2');
+  const profile = integrate();
+  if (profile && profile.dimensions) {
+    var dims = Object.keys(profile.dimensions);
+    setStatus('s1', 'pass', '✅ ' + dims.length + ' 维');
+    window._profile = profile;
+  } else {
+    setStatus('s1', 'fail', '❌ 无数据');
+    showResult(false, 'integrator() 返回空。请先访问 inject-data.html 注入数据');
+  }
+} catch(e) {
+  setStatus('s1', 'fail', '❌ 崩溃');
+  showResult(false, 'Step1 失败: ' + e.message);
+  logError('Step1: ' + e.message + '\n' + e.stack);
+}
+
+// ── Step 2 ──
+if (window._profile) {
+  setStatus('s2', 'running', '加载中...');
+  try {
+    const { translate } = await import('../js/layers/translator.js?v=2');
+    const translation = translate(window._profile);
+    if (translation && translation.sections && Array.isArray(translation.sections) && translation.sections.length > 0) {
+      setStatus('s2', 'pass', '✅ ' + translation.sections.length + ' 条目');
+      window._translation = translation;
+    } else {
+      setStatus('s2', 'fail', '❌ 空');
+      showResult(false, 'translate() 返回空数组');
+      logError('Step2: 翻译为空');
+    }
+  } catch(e) {
+    setStatus('s2', 'fail', '❌ 崩溃');
+    showResult(false, 'Step2 失败: ' + e.message);
+    logError('Step2: ' + e.message + '\n' + e.stack);
+  }
+} else {
+  setStatus('s2', 'fail', '⏭ 跳过');
+}
+
+// ── Step 3 ──
+if (window._translation) {
+  setStatus('s3', 'running', '加载中...');
+  try {
+    var insightMod = await import('../js/layers/insight.js?v=2');
+    window._generateInsight = insightMod.generateInsight;
+    setStatus('s3', 'pass', '✅ 已加载');
+  } catch(e) {
+    setStatus('s3', 'fail', '❌ 崩溃');
+    showResult(false, 'Step3 失败: ' + e.message);
+    logError('Step3: ' + e.message + '\n' + e.stack);
+  }
+} else {
+  setStatus('s3', 'fail', '⏭ 跳过');
+}
+
+// ── Step 4 ──
+setStatus('s4', 'running', '检测中...');
+try {
+  var res = await fetch('http://localhost:8100/health', { signal: AbortSignal.timeout(3000) });
+  var data = await res.json();
+  if (data.status === 'ok') {
+    setStatus('s4', 'pass', '✅ 在线');
+  } else {
+    setStatus('s4', 'fail', '❌ 异常');
+    logError('Step4: Proxy 返回 ' + JSON.stringify(data));
+  }
+} catch(e) {
+  setStatus('s4', 'fail', '❌ 断连');
+  showResult(false, 'Proxy 未启动！请在终端运行: node server/proxy.js');
+  logError('Step4: ' + e.message);
+}
+
+// ── Step 5 ──
+if (window._generateInsight) {
+  setStatus('s5', 'running', '调用中...');
+
+  // 先检查 API Key 是否存在
+  var keysRaw = localStorage.getItem('mindmatch_api_keys');
+  var keys = null;
+  try { keys = JSON.parse(keysRaw); } catch(e) {}
+
+  if (!keys || !keys.hunyuanKey) {
+    setStatus('s5', 'fail', '❌ 无 Key');
+    showResult(false,
+      '<b>未检测到混元 API Key</b><br><br>' +
+      '操作步骤：<br>' +
+      '1. 打开 <a href="/tools/setup-api.html" target="_blank">setup-api.html</a><br>' +
+      '2. 填入你的混元 API Key（sk-xxx）<br>' +
+      '3. 点「保存 Key」→ 点「测试连接」确认可用<br>' +
+      '4. 回到本页 Ctrl+Shift+R 硬刷新'
+    );
+  } else {
+    // Key 存在，开始详细诊断
+    try {
+      setStatus('s5', 'running', '调用中...');
+
+      // 5a: 测试简单调用（和 setup-api 一样的短 prompt）
+      var apiMod = await import('../js/core/api.js?v=2');
+      logError('5a: api 模块已加载');
+
+      var simpleResult = await apiMod.callHunyuan('回复一个字：好', { temperature: 0.1, maxTokens: 10, timeout: 15000 });
+      if (!simpleResult) {
+        setStatus('s5', 'fail', '❌ 简单调用也失败');
+        showResult(false,
+          '<b>简单 Prompt 调用也返回 null</b><br><br>' +
+          '可能原因：<br>' +
+          '- api.js 的 useProxy 或 proxyUrl 配置有误<br>' +
+          '- 浏览器缓存了旧版 api.js<br><br>' +
+          '请按 Ctrl+Shift+R 硬刷新本页后重试'
+        );
+      } else {
+        logError('5a: 简单调用成功: ' + simpleResult.slice(0, 50));
+
+        // 5b: 直接调 API 拿 raw 结果（跳过 insight.js 解析）
+        var insightMod = await import('../js/layers/insight.js?v=2');
+        // 构造 prompt（手动构建，和 insight.js 一样）
+        var promptText = '';
+        try {
+          // 复用 insight 模块的内部函数来构建 prompt
+          var { profile, translation } = { profile: window._profile, translation: window._translation };
+          var dims = Object.entries(profile.dimensions).sort((a, b) => b[1] - a[1]);
+          var topDims = dims.slice(0, 6).map(([k, v]) => k + ':' + v).join('、');
+          var lowDims = dims.slice(-2).map(([k, v]) => k + ':' + v).join('、');
+          var transLines = (translation.sections || []).map(function(t) { return '【' + (t.gameName || t.gameId) + '】' + (t.summary || ''); });
+          var dimLines = Object.entries(profile.dimensions).map(function(entry) { return '- ' + entry[0] + ': ' + entry[1]; });
+          promptText = '你是 MindMatch 的 AI 解读引擎。\n\n## 14 维人格画像分数\n' + dimLines.join('\n') + '\n\n## 高分\n' + topDims + '\n\n## 低分\n' + lowDims + '\n\n## 规则翻译\n' + transLines.join('\n') + '\n\n输出严格 JSON：{"oneLiner":"...", "overall":"...", "highlights":["..."], "tension":"..."}';
+        } catch(e2) {
+          promptText = '（prompt 构建失败: ' + e2.message + '）';
+        }
+
+        // 直接用 api.callHunyuan 获取 raw 文本
+        var rawText = await apiMod.callHunyuan(promptText, { temperature: 0.7, maxTokens: 1024, timeout: 30000 });
+        if (!rawText) {
+          setStatus('s5', 'fail', '❌ Raw 空');
+          showResult(false,
+            '<b>长 Prompt 调用返回 null</b>（大概率超时）<br><br>' +
+            '尝试修复：已用 timeout=30000，如果仍然 null，可能是 prompt 超长被 API 拒绝。<br>' +
+            'Prompt 长度：' + promptText.length + ' 字符'
+          );
+        } else {
+          // 显示原始返回（前 500 字符）
+          var rawPreview = rawText.length > 500 ? rawText.slice(0, 500) + '...' : rawText;
+          logError('5b raw: ' + rawPreview);
+
+          // 尝试 JSON 解析
+          try {
+            var jsonMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+            var jsonStr = jsonMatch ? jsonMatch[1] : rawText;
+            var parsed = JSON.parse(jsonStr);
+            if (parsed.oneLiner) {
+              setStatus('s5', 'pass', '✅ 成功');
+              showResult(true, null);
+              document.getElementById('result').innerHTML +=
+                '<pre style="margin-top:12px;">oneLiner: ' + parsed.oneLiner + '\nhighlights: ' + (parsed.highlights || []).length + ' 条\noverall: ' + (parsed.overall || '').slice(0, 100) + '\ntension: ' + (parsed.tension || '无') + '</pre>';
+            } else {
+              setStatus('s5', 'fail', '❌ 格式缺字段');
+              showResult(false, '<b>JSON 解析成功但缺少 oneLiner</b><br><pre>' + JSON.stringify(parsed, null, 2).slice(0, 300) + '</pre>');
+            }
+          } catch(parseErr) {
+            setStatus('s5', 'fail', '❌ JSON 解析失败');
+            showResult(false,
+              '<b>API 返回了内容但不是有效 JSON</b><br><br>' +
+              '<pre style="max-height:200px;overflow:auto;">' + rawPreview + '</pre><br>' +
+              '解析错误: ' + parseErr.message
+            );
+          }
+        }
+      }
+    } catch(e) {
+      setStatus('s5', 'fail', '❌ 异常');
+      showResult(false, 'Step5 异常: ' + e.message);
+      logError('Step5: ' + e.message + '\n' + e.stack);
+    }
+  }
+} else {
+  setStatus('s5', 'fail', '⏭ 跳过（前置步骤未通过）');
+}
+</script>
+</body>
+</html>

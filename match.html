@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMatch — 岗位匹配</title>
+  <meta name="description" content="基于你的思维肖像，与 4 种腾讯 AI-HR 岗位的匹配度分析。">
+  <script>window.__MM_VER__ = '20260602e';</script>
+  <link rel="stylesheet" href="css/base.css?v=20260602e">
+  <link rel="stylesheet" href="css/components.css?v=20260602e">
+  <link rel="stylesheet" href="css/match.css?v=20260602e">
+</head>
+<body class="page-match">
+
+  <!-- ========== Top Bar ========== -->
+  <div class="match-topbar">
+    <a href="results.html" class="btn-back">← 返回肖像</a>
+  </div>
+
+  <!-- ========== Hero ========== -->
+  <section class="match-hero">
+    <h1>岗位匹配分析</h1>
+    <div class="match-mode-tabs" id="modeTabs">
+      <button class="match-mode-tab active" data-mode="v1">岗位匹配</button>
+      <button class="match-mode-tab" data-mode="extended">职业方向</button>
+    </div>
+    <p class="match-subtitle">基于你的思维肖像，以下是与你的特质最匹配的岗位方向</p>
+  </section>
+
+  <!-- ========== Content ========== -->
+  <div class="match-content" id="matchContent">
+    <div class="match-loading">
+      <div class="spinner"></div>
+      <p>正在分析你的思维特质...</p>
+    </div>
+  </div>
+
+  <!-- ========== Bottom Bar ========== -->
+  <div class="match-bottom">
+    <a href="results.html" class="btn-secondary">← 返回肖像</a>
+    <a href="index.html" class="btn-secondary">返回首页</a>
+  </div>
+
+  <!-- ========== App Script ========== -->
+  <script type="module">
+    import { integrate } from './js/layers/integrator.js?v=20260602e';
+    import { match, matchExtended } from './js/layers/matcher.js?v=20260602e';
+    import { renderMatchResults } from './js/ui/match-ui.js?v=20260602e';
+    import { renderDirectionResults } from './js/ui/match-ui-extended.js?v=20260602e';
+
+    async function init() {
+      const content = document.getElementById('matchContent');
+      const params = new URLSearchParams(location.search);
+      const mode = params.get('mode') || 'v1';
+
+      try {
+        const profile = integrate();
+        const count = profile.meta.completedCount;
+
+        if (count < 4) {
+          content.innerHTML = `
+            <div class="match-empty">
+              <div class="match-empty-icon">🔒</div>
+              <h3>还没准备好</h3>
+              <p>需要完成全部 4 个思维游戏才能进行岗位匹配。<br>当前已完成 <strong>${count}/4</strong>，请先完成剩余游戏。</p>
+            </div>
+          `;
+          return;
+        }
+
+        // 4/4 → 加载匹配引擎
+        const resp = await fetch('./mock/ideal-profiles.json?v=20260602e');
+        if (!resp.ok) throw new Error(`加载数据失败 (HTTP ${resp.status})`);
+        const data = await resp.json();
+
+        if (mode === 'extended') {
+          if (!data.directions || Object.keys(data.directions).length === 0) {
+            console.warn('[MindMatch] 扩展模式降级：缺少 directions 数据');
+            if (!data.jobs) throw new Error('岗位数据格式错误');
+            document.title = 'MindMatch — 岗位匹配';
+            const hero = document.querySelector('.match-hero h1');
+            if (hero) hero.textContent = '岗位匹配分析';
+            const subtitle = document.querySelector('.match-hero .match-subtitle');
+            if (subtitle) subtitle.textContent = '基于你的思维肖像，以下是与你的特质最匹配的岗位方向';
+            document.querySelectorAll('.match-mode-tab').forEach(btn => {
+              btn.classList.toggle('active', btn.dataset.mode === 'v1');
+            });
+            const report = match(profile, data.jobs);
+            renderMatchResults('matchContent', report);
+            return;
+          }
+
+          document.title = 'MindMatch — 职业方向匹配';
+          const hero = document.querySelector('.match-hero h1');
+          if (hero) hero.textContent = '职业方向匹配';
+          const subtitle = document.querySelector('.match-hero .match-subtitle');
+          if (subtitle) subtitle.textContent = '基于你的思维肖像，探索最适合你的六大职业方向';
+          document.querySelectorAll('.match-mode-tab').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === 'extended');
+          });
+
+          const report = matchExtended(profile, data);
+          renderDirectionResults('matchContent', report);
+        } else {
+          if (!data.jobs) throw new Error('岗位数据格式错误');
+          document.title = 'MindMatch — 岗位匹配';
+          const hero = document.querySelector('.match-hero h1');
+          if (hero) hero.textContent = '岗位匹配分析';
+          const subtitle = document.querySelector('.match-hero .match-subtitle');
+          if (subtitle) subtitle.textContent = '基于你的思维肖像，以下是与你的特质最匹配的岗位方向';
+          document.querySelectorAll('.match-mode-tab').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.mode === 'v1');
+          });
+          const report = match(profile, data.jobs);
+          renderMatchResults('matchContent', report);
+        }
+      } catch (err) {
+        console.error('[MindMatch] 匹配失败:', err);
+        content.innerHTML = `
+          <div class="match-empty">
+            <div class="match-empty-icon">⚠️</div>
+            <h3>匹配引擎加载失败</h3>
+            <p>${err.message || '请返回结果页刷新后重试'}</p>
+          </div>
+        `;
+      }
+    }
+
+    // 模式切换按钮事件
+    document.getElementById('modeTabs').addEventListener('click', (e) => {
+      const btn = e.target.closest('.match-mode-tab');
+      if (!btn) return;
+      const targetMode = btn.dataset.mode;
+      const currentMode = new URLSearchParams(location.search).get('mode') || 'v1';
+      if (targetMode === currentMode) return;
+      const url = new URL(location);
+      if (targetMode === 'v1') {
+        url.searchParams.delete('mode');
+      } else {
+        url.searchParams.set('mode', targetMode);
+      }
+      location.href = url.toString();
+    });
+
+    init();
+  </script>
+
+</body>
+</html>

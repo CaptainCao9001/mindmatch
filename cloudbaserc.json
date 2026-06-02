@@ -1,0 +1,14 @@
+{
+  "envId": "mindmatch-d0gz847n4e29e3181",
+  "version": "2.0",
+  "functionRoot": "./cloudfunctions",
+  "functions": [
+    {
+      "name": "proxy",
+      "timeout": 30,
+      "runtime": "Nodejs18.15",
+      "handler": "index.main",
+      "triggers": []
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>MindMatch — 诊断工具</title>
+  <link rel="stylesheet" href="css/base.css">
+  <style>
+    body { padding: 2rem; font-family: var(--font-mono); }
+    .check-item { padding: 0.25rem 0; }
+    .ok { color: #10b981; }
+    .fail { color: #ef4444; }
+    .warn { color: #f59e0b; }
+    h3 { margin: 1.5rem 0 0.5rem; color: var(--color-primary); }
+    pre { background: var(--color-surface); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 0.5rem 0; }
+    .btn { padding: 0.5rem 1rem; margin: 0.25rem; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); cursor: pointer; border-radius: 4px; }
+    .btn:hover { background: var(--color-surface-hover); }
+  </style>
+</head>
+<body>
+  <h1>MindMatch 诊断工具</h1>
+  <p>自动检测各模块加载状态和 localStorage 数据。</p>
+  <div style="margin:1rem 0">
+    <button class="btn" onclick="runDiagnostics()">运行诊断</button>
+    <button class="btn" onclick="injectAll()">注入全部 4 游戏 Mock 数据</button>
+    <button class="btn" onclick="clearAll()">清空数据</button>
+    <a class="btn" href="results.html" style="text-decoration:none;display:inline-block">打开结果页</a>
+  </div>
+  <div id="output"></div>
+
+  <script type="module">
+    const PREFIX = 'mindmatch_';
+    const GAMES = ['game1', 'game2', 'game3', 'game4'];
+
+    function status(label, ok, detail) {
+      const cls = ok === true ? 'ok' : ok === false ? 'fail' : 'warn';
+      const icon = ok === true ? '✓' : ok === false ? '✗' : '⚠';
+      return `<div class="check-item"><span class="${cls}">${icon} ${label}</span>${detail ? `<span style="color:var(--color-text-muted)"> — ${detail}</span>` : ''}</div>`;
+    }
+
+    async function testImport(modulePath) {
+      try {
+        const mod = await import(modulePath);
+        return { ok: true, exports: Object.keys(mod) };
+      } catch (e) {
+        return { ok: false, error: e.message };
+      }
+    }
+
+    window.runDiagnostics = async function() {
+      const out = document.getElementById('output');
+      let html = '<h3>1. 模块加载检查</h3>';
+
+      // ES Module imports
+      const modules = [
+        { path: './js/core/store.js', name: 'store.js' },
+        { path: './js/core/utils.js', name: 'utils.js' },
+        { path: './js/layers/integrator.js', name: 'integrator.js' },
+        { path: './js/layers/translator.js', name: 'translator.js' },
+        { path: './js/ui/portrait.js', name: 'portrait.js (ui)' },
+        { path: './js/ui/charts.js', name: 'charts.js (ui)' },
+      ];
+
+      for (const mod of modules) {
+        const result = await testImport(mod.path);
+        if (result.ok) {
+          html += status(mod.name, true, `导出: [${result.exports.join(', ')}]`);
+        } else {
+          html += status(mod.name, false, result.error);
+        }
+      }
+
+      // ECharts
+      html += status('ECharts CDN', typeof echarts !== 'undefined', typeof echarts !== 'undefined' ? `v${echarts.version}` : '未加载');
+
+      html += '<h3>2. localStorage 数据检查</h3>';
+
+      const metaRaw = localStorage.getItem(PREFIX + 'meta');
+      const meta = metaRaw ? JSON.parse(metaRaw) : null;
+      const completedGames = meta?.completedGames || [];
+
+      html += status('Meta 数据', !!meta, meta ? `已完成: [${completedGames.join(', ')}] (${completedGames.length}/4)` : '无 Meta 数据');
+
+      for (const gameId of GAMES) {
+        const raw = localStorage.getItem(PREFIX + gameId);
+        if (raw) {
+          try {
+            const data = JSON.parse(raw);
+            const dims = Object.keys(data.dimensions || {});
+            html += status(gameId, true, `维度: [${dims.join(', ')}], totalTime: ${data.meta?.totalTime}ms`);
+          } catch {
+            html += status(gameId, false, '数据损坏（JSON 解析失败）');
+          }
+        } else {
+          html += status(gameId, false, '无数据');
+        }
+      }
+
+      html += '<h3>3. integrator 输出检查</h3>';
+      try {
+        const { integrate } = await import('./js/layers/integrator.js');
+        const profile = integrate();
+        html += status('integrate() 调用', true, `completedCount: ${profile.meta.completedCount}, allCompleted: ${profile.meta.allCompleted}`);
+
+        // 检查各维度
+        const nonNullDims = Object.entries(profile.dimensions).filter(([k, v]) => v !== null);
+        html += status('维度非空数量', true, `${nonNullDims.length}/${Object.keys(profile.dimensions).length} — [${nonNullDims.map(([k]) => k).join(', ')}]`);
+
+        // 检查 raw 值
+        const nonNullRaw = Object.entries(profile.raw).filter(([k, v]) => v !== null);
+        html += status('Raw 值非空数量', true, `${nonNullRaw.length}/${Object.keys(profile.raw).length}`);
+      } catch (e) {
+        html += status('integrate() 调用', false, e.message);
+      }
+
+      html += '<h3>4. translator 输出检查</h3>';
+      try {
+        const { integrate } = await import('./js/layers/integrator.js');
+        const { translate } = await import('./js/layers/translator.js');
+        const profile = integrate();
+        const translation = translate(profile);
+        html += status('translate() 调用', true, `sections: ${translation.sections.length}, completedCount: ${translation.completedCount}`);
+        translation.sections.forEach(s => {
+          html += status(`  ${s.gameId}`, true, `${s.gameName}: ${s.summary.substring(0, 50)}...`);
+        });
+      } catch (e) {
+        html += status('translate() 调用', false, e.message);
+      }
+
+      html += '<h3>5. 完整 Profile JSON（用于调试）</h3>';
+      try {
+        const { integrate } = await import('./js/layers/integrator.js');
+        const profile = integrate();
+        html += `<pre>${JSON.stringify(profile, null, 2)}</pre>`;
+      } catch (e) {
+        html += `<pre>错误: ${e.message}</pre>`;
+      }
+
+      out.innerHTML = html;
+    };
+
+    // Mock 数据
+    const MOCK_DATA = {
+      game1: { gameId: "game1", version: "1.0.0", dimensions: { nAch: 7, nPow: 3, nAff: 6 }, behaviorSummary: { primaryDriver: "nAch", secondaryDriver: "nAff", consistencyScore: 0.78 }, decisions: [{ scenarioId: "s1", optionId: "s1_a", decisionTime: 3200 }], meta: { totalTime: 35000, elapsedMs: 420000, decisionCount: 5, completedAt: Date.now() - 120000 } },
+      game2: { gameId: "game2", version: "1.0.0", dimensions: { TF: 8, GM: 2, AU: 4, SE: 1, EC: 7, SV: 3, CH: 6, LS: 5 }, behaviorSummary: { primaryAnchor: "TF", secondaryAnchor: "EC", bottomAnchor: "SE" }, decisions: [{ stage: 1, cardId: "c1", action: "join", anchor: "TF" }], meta: { totalTime: 45000, elapsedMs: 320000, decisionCount: 28, completedAt: Date.now() - 60000 } },
+      game3: { gameId: "game3", version: "1.0.0", dimensions: { wholistAnalytic: 0.4 }, behaviorSummary: { dominantStyle: "分析型", flexibility: 6, impulseScore: 4 }, decisions: [{ stage: 1, cardId: "m1", group: "green" }], meta: { totalTime: 45000, completedAt: Date.now() } },
+      game4: { gameId: "game4", version: "1.0.0", dimensions: { presence: 6, search: 8 }, behaviorSummary: { profileType: "成长型", meaningSource: "揭示真相" }, decisions: [{ sceneId: "f1", reaction1: "P+", reaction2: "S-" }], meta: { totalTime: 30000, elapsedMs: 180000, decisionCount: 12, completedAt: Date.now() } }
+    };
+
+    window.injectAll = function() {
+      GAMES.forEach(g => {
+        localStorage.setItem(PREFIX + g, JSON.stringify(MOCK_DATA[g]));
+      });
+      let meta = JSON.parse(localStorage.getItem(PREFIX + 'meta') || '{}');
+      meta.completedGames = ['game1', 'game2', 'game3', 'game4'];
+      localStorage.setItem(PREFIX + 'meta', JSON.stringify(meta));
+      runDiagnostics();
+    };
+
+    window.clearAll = function() {
+      GAMES.forEach(g => localStorage.removeItem(PREFIX + g));
+      localStorage.removeItem(PREFIX + 'meta');
+      runDiagnostics();
+    };
+
+    // 自动运行
+    runDiagnostics();
+  </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+{
+  "_comment": "11 个合成用户，用于验证扩展匹配系统（T04）。每个用户含完整 14 维 dimensions + expectedTopDirection。",
+  "users": [
+    {
+      "id": "sb-perfect",
+      "label": "系统建构者-清晰",
+      "type": "clear",
+      "expectedTopDirection": "system-builder",
+      "dimensions": {
+        "nAch": 0.75,
+        "nPow": 0.35,
+        "nAff": 0.30,
+        "TF": 0.90,
+        "GM": 0.50,
+        "AU": 0.65,
+        "SE": 0.55,
+        "EC": 0.50,
+        "SV": 0.25,
+        "CH": 0.70,
+        "LS": 0.50,
+        "wholistAnalytic": 0.85,
+        "presence": 0.30,
+        "search": 0.70
+      }
+    },
+    {
+      "id": "dr-perfect",
+      "label": "深度解读者-清晰",
+      "type": "clear",
+      "expectedTopDirection": "deep-reader",
+      "dimensions": {
+        "nAch": 0.80,
+        "nPow": 0.30,
+        "nAff": 0.35,
+        "TF": 0.70,
+        "GM": 0.45,
+        "AU": 0.60,
+        "SE": 0.50,
+        "EC": 0.40,
+        "SV": 0.25,
+        "CH": 0.75,
+        "LS": 0.45,
+        "wholistAnalytic": 0.90,
+        "presence": 0.40,
+        "search": 0.80
+      }
+    },
+    {
+      "id": "cm-perfect",
+      "label": "创意塑造者-清晰",
+      "type": "clear",
+      "expectedTopDirection": "creative-molder",
+      "dimensions": {
+        "nAch": 0.70,
+        "nPow": 0.35,
+        "nAff": 0.55,
+        "TF": 0.45,
+        "GM": 0.40,
+        "AU": 0.85,
+        "SE": 0.30,
+        "EC": 0.90,
+        "SV": 0.45,
+        "CH": 0.75,
+        "LS": 0.60,
+        "wholistAnalytic": 0.35,
+        "presence": 0.70,
+        "search": 0.85
+      }
+    },
+    {
+      "id": "pc-perfect",
+      "label": "人际联结者-清晰",
+      "type": "clear",
+      "expectedTopDirection": "people-connector",
+      "dimensions": {
+        "nAch": 0.65,
+        "nPow": 0.60,
+        "nAff": 0.85,
+        "TF": 0.35,
+        "GM": 0.65,
+        "AU": 0.50,
+        "SE": 0.60,
+        "EC": 0.60,
+        "SV": 0.85,
+        "CH": 0.55,
+        "LS": 0.55,
+        "wholistAnalytic": 0.50,
+        "presence": 0.75,
+        "search": 0.60
+      }
+    },
+    {
+      "id": "vd-perfect",
+      "label": "价值驱动者-清晰",
+      "type": "clear",
+      "expectedTopDirection": "value-driver",
+      "dimensions": {
+        "nAch": 0.80,
+        "nPow": 0.85,
+        "nAff": 0.60,
+        "TF": 0.50,
+        "GM": 0.85,
+        "AU": 0.40,
+        "SE": 0.65,
+        "EC": 0.75,
+        "SV": 0.60,
+        "CH": 0.70,
+        "LS": 0.70,
+        "wholistAnalytic": 0.55,
+        "presence": 0.70,
+        "search": 0.55
+      }
+    },
+    {
+      "id": "ec-perfect",
+      "label": "赋能陪伴者-清晰",
+      "type": "clear",
+      "expectedTopDirection": "empowerment-companion",
+      "dimensions": {
+        "nAch": 0.55,
+        "nPow": 0.25,
+        "nAff": 0.90,
+        "TF": 0.30,
+        "GM": 0.35,
+        "AU": 0.65,
+        "SE": 0.70,
+        "EC": 0.45,
+        "SV": 0.90,
+        "CH": 0.50,
+        "LS": 0.65,
+        "wholistAnalytic": 0.45,
+        "presence": 0.80,
+        "search": 0.75
+      }
+    },
+    {
+      "id": "mixed-tech-creative",
+      "label": "技术+创意混合",
+      "type": "mixed",
+      "expectedTopDirection": "system-builder",
+      "expectedAltDirection": "creative-molder",
+      "dimensions": {
+        "nAch": 0.50,
+        "nPow": 0.50,
+        "nAff": 0.50,
+        "TF": 0.65,
+        "GM": 0.50,
+        "AU": 0.75,
+        "SE": 0.50,
+        "EC": 0.70,
+        "SV": 0.50,
+        "CH": 0.50,
+        "LS": 0.50,
+        "wholistAnalytic": 0.60,
+        "presence": 0.50,
+        "search": 0.75
+      }
+    },
+    {
+      "id": "mixed-people-value",
+      "label": "人际+价值混合",
+      "type": "mixed",
+      "expectedTopDirection": "people-connector",
+      "expectedAltDirection": "value-driver",
+      "dimensions": {
+        "nAch": 0.50,
+        "nPow": 0.70,
+        "nAff": 0.75,
+        "TF": 0.50,
+        "GM": 0.70,
+        "AU": 0.50,
+        "SE": 0.50,
+        "EC": 0.50,
+        "SV": 0.70,
+        "CH": 0.50,
+        "LS": 0.50,
+        "wholistAnalytic": 0.50,
+        "presence": 0.65,
+        "search": 0.50
+      }
+    },
+    {
+      "id": "mixed-empower-reader",
+      "label": "赋能+解读混合",
+      "type": "mixed",
+      "expectedTopDirection": "empowerment-companion",
+      "expectedAltDirection": "deep-reader",
+      "dimensions": {
+        "nAch": 0.50,
+        "nPow": 0.50,
+        "nAff": 0.70,
+        "TF": 0.50,
+        "GM": 0.50,
+        "AU": 0.50,
+        "SE": 0.50,
+        "EC": 0.50,
+        "SV": 0.75,
+        "CH": 0.50,
+        "LS": 0.50,
+        "wholistAnalytic": 0.65,
+        "presence": 0.65,
+        "search": 0.70
+      }
+    },
+    {
+      "id": "extreme-all-zero",
+      "label": "全低型",
+      "type": "extreme",
+      "expectedTopDirection": null,
+      "dimensions": {
+        "nAch": 0.05,
+        "nPow": 0.05,
+        "nAff": 0.05,
+        "TF": 0.05,
+        "GM": 0.05,
+        "AU": 0.05,
+        "SE": 0.05,
+        "EC": 0.05,
+        "SV": 0.05,
+        "CH": 0.05,
+        "LS": 0.05,
+        "wholistAnalytic": 0.05,
+        "presence": 0.05,
+        "search": 0.05
+      }
+    },
+    {
+      "id": "extreme-all-one",
+      "label": "全高型",
+      "type": "extreme",
+      "expectedTopDirection": null,
+      "dimensions": {
+        "nAch": 0.95,
+        "nPow": 0.95,
+        "nAff": 0.95,
+        "TF": 0.95,
+        "GM": 0.95,
+        "AU": 0.95,
+        "SE": 0.95,
+        "EC": 0.95,
+        "SV": 0.95,
+        "CH": 0.95,
+        "LS": 0.95,
+        "wholistAnalytic": 0.95,
+        "presence": 0.95,
+        "search": 0.95
+      }
+    }
+  ]
+}

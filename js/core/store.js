@@ -4,7 +4,7 @@
 // 依赖: 无
 // ============================================================
 
-import { log, logWarn, logError } from './utils.js';
+import { log, logWarn, logError } from './utils.js?v=20260602e';
 
 // ---------- 常量 ----------
 const STORAGE_PREFIX = 'mindmatch_';

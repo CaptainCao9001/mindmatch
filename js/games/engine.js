@@ -17,8 +17,8 @@
 // 每个方法返回 Promise，Engine await 后进入下一状态。
 // ============================================================
 
-import { normalize, clamp, log, logWarn, logError } from '../core/utils.js';
-import { save } from '../core/store.js';
+import { normalize, clamp, log, logWarn, logError } from '../core/utils.js?v=20260602e';
+import { save } from '../core/store.js?v=20260602e';
 
 // ---------- 阶段枚举 ----------
 const Phase = {

@@ -4,17 +4,488 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 核心驱动力</title>
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/games.css">
+  <script>window.__MM_VER__ = '20260601i';</script>
+  <link rel="stylesheet" href="../css/base.css?v=20260602e">
+  <link rel="stylesheet" href="../css/components.css?v=20260602e">
+  <link rel="stylesheet" href="../css/games.css?v=20260602e">
+  <style>
+    /* ============================================================
+     * G1 深海控制中心主题
+     *   body       → 深蓝黑底 + 海底光晕 + 上升气泡
+     *   引导页      → 控制室仪表盘质感
+     *   情境卡片    → 舷窗（铆钉 + 厚玻璃边）
+     *   选项卡片    → 控制面板按钮（青色发光）
+     *   进度点      → 声呐脉冲环
+     *   完成页      → 控制室主屏
+     * ============================================================ */
+
+    /* ---------- 全局深海背景 ---------- */
+    body {
+      background: hsl(212, 70%, 3.5%);
+      background-image:
+        radial-gradient(ellipse 45vw 40vh at 30% 20%, hsla(200,65%,18%,0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 38vw 32vh at 70% 65%, hsla(185,55%,14%,0.28) 0%, transparent 65%),
+        radial-gradient(ellipse 28vw 24vh at 50% 88%, hsla(195,50%,12%,0.18) 0%, transparent 55%);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 上升气泡层 */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1.5px 1.5px at 10% 92%, hsla(195,80%,75%,0.35), transparent),
+        radial-gradient(1px 1px at 22% 96%,   hsla(190,70%,70%,0.25), transparent),
+        radial-gradient(2px 2px at 35% 88%,   hsla(200,85%,80%,0.3), transparent),
+        radial-gradient(1.2px 1.2px at 48% 94%, hsla(185,75%,72%,0.28), transparent),
+        radial-gradient(1.8px 1.8px at 60% 90%, hsla(195,80%,78%,0.32), transparent),
+        radial-gradient(1px 1px at 72% 96%,   hsla(190,65%,68%,0.22), transparent),
+        radial-gradient(2.2px 2.2px at 85% 86%, hsla(200,90%,82%,0.3), transparent),
+        radial-gradient(1.3px 1.3px at 15% 82%, hsla(185,72%,74%,0.26), transparent),
+        radial-gradient(1.6px 1.6px at 42% 78%, hsla(195,78%,76%,0.3), transparent),
+        radial-gradient(1px 1px at 68% 84%,   hsla(190,68%,70%,0.24), transparent),
+        radial-gradient(1.8px 1.8px at 90% 92%, hsla(200,85%,80%,0.28), transparent),
+        radial-gradient(1.2px 1.2px at 55% 76%, hsla(185,74%,72%,0.25), transparent);
+      animation: g1-bubbles-rise 18s ease-in-out infinite alternate;
+    }
+    @keyframes g1-bubbles-rise {
+      0%   { transform: translateY(0) scale(1); opacity: 0.5; }
+      50%  { opacity: 0.8; }
+      100% { transform: translateY(-60px) scale(1.08); opacity: 0.35; }
+    }
+
+    /* 容器置顶 */
+    .game-container { position: relative; z-index: 1; }
+
+    /* ============================================================
+     * 引导页 — 控制室仪表盘
+     * ============================================================ */
+    .game-intro {
+      text-align: center;
+      padding: var(--space-16) var(--space-4);
+      position: relative;
+    }
+    .game-intro__subtitle {
+      color: hsla(185,35%,55%,0.7);
+      font-size: var(--text-xs);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-2);
+      font-family: 'Courier New', monospace;
+      text-shadow: 0 0 12px hsla(185,60%,45%,0.3);
+    }
+    .game-intro__title {
+      font-size: var(--text-4xl);
+      font-weight: 700;
+      margin: var(--space-3) 0 var(--space-4);
+      background: linear-gradient(135deg, hsl(185,75%,58%), hsl(200,65%,68%));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.04em;
+    }
+    .game-intro__desc {
+      color: hsla(200,25%,72%,0.85);
+      max-width: 480px;
+      margin: 0 auto var(--space-4);
+      line-height: 1.75;
+      white-space: pre-line;
+      font-size: var(--text-sm);
+    }
+    .game-intro__time {
+      color: hsla(185,20%,50%,0.6);
+      font-size: var(--text-xs);
+      margin-bottom: var(--space-8);
+      font-family: 'Courier New', monospace;
+    }
+
+    /* 开始按钮 — 控制面板启动键 */
+    .game-intro__cta {
+      background: linear-gradient(180deg, hsla(185,65%,22%,0.8), hsla(210,55%,12%,0.85));
+      border: 1px solid hsla(185,55%,42%,0.5);
+      color: hsl(185,70%,72%);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-8);
+      font-size: var(--text-lg);
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow:
+        0 0 20px hsla(185,60%,40%,0.2),
+        inset 0 1px 0 hsla(185,60%,55%,0.15);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .game-intro__cta:hover:not(:disabled) {
+      background: linear-gradient(180deg, hsla(185,70%,28%,0.88), hsla(210,60%,16%,0.9));
+      border-color: hsla(185,65%,55%,0.7);
+      box-shadow:
+        0 0 32px hsla(185,65%,45%,0.35),
+        0 0 56px hsla(185,55%,38%,0.15),
+        inset 0 1px 0 hsla(185,60%,60%,0.2);
+      transform: translateY(-1px);
+      color: hsl(185,75%,82%);
+    }
+    .game-intro__cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, hsla(185,60%,65%,0.12), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.45s ease;
+    }
+    .game-intro__cta:hover::before { left: 140%; }
+
+    /* ============================================================
+     * 情境视图
+     * ============================================================ */
+    .scenario-view { animation: g1-slideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
+    @keyframes g1-slideIn {
+      from { opacity: 0; transform: translateX(28px) scale(0.97); }
+      to   { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    .scenario-view.is-exiting {
+      animation: g1-slideOut 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+    @keyframes g1-slideOut {
+      from { opacity: 1; transform: translateX(0) scale(1); }
+      to   { opacity: 0; transform: translateX(-28px) scale(0.97); }
+    }
+
+    /* ---------- 进度区 ---------- */
+    .scenario-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+    .scenario-step {
+      font-size: var(--text-xs);
+      color: hsla(185,25%,55%,0.65);
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.08em;
+    }
+
+    /* 声呐脉冲进度点 */
+    .progress-dots { display: flex; gap: 6px; align-items: center; }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: hsla(210,40%,22%,0.6);
+      border: 1px solid hsla(185,35%,30%,0.35);
+      transition: all 0.35s ease;
+      position: relative;
+    }
+    .dot--done {
+      background: hsla(185,55%,35%,0.7);
+      border-color: hsla(185,50%,42%,0.5);
+      box-shadow: 0 0 6px hsla(185,60%,40%,0.25);
+    }
+    .dot--active {
+      background: transparent;
+      border-color: hsla(185,65%,52%,0.7);
+      box-shadow: 0 0 10px hsla(185,65%,48%,0.35);
+    }
+    .dot--active::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 1px solid hsla(185,60%,48%,0.3);
+      border-radius: 50%;
+      animation: g1-sonar-pulse 1.6s ease-out infinite;
+    }
+    .dot--active::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 1px solid hsla(185,55%,45%,0.15);
+      border-radius: 50%;
+      animation: g1-sonar-pulse 1.6s ease-out 0.5s infinite;
+    }
+    @keyframes g1-sonar-pulse {
+      0%   { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+
+    /* ---------- 情境卡片 — 舷窗 ---------- */
+    .scenario-card {
+      background: hsla(210,55%,9%,0.65);
+      border: 1px solid hsla(185,38%,30%,0.4);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6) var(--space-8);
+      margin-bottom: var(--space-6);
+      position: relative;
+      backdrop-filter: blur(6px);
+      box-shadow:
+        0 0 40px hsla(185,45%,18%,0.12),
+        inset 0 0 32px hsla(185,30%,8%,0.06);
+      /* 舷窗铆钉效果 */
+      overflow: visible;
+    }
+    .scenario-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      border: 1px solid hsla(185,42%,35%,0.2);
+      pointer-events: none;
+    }
+    /* 四个角铆钉 */
+    .scenario-card::after {
+      content: '';
+      position: absolute;
+      top: 8px; left: 8px; right: 8px; bottom: 8px;
+      border-radius: calc(var(--radius-lg) - 4px);
+      border: 1px solid hsla(185,30%,25%,0.15);
+      pointer-events: none;
+    }
+    .scenario-title {
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      color: hsla(200,30%,88%,0.95);
+      margin-bottom: var(--space-3);
+      font-family: 'Courier New', monospace;
+    }
+    .scenario-description {
+      color: hsla(200,20%,68%,0.82);
+      line-height: 1.75;
+      font-size: var(--text-sm);
+    }
+
+    /* ============================================================
+     * 选项卡片 — 控制面板按钮
+     * ============================================================ */
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .option-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-5);
+      background: hsla(210,50%,10%,0.55);
+      border: 1px solid hsla(185,32%,28%,0.35);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      user-select: none;
+      text-align: left;
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      color: hsla(200,22%,78%,0.9);
+    }
+    .option-card:hover:not(.option-card--disabled):not(.option-card--selected) {
+      border-color: hsla(185,50%,42%,0.55);
+      background: hsla(185,40%,14%,0.45);
+      box-shadow: 0 0 20px hsla(185,55%,38%,0.15);
+      transform: translateY(-1px);
+    }
+    .option-card--selected {
+      border-color: hsla(185,62%,48%,0.7);
+      background: hsla(185,45%,16%,0.55);
+      box-shadow:
+        0 0 24px hsla(185,60%,42%,0.22),
+        inset 0 0 24px hsla(185,40%,18%,0.08);
+    }
+    .option-card--disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .option-card__label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: hsla(210,45%,16%,0.6);
+      border: 1px solid hsla(185,35%,30%,0.4);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      color: hsla(185,45%,58%,0.8);
+      font-family: 'Courier New', monospace;
+      flex-shrink: 0;
+      transition: all 0.22s ease;
+    }
+    .option-card--selected .option-card__label {
+      background: hsla(185,60%,38%,0.75);
+      border-color: hsla(185,55%,52%,0.6);
+      color: hsl(210,50%,6%);
+      box-shadow: 0 0 10px hsla(185,65%,48%,0.35);
+    }
+    .option-card__content { flex: 1; min-width: 0; }
+    .option-card__text {
+      display: block;
+      font-weight: 600;
+      font-size: var(--text-sm);
+      color: hsla(200,25%,85%,0.92);
+      margin-bottom: var(--space-1);
+    }
+    .option-card__subtext {
+      display: block;
+      font-size: var(--text-xs);
+      color: hsla(185,20%,55%,0.65);
+      font-style: italic;
+    }
+    .option-card--selected .option-card__text  { color: hsla(185,65%,82%,0.95); }
+    .option-card--selected .option-card__subtext { color: hsla(185,30%,62%,0.75); }
+
+    /* 涟漪效果 — 青色 */
+    .option-card__ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: hsla(185,70%,55%,0.3);
+      transform: scale(0);
+      pointer-events: none;
+    }
+    .option-card__ripple.is-active {
+      animation: ripple-g1 0.55s ease-out forwards;
+    }
+    @keyframes ripple-g1 {
+      to { transform: scale(3.5); opacity: 0; }
+    }
+
+    /* ============================================================
+     * 反馈弹窗 — 控制室信息屏
+     * ============================================================ */
+    .feedback-overlay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50vh;
+      padding: var(--space-8) var(--space-4);
+    }
+    .feedback-card {
+      background: hsla(210,55%,9%,0.72);
+      border: 1px solid hsla(185,38%,32%,0.4);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8) var(--space-10);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 48px hsla(185,45%,20%,0.15);
+    }
+    .feedback-text {
+      color: hsla(200,22%,76%,0.88);
+      line-height: 1.75;
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-6);
+      white-space: pre-line;
+    }
+    .feedback-next {
+      background: linear-gradient(180deg, hsla(185,55%,20%,0.75), hsla(210,50%,12%,0.82));
+      border: 1px solid hsla(185,48%,38%,0.45);
+      color: hsl(185,65%,72%);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 16px hsla(185,55%,35%,0.18);
+      transition: all 0.22s ease;
+    }
+    .feedback-next:hover:not(:disabled) {
+      background: linear-gradient(180deg, hsla(185,65%,26%,0.85), hsla(210,55%,16%,0.88));
+      border-color: hsla(185,58%,50%,0.65);
+      box-shadow: 0 0 24px hsla(185,60%,40%,0.28);
+      color: hsl(185,70%,80%);
+    }
+
+    /* ============================================================
+     * 完成页 — 控制室主屏
+     * ============================================================ */
+    .game-complete {
+      text-align: center;
+      padding: var(--space-12) var(--space-4);
+    }
+    .game-complete__icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-4);
+      color: hsla(185,70%,55%,0.9);
+      filter: drop-shadow(0 0 14px hsla(185,65%,48%,0.35));
+    }
+    .game-complete__title {
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      margin-bottom: var(--space-6);
+      color: hsla(200,30%,90%,0.95);
+      font-family: 'Courier New', monospace;
+    }
+    .game-complete__desc {
+      color: hsla(200,18%,68%,0.8);
+      max-width: 480px;
+      margin: 0 auto var(--space-8);
+      line-height: 1.7;
+      white-space: pre-line;
+      font-size: var(--text-sm);
+    }
+    .game-complete__nav { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+
+    /* 完成页按钮 — 深海主题 */
+    .game-complete__nav .btn-primary {
+      background: linear-gradient(180deg, hsla(185,65%,42%,0.82), hsla(210,55%,18%,0.88));
+      border: 1px solid hsla(185,58%,52%,0.55);
+      color: hsl(185,72%,78%);
+      border-radius: var(--radius-md);
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      box-shadow: 0 0 22px hsla(185,60%,40%,0.22);
+      backdrop-filter: blur(8px);
+      transition: all 0.22s ease;
+    }
+    .game-complete__nav .btn-primary:hover:not(:disabled) {
+      box-shadow: 0 0 32px hsla(185,65%,45%,0.35);
+      border-color: hsla(185,65%,60%,0.7);
+      transform: translateY(-1px);
+    }
+    .game-complete__nav .btn-secondary {
+      background: hsla(210,50%,12%,0.6);
+      border: 1px solid hsla(185,32%,32%,0.4);
+      color: hsla(200,22%,72%,0.85);
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      backdrop-filter: blur(6px);
+      transition: all 0.22s ease;
+    }
+    .game-complete__nav .btn-secondary:hover:not(:disabled) {
+      background: hsla(210,55%,16%,0.65);
+      border-color: hsla(185,42%,40%,0.5);
+      color: hsla(200,25%,82%,0.92);
+    }
+
+    /* ============================================================
+     * 响应式
+     * ============================================================ */
+    @media (max-width: 640px) {
+      .scenario-card { padding: var(--space-4) var(--space-5); }
+      .feedback-card { padding: var(--space-6) var(--space-5); margin: 0 var(--space-3); }
+      .option-card  { padding: var(--space-3) var(--space-4); }
+    }
+  </style>
 </head>
 <body>
   <main class="game-container" id="js-game-root"></main>
 
   <script type="module">
-    import { GameEngine } from '../js/games/engine.js';
-    import { CardClickStrategy } from '../js/games/strategies/card-click.js';
-    import { GAME1_CONFIG } from '../js/games/game1-data.js';
+    import { GameEngine } from '../js/games/engine.js?v=20260602e';
+    import { CardClickStrategy } from '../js/games/strategies/card-click.js?v=20260602e';
+    import { GAME1_CONFIG } from '../js/games/game1-data.js?v=20260602e';
 
     const root = document.getElementById('js-game-root');
 

@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 帮你看到自己不曾察觉的地方</title>
   <meta name="description" content="通过 4 个投射式小游戏，10-15 分钟，生成你的专属思维肖像与岗位匹配分析。">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/index.css">
+  <script>window.__MM_VER__ = '20260602e';</script>
+  <link rel="stylesheet" href="css/base.css?v=20260602e">
+  <link rel="stylesheet" href="css/components.css?v=20260602e">
+  <link rel="stylesheet" href="css/index.css?v=20260602e">
 </head>
 <body>
 
@@ -94,7 +92,7 @@ const GAMES = [
   {
     id: 'game3',
     key: 'game3',
-    file: 'games/game3-cognitive.html',
+    file: 'games/game3-cognitive-style.html',
     number: 'G3',
     title: '认知处理风格',
     subtitle: '你习惯怎么理解世界',
@@ -104,7 +102,7 @@ const GAMES = [
   {
     id: 'game4',
     key: 'game4',
-    file: 'games/game4-meaning.html',
+    file: 'games/game4-meaning-construction.html',
     number: 'G4',
     title: '意义建构取向',
     subtitle: '你在工作中寻找什么意义',
@@ -188,8 +186,20 @@ function renderCards() {
 
 /* ---------- Render Results CTA ---------- */
 function renderResultsCta() {
-  const allDone = completedCount() === 4;
-  document.getElementById('resultsCta').style.display = allDone ? '' : 'none';
+  const count = completedCount();
+  const cta = document.getElementById('resultsCta');
+  if (count === 0) {
+    cta.style.display = 'none';
+    return;
+  }
+  cta.style.display = '';
+  const btnText = count === 4
+    ? '查看我的思维肖像'
+    : `查看已有结果（${count}/4）`;
+  cta.querySelector('.results-cta__btn').innerHTML = `
+    ${btnText}
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  `;
 }
 
 /* ---------- Init ---------- */

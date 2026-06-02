@@ -1,0 +1,135 @@
+{
+  "_comment": "MindMatch 模拟游戏输出数据，用于开发和调试肖像模块。G1 数据参考真实格式，G2/G3/G4 为模拟。",
+  "game1": {
+    "gameId": "game1",
+    "version": "1.0.0",
+    "dimensions": {
+      "nAch": 7,
+      "nPow": 3,
+      "nAff": 6
+    },
+    "behaviorSummary": {
+      "primaryDriver": "nAch",
+      "secondaryDriver": "nAff",
+      "consistencyScore": 0.78
+    },
+    "decisions": [
+      { "scenarioId": "s1", "optionId": "s1_a", "decisionTime": 3200 },
+      { "scenarioId": "s2", "optionId": "s2_c", "decisionTime": 5100 },
+      { "scenarioId": "s3", "optionId": "s3_b", "decisionTime": 4200 },
+      { "scenarioId": "s4", "optionId": "s4_a", "decisionTime": 3800 },
+      { "scenarioId": "s5", "optionId": "s5_b", "decisionTime": 2900 }
+    ],
+    "meta": {
+      "totalTime": 35000,
+      "elapsedMs": 420000,
+      "decisionCount": 5,
+      "completedAt": 1748638800000
+    }
+  },
+  "game2": {
+    "gameId": "game2",
+    "version": "1.0.0",
+    "dimensions": {
+      "TF": 8,
+      "GM": 2,
+      "AU": 4,
+      "SE": 1,
+      "EC": 7,
+      "SV": 3,
+      "CH": 6,
+      "LS": 5
+    },
+    "behaviorSummary": {
+      "primaryAnchor": "TF",
+      "secondaryAnchor": "EC",
+      "bottomAnchor": "SE"
+    },
+    "decisions": [
+      { "stage": 1, "cardId": "c1", "action": "join", "anchor": "TF" },
+      { "stage": 1, "cardId": "c3", "action": "pass", "anchor": "GM" },
+      { "stage": 1, "cardId": "c9", "action": "join", "anchor": "EC" },
+      { "stage": 1, "cardId": "c14", "action": "pass", "anchor": "SE" },
+      { "stage": 2, "cardId": "c1", "action": "keep", "anchor": "TF" },
+      { "stage": 2, "cardId": "c9", "action": "keep", "anchor": "EC" },
+      { "stage": 3, "cardId": "c1", "action": "select", "anchor": "TF" }
+    ],
+    "meta": {
+      "totalTime": 45000,
+      "elapsedMs": 320000,
+      "decisionCount": 28,
+      "stage1Kept": 8,
+      "stage2Kept": 3,
+      "stage3Kept": 1,
+      "completedAt": 1748638860000
+    }
+  },
+  "game3": {
+    "gameId": "game3",
+    "version": "1.0.0",
+    "dimensions": {
+      "wholistAnalytic": 0.4
+    },
+    "behaviorSummary": {
+      "dominantStyle": "分析型",
+      "flexibility": 6,
+      "impulseScore": 4
+    },
+    "mbtiIntermediate": {
+      "E": 2, "I": 0,
+      "S": 5, "N": -3,
+      "T": 4, "F": -2,
+      "J": 3, "P": -1
+    },
+    "decisions": [
+      { "stage": 1, "cardId": "m1", "group": "green", "groupLabel": "这就是我" },
+      { "stage": 1, "cardId": "m4", "group": "green", "groupLabel": "这就是我" },
+      { "stage": 1, "cardId": "m5", "group": "green", "groupLabel": "这就是我" },
+      { "stage": 1, "cardId": "m2", "group": "yellow", "groupLabel": "有点像我" },
+      { "stage": 1, "cardId": "m3", "group": "yellow", "groupLabel": "有点像我" },
+      { "stage": 1, "cardId": "m7", "group": "red", "groupLabel": "不太像我" },
+      { "stage": 1, "cardId": "m6", "group": "red", "groupLabel": "不太像我" },
+      { "stage": 1, "cardId": "m8", "group": "yellow", "groupLabel": "有点像我" },
+      { "stage": 2, "cardId": "m1", "rank": 1 },
+      { "stage": 2, "cardId": "m5", "rank": 2 },
+      { "stage": 2, "cardId": "m4", "rank": 3 }
+    ],
+    "meta": {
+      "stage1Time": 12000,
+      "stage2Time": 28000,
+      "greenCount": 3,
+      "yellowCount": 3,
+      "redCount": 2,
+      "totalTime": 45000,
+      "completedAt": 1748638920000
+    }
+  },
+  "game4": {
+    "gameId": "game4",
+    "version": "1.0.0",
+    "dimensions": {
+      "presence": 6,
+      "search": 8
+    },
+    "behaviorSummary": {
+      "profileType": "成长型",
+      "meaningSource": "揭示真相"
+    },
+    "decisions": [
+      { "sceneId": "f1", "reaction1": "P+", "reaction2": "S-" },
+      { "sceneId": "f2", "reaction1": "P+", "reaction2": "S+" },
+      { "sceneId": "f3", "reaction1": "P+", "reaction2": "S-" },
+      { "sceneId": "f4", "reaction1": "P+", "reaction2": "S+" },
+      { "sceneId": "f5", "reaction1": "P-", "reaction2": "S+" },
+      { "sceneId": "f6", "reaction1": "P-", "reaction2": "S+" }
+    ],
+    "meta": {
+      "totalTime": 30000,
+      "elapsedMs": 180000,
+      "decisionCount": 12,
+      "presenceRaw": 2,
+      "searchRaw": 4,
+      "completedAt": 1748638980000
+    }
+  }
+}
