@@ -110,7 +110,8 @@
           });
 
           // 计算方向匹配
-          const directionReport = matchExtended(profile, data);
+          const matchResult = matchExtended(profile, data);
+          const directionRanking = matchResult && matchResult.directionRanking ? matchResult.directionRanking : [];
 
           // 行为叙事
           const rawData = { game1: load('game1'), game2: load('game2'), game3: load('game3'), game4: load('game4') };
@@ -124,8 +125,8 @@
             : '';
 
           // 检查缓存，如果有则直接渲染结果
-          if (hasExperimentCache(profile, directionReport)) {
-            const result = await generateExperiments(profile, directionReport, transText, bnText);
+          if (hasExperimentCache(profile, directionRanking)) {
+            const result = await generateExperiments(profile, directionRanking, transText, bnText);
             if (result) {
               renderExperimentResult('matchContent', result);
               return;
@@ -138,7 +139,7 @@
             renderExperimentLoading('matchContent');
 
             try {
-              const result = await generateExperiments(profile, directionReport, transText, bnText);
+              const result = await generateExperiments(profile, directionRanking, transText, bnText);
               if (result) {
                 renderExperimentResult('matchContent', result);
               } else {

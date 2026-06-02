@@ -26,9 +26,12 @@ async function getApi() {
  * @returns {string}
  */
 function buildExperimentPrompt(profile, directionReport, translationText, behaviorNarrative) {
+  if (!Array.isArray(directionReport) || directionReport.length === 0) {
+    throw new Error('directionReport 为空，无法构建实验 Prompt');
+  }
   const topDir = directionReport[0];
-  const top2 = directionReport[1];
-  const top3 = directionReport[2];
+  const top2 = directionReport[1] || topDir;
+  const top3 = directionReport[2] || top2;
 
   const dimSummary = Object.entries(profile.dimensions)
     .sort((a, b) => b[1] - a[1])
