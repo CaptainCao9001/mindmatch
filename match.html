@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 方向验证实验</title>
   <meta name="description" content="AI 帮你设计可执行的验证实验，让你在现实中确认自己的职业方向。">
-  <script>window.__MM_VER__ = '20260602e';</script>
-  <link rel="stylesheet" href="css/base.css?v=20260602e">
-  <link rel="stylesheet" href="css/components.css?v=20260602e">
-  <link rel="stylesheet" href="css/match.css?v=20260602e">
+  <script>window.__MM_VER__ = '20260603a';</script>
+  <link rel="stylesheet" href="css/base.css?v=20260603a">
+  <link rel="stylesheet" href="css/components.css?v=20260603a">
+  <link rel="stylesheet" href="css/match.css?v=20260603a">
 </head>
 <body class="page-match">
 
@@ -43,14 +43,14 @@
 
   <!-- ========== App Script ========== -->
   <script type="module">
-    import { integrate } from './js/layers/integrator.js?v=20260602e';
-    import { matchExtended } from './js/layers/matcher.js?v=20260602e';
-    import { renderDirectionResults } from './js/ui/match-ui-extended.js?v=20260602e';
-    import { load } from './js/core/store.js?v=20260602e';
-    import { extractBehaviorNarrative, formatBehaviorNarrative } from './js/layers/behavior-narrative.js?v=20260602e';
-    import { translate } from './js/layers/translator.js?v=20260602e';
-    import { generateExperiments, hasExperimentCache } from './js/layers/experiment.js?v=20260602e';
-    import { renderExperimentButton, renderExperimentLoading, renderExperimentResult, renderExperimentError } from './js/ui/experiment-card.js?v=20260602e';
+    import { integrate } from './js/layers/integrator.js?v=20260603a';
+    import { matchExtended } from './js/layers/matcher.js?v=20260603a';
+    import { renderDirectionResults } from './js/ui/match-ui-extended.js?v=20260603a';
+    import { load } from './js/core/store.js?v=20260603a';
+    import { extractBehaviorNarrative, formatBehaviorNarrative } from './js/layers/behavior-narrative.js?v=20260603a';
+    import { translate } from './js/layers/translator.js?v=20260603a';
+    import { generateExperiments, hasExperimentCache } from './js/layers/experiment.js?v=20260603a';
+    import { renderExperimentButton, renderExperimentLoading, renderExperimentResult, renderExperimentError } from './js/ui/experiment-card.js?v=20260603a';
 
     async function init() {
       const content = document.getElementById('matchContent');
@@ -73,7 +73,7 @@
         }
 
         // 4/4 → 加载匹配引擎
-        const resp = await fetch('./mock/ideal-profiles.json?v=20260602e');
+        const resp = await fetch('./mock/ideal-profiles.json?v=20260603a');
         if (!resp.ok) throw new Error(`加载数据失败 (HTTP ${resp.status})`);
         const data = await resp.json();
 

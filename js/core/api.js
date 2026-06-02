@@ -7,7 +7,7 @@
 //   用户无需在客户端配置 Key，打开页面即可使用 AI 功能
 // ============================================================
 
-import { log, logWarn, logError } from './utils.js?v=20260602e';
+import { log, logWarn, logError } from './utils.js?v=20260603a';
 
 // ---------- 环境检测 ----------
 const _isLocalhost = typeof location !== 'undefined' &&
