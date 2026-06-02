@@ -8,22 +8,97 @@
       "slogan": "用技术搭建未来",
       "description": "热衷于用技术手段搭建高效系统，在代码与架构中找到秩序与创造的交汇。",
       "icon": "🛜",
-      "gameWeights": { "G1": 0.20, "G2": 0.20, "G3": 0.35, "G4": 0.25 },
+      "gameWeights": {
+        "G1": 0.2,
+        "G2": 0.2,
+        "G3": 0.35,
+        "G4": 0.25
+      },
       "profiles": [
-        { "field": "nAch", "ideal": 0.75, "direction": "high", "weight": 0.35 },
-        { "field": "nPow", "ideal": 0.35, "direction": "low", "weight": 0.15 },
-        { "field": "nAff", "ideal": 0.30, "direction": "low", "weight": 0.10 },
-        { "field": "TF", "ideal": 0.90, "direction": "high", "weight": 0.30 },
-        { "field": "GM", "ideal": 0.50, "direction": "mid", "weight": 0.10 },
-        { "field": "AU", "ideal": 0.65, "direction": "high", "weight": 0.20 },
-        { "field": "SE", "ideal": 0.55, "direction": "mid", "weight": 0.08 },
-        { "field": "EC", "ideal": 0.50, "direction": "mid", "weight": 0.10 },
-        { "field": "SV", "ideal": 0.25, "direction": "low", "weight": 0.05 },
-        { "field": "CH", "ideal": 0.70, "direction": "high", "weight": 0.18 },
-        { "field": "LS", "ideal": 0.50, "direction": "mid", "weight": 0.10 },
-        { "field": "wholistAnalytic", "ideal": 0.85, "direction": "high", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.30, "direction": "low", "weight": 0.40 },
-        { "field": "search", "ideal": 0.70, "direction": "high", "weight": 0.60 }
+        {
+          "field": "nAch",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.24
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 0.15
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.1
+        },
+        {
+          "field": "TF",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.3
+        },
+        {
+          "field": "GM",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "AU",
+          "ideal": 0.65,
+          "direction": "mid",
+          "weight": 0.16
+        },
+        {
+          "field": "SE",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "EC",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "SV",
+          "ideal": 0.25,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "CH",
+          "ideal": 0.75,
+          "direction": "high",
+          "weight": 0.09
+        },
+        {
+          "field": "LS",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.4
+        },
+        {
+          "field": "search",
+          "ideal": 0.75,
+          "direction": "high",
+          "weight": 0.42
+        }
       ]
     },
     "deep-reader": {
@@ -32,22 +107,97 @@
       "slogan": "用分析洞察本质",
       "description": "热衷于挖掘本质、发现规律，在数据与逻辑中找到深层洞见。",
       "icon": "🔬",
-      "gameWeights": { "G1": 0.25, "G2": 0.20, "G3": 0.30, "G4": 0.25 },
+      "gameWeights": {
+        "G1": 0.25,
+        "G2": 0.2,
+        "G3": 0.3,
+        "G4": 0.25
+      },
       "profiles": [
-        { "field": "nAch", "ideal": 0.80, "direction": "high", "weight": 0.40 },
-        { "field": "nPow", "ideal": 0.30, "direction": "low", "weight": 0.15 },
-        { "field": "nAff", "ideal": 0.35, "direction": "low", "weight": 0.10 },
-        { "field": "TF", "ideal": 0.70, "direction": "high", "weight": 0.25 },
-        { "field": "GM", "ideal": 0.45, "direction": "mid", "weight": 0.08 },
-        { "field": "AU", "ideal": 0.60, "direction": "mid", "weight": 0.15 },
-        { "field": "SE", "ideal": 0.50, "direction": "mid", "weight": 0.05 },
-        { "field": "EC", "ideal": 0.40, "direction": "mid", "weight": 0.08 },
-        { "field": "SV", "ideal": 0.25, "direction": "low", "weight": 0.05 },
-        { "field": "CH", "ideal": 0.75, "direction": "high", "weight": 0.22 },
-        { "field": "LS", "ideal": 0.45, "direction": "mid", "weight": 0.12 },
-        { "field": "wholistAnalytic", "ideal": 0.90, "direction": "high", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.40, "direction": "mid", "weight": 0.45 },
-        { "field": "search", "ideal": 0.80, "direction": "high", "weight": 0.55 }
+        {
+          "field": "nAch",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 0.28
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.15
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 0.1
+        },
+        {
+          "field": "TF",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.25
+        },
+        {
+          "field": "GM",
+          "ideal": 0.45,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "AU",
+          "ideal": 0.55,
+          "direction": "mid",
+          "weight": 0.12
+        },
+        {
+          "field": "SE",
+          "ideal": 0.45,
+          "direction": "mid",
+          "weight": 0.03
+        },
+        {
+          "field": "EC",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "SV",
+          "ideal": 0.25,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "CH",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.11
+        },
+        {
+          "field": "LS",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 0.06
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.45
+        },
+        {
+          "field": "search",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 0.39
+        }
       ]
     },
     "creative-molder": {
@@ -56,22 +206,97 @@
       "slogan": "用创意改变表达",
       "description": "热衷于创造新事物、表达独特想法，在自由与灵感中找到生命力。",
       "icon": "🎨",
-      "gameWeights": { "G1": 0.25, "G2": 0.25, "G3": 0.20, "G4": 0.30 },
+      "gameWeights": {
+        "G1": 0.25,
+        "G2": 0.25,
+        "G3": 0.2,
+        "G4": 0.3
+      },
       "profiles": [
-        { "field": "nAch", "ideal": 0.70, "direction": "high", "weight": 0.30 },
-        { "field": "nPow", "ideal": 0.35, "direction": "low", "weight": 0.15 },
-        { "field": "nAff", "ideal": 0.55, "direction": "mid", "weight": 0.20 },
-        { "field": "TF", "ideal": 0.45, "direction": "mid", "weight": 0.08 },
-        { "field": "GM", "ideal": 0.40, "direction": "mid", "weight": 0.08 },
-        { "field": "AU", "ideal": 0.85, "direction": "high", "weight": 0.30 },
-        { "field": "SE", "ideal": 0.30, "direction": "low", "weight": 0.05 },
-        { "field": "EC", "ideal": 0.90, "direction": "high", "weight": 0.28 },
-        { "field": "SV", "ideal": 0.45, "direction": "mid", "weight": 0.08 },
-        { "field": "CH", "ideal": 0.75, "direction": "high", "weight": 0.15 },
-        { "field": "LS", "ideal": 0.60, "direction": "mid", "weight": 0.10 },
-        { "field": "wholistAnalytic", "ideal": 0.35, "direction": "low", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.70, "direction": "high", "weight": 0.45 },
-        { "field": "search", "ideal": 0.85, "direction": "high", "weight": 0.55 }
+        {
+          "field": "nAch",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.21
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 0.15
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.55,
+          "direction": "mid",
+          "weight": 0.2
+        },
+        {
+          "field": "TF",
+          "ideal": 0.45,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "GM",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "AU",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.24
+        },
+        {
+          "field": "SE",
+          "ideal": 0.25,
+          "direction": "low",
+          "weight": 0.03
+        },
+        {
+          "field": "EC",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.28
+        },
+        {
+          "field": "SV",
+          "ideal": 0.45,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "CH",
+          "ideal": 0.75,
+          "direction": "high",
+          "weight": 0.07
+        },
+        {
+          "field": "LS",
+          "ideal": 0.55,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.45
+        },
+        {
+          "field": "search",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.39
+        }
       ]
     },
     "people-connector": {
@@ -80,22 +305,97 @@
       "slogan": "用联结创造价值",
       "description": "热衷于与人打交道、促成合作，在关系网络中找到影响力与归属。",
       "icon": "🤝",
-      "gameWeights": { "G1": 0.30, "G2": 0.30, "G3": 0.15, "G4": 0.25 },
+      "gameWeights": {
+        "G1": 0.3,
+        "G2": 0.3,
+        "G3": 0.15,
+        "G4": 0.25
+      },
       "profiles": [
-        { "field": "nAch", "ideal": 0.65, "direction": "mid", "weight": 0.25 },
-        { "field": "nPow", "ideal": 0.60, "direction": "mid", "weight": 0.25 },
-        { "field": "nAff", "ideal": 0.85, "direction": "high", "weight": 0.35 },
-        { "field": "TF", "ideal": 0.35, "direction": "low", "weight": 0.08 },
-        { "field": "GM", "ideal": 0.65, "direction": "high", "weight": 0.18 },
-        { "field": "AU", "ideal": 0.50, "direction": "mid", "weight": 0.12 },
-        { "field": "SE", "ideal": 0.60, "direction": "mid", "weight": 0.08 },
-        { "field": "EC", "ideal": 0.60, "direction": "mid", "weight": 0.12 },
-        { "field": "SV", "ideal": 0.85, "direction": "high", "weight": 0.30 },
-        { "field": "CH", "ideal": 0.55, "direction": "mid", "weight": 0.10 },
-        { "field": "LS", "ideal": 0.55, "direction": "mid", "weight": 0.12 },
-        { "field": "wholistAnalytic", "ideal": 0.50, "direction": "mid", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.75, "direction": "high", "weight": 0.55 },
-        { "field": "search", "ideal": 0.60, "direction": "mid", "weight": 0.45 }
+        {
+          "field": "nAch",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.17
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.25
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 0.35
+        },
+        {
+          "field": "TF",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 0.08
+        },
+        {
+          "field": "GM",
+          "ideal": 0.65,
+          "direction": "high",
+          "weight": 0.18
+        },
+        {
+          "field": "AU",
+          "ideal": 0.45,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "SE",
+          "ideal": 0.55,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "EC",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.12
+        },
+        {
+          "field": "SV",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 0.3
+        },
+        {
+          "field": "CH",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "LS",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.06
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.75,
+          "direction": "high",
+          "weight": 0.55
+        },
+        {
+          "field": "search",
+          "ideal": 0.55,
+          "direction": "mid",
+          "weight": 0.32
+        }
       ]
     },
     "value-driver": {
@@ -104,22 +404,97 @@
       "slogan": "用影响力推动改变",
       "description": "热衷于带领团队、推动目标，在决策与执行中创造可见的影响力。",
       "icon": "🚀",
-      "gameWeights": { "G1": 0.30, "G2": 0.30, "G3": 0.15, "G4": 0.25 },
+      "gameWeights": {
+        "G1": 0.3,
+        "G2": 0.3,
+        "G3": 0.15,
+        "G4": 0.25
+      },
       "profiles": [
-        { "field": "nAch", "ideal": 0.80, "direction": "high", "weight": 0.35 },
-        { "field": "nPow", "ideal": 0.85, "direction": "high", "weight": 0.40 },
-        { "field": "nAff", "ideal": 0.60, "direction": "mid", "weight": 0.20 },
-        { "field": "TF", "ideal": 0.50, "direction": "mid", "weight": 0.10 },
-        { "field": "GM", "ideal": 0.85, "direction": "high", "weight": 0.30 },
-        { "field": "AU", "ideal": 0.40, "direction": "low", "weight": 0.10 },
-        { "field": "SE", "ideal": 0.65, "direction": "high", "weight": 0.12 },
-        { "field": "EC", "ideal": 0.75, "direction": "high", "weight": 0.20 },
-        { "field": "SV", "ideal": 0.60, "direction": "mid", "weight": 0.15 },
-        { "field": "CH", "ideal": 0.70, "direction": "high", "weight": 0.15 },
-        { "field": "LS", "ideal": 0.70, "direction": "high", "weight": 0.18 },
-        { "field": "wholistAnalytic", "ideal": 0.55, "direction": "mid", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.70, "direction": "high", "weight": 0.50 },
-        { "field": "search", "ideal": 0.55, "direction": "mid", "weight": 0.50 }
+        {
+          "field": "nAch",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 0.24
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 0.4
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.2
+        },
+        {
+          "field": "TF",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "GM",
+          "ideal": 0.85,
+          "direction": "high",
+          "weight": 0.3
+        },
+        {
+          "field": "AU",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 0.08
+        },
+        {
+          "field": "SE",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.07
+        },
+        {
+          "field": "EC",
+          "ideal": 0.75,
+          "direction": "high",
+          "weight": 0.2
+        },
+        {
+          "field": "SV",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.15
+        },
+        {
+          "field": "CH",
+          "ideal": 0.75,
+          "direction": "high",
+          "weight": 0.07
+        },
+        {
+          "field": "LS",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.09
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.55,
+          "direction": "mid",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.5
+        },
+        {
+          "field": "search",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.35
+        }
       ]
     },
     "empowerment-companion": {
@@ -128,306 +503,1353 @@
       "slogan": "用陪伴温暖成长",
       "description": "热衷于帮助他人成长、疗愈心灵，在支持与温暖中找到生命的意义。",
       "icon": "🌱",
-      "gameWeights": { "G1": 0.25, "G2": 0.25, "G3": 0.20, "G4": 0.30 },
+      "gameWeights": {
+        "G1": 0.25,
+        "G2": 0.25,
+        "G3": 0.2,
+        "G4": 0.3
+      },
       "profiles": [
-        { "field": "nAch", "ideal": 0.55, "direction": "mid", "weight": 0.20 },
-        { "field": "nPow", "ideal": 0.25, "direction": "low", "weight": 0.10 },
-        { "field": "nAff", "ideal": 0.90, "direction": "high", "weight": 0.40 },
-        { "field": "TF", "ideal": 0.30, "direction": "low", "weight": 0.05 },
-        { "field": "GM", "ideal": 0.35, "direction": "low", "weight": 0.05 },
-        { "field": "AU", "ideal": 0.65, "direction": "high", "weight": 0.20 },
-        { "field": "SE", "ideal": 0.70, "direction": "high", "weight": 0.15 },
-        { "field": "EC", "ideal": 0.45, "direction": "mid", "weight": 0.08 },
-        { "field": "SV", "ideal": 0.90, "direction": "high", "weight": 0.35 },
-        { "field": "CH", "ideal": 0.50, "direction": "mid", "weight": 0.10 },
-        { "field": "LS", "ideal": 0.65, "direction": "high", "weight": 0.15 },
-        { "field": "wholistAnalytic", "ideal": 0.45, "direction": "mid", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.80, "direction": "high", "weight": 0.60 },
-        { "field": "search", "ideal": 0.75, "direction": "high", "weight": 0.40 }
+        {
+          "field": "nAch",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.14
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.25,
+          "direction": "low",
+          "weight": 0.1
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.4
+        },
+        {
+          "field": "TF",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "GM",
+          "ideal": 0.35,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "AU",
+          "ideal": 0.65,
+          "direction": "mid",
+          "weight": 0.16
+        },
+        {
+          "field": "SE",
+          "ideal": 0.75,
+          "direction": "high",
+          "weight": 0.09
+        },
+        {
+          "field": "EC",
+          "ideal": 0.45,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "SV",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.35
+        },
+        {
+          "field": "CH",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "LS",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.07
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.45,
+          "direction": "mid",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.6
+        },
+        {
+          "field": "search",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.28
+        }
       ]
     }
   },
   "directionJobs": {
     "system-builder": [
       {
-        "id": "software-engineer", "name": "软件工程师", "directionId": "system-builder",
-        "icon": "💻", "description": "设计、开发、测试和维护软件系统。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.05,"GM":0.00,"AU":0.05,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "software-engineer",
+        "name": "软件工程师",
+        "directionId": "system-builder",
+        "icon": "💻",
+        "description": "设计、开发、测试和维护软件系统。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.05,
+          "GM": 0.0,
+          "AU": 0.05,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "data-scientist", "name": "数据分析师", "directionId": "system-builder",
-        "icon": "📊", "description": "从数据中提取洞察，用统计和机器学习解决问题。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":-0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "data-scientist",
+        "name": "数据分析师",
+        "directionId": "system-builder",
+        "icon": "📊",
+        "description": "从数据中提取洞察，用统计和机器学习解决问题。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": -0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "ai-engineer", "name": "AI/算法工程师", "directionId": "system-builder",
-        "icon": "🧠", "description": "研发人工智能模型和算法系统。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.10,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.05,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "ai-engineer",
+        "name": "AI/算法工程师",
+        "directionId": "system-builder",
+        "icon": "🧠",
+        "description": "研发人工智能模型和算法系统。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.1,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.05,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "systems-architect", "name": "系统架构师", "directionId": "system-builder",
-        "icon": "🏗️", "description": "设计复杂软件系统的整体架构和技术方案。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.05,"GM":0.10,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "systems-architect",
+        "name": "系统架构师",
+        "directionId": "system-builder",
+        "icon": "🏗️",
+        "description": "设计复杂软件系统的整体架构和技术方案。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.05,
+          "GM": 0.1,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "security-engineer", "name": "网络安全工程师", "directionId": "system-builder",
-        "icon": "🛡️", "description": "防护信息系统、检测和响应安全威胁。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":-0.05,"EC":0.00,"SV":0.00,"CH":0.05,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "security-engineer",
+        "name": "网络安全工程师",
+        "directionId": "system-builder",
+        "icon": "🛡️",
+        "description": "防护信息系统、检测和响应安全威胁。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": -0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.05,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "embedded-engineer", "name": "嵌入式/硬件工程师", "directionId": "system-builder",
-        "icon": "🔧", "description": "开发嵌入式系统和硬件驱动软件。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.05,"GM":0.00,"AU":-0.05,"SE":0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "embedded-engineer",
+        "name": "嵌入式/硬件工程师",
+        "directionId": "system-builder",
+        "icon": "🔧",
+        "description": "开发嵌入式系统和硬件驱动软件。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.05,
+          "GM": 0.0,
+          "AU": -0.05,
+          "SE": 0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "database-admin", "name": "数据库管理员", "directionId": "system-builder",
-        "icon": "🗄️", "description": "管理和优化数据库系统，确保数据安全和高可用。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":-0.05,"GM":0.05,"AU":0.00,"SE":0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "database-admin",
+        "name": "数据库管理员",
+        "directionId": "system-builder",
+        "icon": "🗄️",
+        "description": "管理和优化数据库系统，确保数据安全和高可用。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": -0.05,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "devops-engineer", "name": "DevOps工程师", "directionId": "system-builder",
-        "icon": "🔄", "description": "构建CI/CD管线，打通开发和运维的壁垒。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "devops-engineer",
+        "name": "DevOps工程师",
+        "directionId": "system-builder",
+        "icon": "🔄",
+        "description": "构建CI/CD管线，打通开发和运维的壁垒。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "robotics-engineer", "name": "机器人工程师", "directionId": "system-builder",
-        "icon": "🤖", "description": "设计、制造和编程智能机器人系统。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.05,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.05,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "robotics-engineer",
+        "name": "机器人工程师",
+        "directionId": "system-builder",
+        "icon": "🤖",
+        "description": "设计、制造和编程智能机器人系统。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.05,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.05,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       }
     ],
     "deep-reader": [
       {
-        "id": "financial-analyst", "name": "金融分析师", "directionId": "deep-reader",
-        "icon": "📈", "description": "分析金融市场数据，提供投资建议和风险评估。",
-        "delta": { "nAch":0.05,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "financial-analyst",
+        "name": "金融分析师",
+        "directionId": "deep-reader",
+        "icon": "📈",
+        "description": "分析金融市场数据，提供投资建议和风险评估。",
+        "delta": {
+          "nAch": 0.05,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "researcher-scholar", "name": "研究员/学者", "directionId": "deep-reader",
-        "icon": "📚", "description": "在学术或企业研究机构中探索前沿知识。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.10,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.05 }
+        "id": "researcher-scholar",
+        "name": "研究员/学者",
+        "directionId": "deep-reader",
+        "icon": "📚",
+        "description": "在学术或企业研究机构中探索前沿知识。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.1,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.05
+        }
       },
       {
-        "id": "strategic-planner", "name": "战略规划师", "directionId": "deep-reader",
-        "icon": "🎯", "description": "制定企业中长期战略，分析行业趋势和竞争格局。",
-        "delta": { "nAch":0.00,"nPow":0.10,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "strategic-planner",
+        "name": "战略规划师",
+        "directionId": "deep-reader",
+        "icon": "🎯",
+        "description": "制定企业中长期战略，分析行业趋势和竞争格局。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.1,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "legal-auditor", "name": "法务/合规审计", "directionId": "deep-reader",
-        "icon": "⚖️", "description": "审核法律合规性，防范法律风险。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":-0.05,"SE":0.10,"EC":-0.05,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "legal-auditor",
+        "name": "法务/合规审计",
+        "directionId": "deep-reader",
+        "icon": "⚖️",
+        "description": "审核法律合规性，防范法律风险。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": -0.05,
+          "SE": 0.1,
+          "EC": -0.05,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "medical-researcher", "name": "医学研究员", "directionId": "deep-reader",
-        "icon": "🧬", "description": "研究疾病机理、药物作用和临床治疗方案。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.10,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.05 }
+        "id": "medical-researcher",
+        "name": "医学研究员",
+        "directionId": "deep-reader",
+        "icon": "🧬",
+        "description": "研究疾病机理、药物作用和临床治疗方案。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.1,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.05
+        }
       },
       {
-        "id": "quantitative-analyst", "name": "量化分析师", "directionId": "deep-reader",
-        "icon": "🔢", "description": "用数学和统计模型进行金融量化交易和风险评估。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.10,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "quantitative-analyst",
+        "name": "量化分析师",
+        "directionId": "deep-reader",
+        "icon": "🔢",
+        "description": "用数学和统计模型进行金融量化交易和风险评估。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.1,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "risk-modeler", "name": "风险建模师", "directionId": "deep-reader",
-        "icon": "⚠️", "description": "构建风险预测模型，量化和管理各类业务风险。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "risk-modeler",
+        "name": "风险建模师",
+        "directionId": "deep-reader",
+        "icon": "⚠️",
+        "description": "构建风险预测模型，量化和管理各类业务风险。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "biostatistician", "name": "生物统计学家", "directionId": "deep-reader",
-        "icon": "📉", "description": "应用统计学方法分析生物医学数据。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.05,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "biostatistician",
+        "name": "生物统计学家",
+        "directionId": "deep-reader",
+        "icon": "📉",
+        "description": "应用统计学方法分析生物医学数据。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.05,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "actuary", "name": "精算师", "directionId": "deep-reader",
-        "icon": "🧮", "description": "评估保险和金融产品的风险与定价。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.10,"EC":-0.05,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "actuary",
+        "name": "精算师",
+        "directionId": "deep-reader",
+        "icon": "🧮",
+        "description": "评估保险和金融产品的风险与定价。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.1,
+          "EC": -0.05,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       }
     ],
     "creative-molder": [
       {
-        "id": "ui-designer", "name": "视觉/UI设计师", "directionId": "creative-molder",
-        "icon": "🖌️", "description": "设计数字产品的视觉界面和交互体验。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.10,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.05,"search":0.00 }
+        "id": "ui-designer",
+        "name": "视觉/UI设计师",
+        "directionId": "creative-molder",
+        "icon": "🖌️",
+        "description": "设计数字产品的视觉界面和交互体验。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.1,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.05,
+          "search": 0.0
+        }
       },
       {
-        "id": "content-creator", "name": "内容创作者", "directionId": "creative-molder",
-        "icon": "✍️", "description": "撰写文章、制作视频或音频内容，吸引和影响受众。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.10,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":-0.05,"presence":0.00,"search":0.00 }
+        "id": "content-creator",
+        "name": "内容创作者",
+        "directionId": "creative-molder",
+        "icon": "✍️",
+        "description": "撰写文章、制作视频或音频内容，吸引和影响受众。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.1,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": -0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "product-manager", "name": "产品经理", "directionId": "creative-molder",
-        "icon": "📱", "description": "定义产品方向，协调设计、开发和业务团队。",
-        "delta": { "nAch":0.00,"nPow":0.10,"nAff":0.00,"TF":0.00,"GM":0.10,"AU":0.00,"SE":0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "product-manager",
+        "name": "产品经理",
+        "directionId": "creative-molder",
+        "icon": "📱",
+        "description": "定义产品方向，协调设计、开发和业务团队。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.1,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.1,
+          "AU": 0.0,
+          "SE": 0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "video-producer", "name": "编导/视频制作", "directionId": "creative-molder",
-        "icon": "🎬", "description": "策划、拍摄和剪辑视频内容，讲述视觉故事。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.05,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.05,"search":0.00 }
+        "id": "video-producer",
+        "name": "编导/视频制作",
+        "directionId": "creative-molder",
+        "icon": "🎬",
+        "description": "策划、拍摄和剪辑视频内容，讲述视觉故事。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.05,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.05,
+          "search": 0.0
+        }
       },
       {
-        "id": "brand-planner", "name": "品牌策划师", "directionId": "creative-molder",
-        "icon": "💡", "description": "塑造品牌形象和传播策略，建立消费者认知。",
-        "delta": { "nAch":0.00,"nPow":0.05,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.05,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "brand-planner",
+        "name": "品牌策划师",
+        "directionId": "creative-molder",
+        "icon": "💡",
+        "description": "塑造品牌形象和传播策略，建立消费者认知。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.05,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.05,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "ux-designer", "name": "用户体验设计师", "directionId": "creative-molder",
-        "icon": "🎯", "description": "研究用户行为，设计直观易用的产品体验。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.05,"TF":0.05,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "ux-designer",
+        "name": "用户体验设计师",
+        "directionId": "creative-molder",
+        "icon": "🎯",
+        "description": "研究用户行为，设计直观易用的产品体验。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.05,
+          "TF": 0.05,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "illustrator", "name": "插画师/原画师", "directionId": "creative-molder",
-        "icon": "🎨", "description": "用绘画表达创意，为出版物、游戏和媒体创作视觉作品。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":-0.05,"GM":0.00,"AU":0.10,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "illustrator",
+        "name": "插画师/原画师",
+        "directionId": "creative-molder",
+        "icon": "🎨",
+        "description": "用绘画表达创意，为出版物、游戏和媒体创作视觉作品。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": -0.05,
+          "GM": 0.0,
+          "AU": 0.1,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "art-director", "name": "广告创意总监", "directionId": "creative-molder",
-        "icon": "🏆", "description": "主导广告创意方向，管理视觉设计和文案团队。",
-        "delta": { "nAch":0.00,"nPow":0.15,"nAff":0.00,"TF":0.00,"GM":0.10,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "art-director",
+        "name": "广告创意总监",
+        "directionId": "creative-molder",
+        "icon": "🏆",
+        "description": "主导广告创意方向，管理视觉设计和文案团队。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.15,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.1,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "self-media", "name": "自媒体运营/UP主", "directionId": "creative-molder",
-        "icon": "🎥", "description": "独立运营个人媒体频道，持续产出内容并建立粉丝社区。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.05,"SE":-0.05,"EC":0.10,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "self-media",
+        "name": "自媒体运营/UP主",
+        "directionId": "creative-molder",
+        "icon": "🎥",
+        "description": "独立运营个人媒体频道，持续产出内容并建立粉丝社区。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.05,
+          "SE": -0.05,
+          "EC": 0.1,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       }
     ],
     "people-connector": [
       {
-        "id": "hr-specialist", "name": "人力资源专员", "directionId": "people-connector",
-        "icon": "👥", "description": "管理招聘、培训、薪酬和员工关系。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.05,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "hr-specialist",
+        "name": "人力资源专员",
+        "directionId": "people-connector",
+        "icon": "👥",
+        "description": "管理招聘、培训、薪酬和员工关系。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.05,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "sales-manager", "name": "销售/客户经理", "directionId": "people-connector",
-        "icon": "💼", "description": "开拓市场、维护客户关系、达成销售目标。",
-        "delta": { "nAch":0.10,"nPow":0.10,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "sales-manager",
+        "name": "销售/客户经理",
+        "directionId": "people-connector",
+        "icon": "💼",
+        "description": "开拓市场、维护客户关系、达成销售目标。",
+        "delta": {
+          "nAch": 0.1,
+          "nPow": 0.1,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "pr-specialist", "name": "公关/品牌传播", "directionId": "people-connector",
-        "icon": "📢", "description": "管理企业公众形象，策划传播活动和媒体关系。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.05,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.05,"search":0.00 }
+        "id": "pr-specialist",
+        "name": "公关/品牌传播",
+        "directionId": "people-connector",
+        "icon": "📢",
+        "description": "管理企业公众形象，策划传播活动和媒体关系。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.05,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.05,
+          "search": 0.0
+        }
       },
       {
-        "id": "marketing-manager", "name": "市场运营", "directionId": "people-connector",
-        "icon": "📊", "description": "策划和执行市场营销活动，提升品牌知名度和转化率。",
-        "delta": { "nAch":0.05,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.05,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "marketing-manager",
+        "name": "市场运营",
+        "directionId": "people-connector",
+        "icon": "📊",
+        "description": "策划和执行市场营销活动，提升品牌知名度和转化率。",
+        "delta": {
+          "nAch": 0.05,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.05,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "corporate-trainer", "name": "培训师/企业讲师", "directionId": "people-connector",
-        "icon": "🎤", "description": "设计和讲授培训课程，提升员工能力和绩效。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.10,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.05,"search":0.00 }
+        "id": "corporate-trainer",
+        "name": "培训师/企业讲师",
+        "directionId": "people-connector",
+        "icon": "🎤",
+        "description": "设计和讲授培训课程，提升员工能力和绩效。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.1,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.05,
+          "search": 0.0
+        }
       },
       {
-        "id": "account-executive", "name": "大客户销售", "directionId": "people-connector",
-        "icon": "💎", "description": "维护和深化战略客户关系，推动大额订单成交。",
-        "delta": { "nAch":0.15,"nPow":0.10,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "account-executive",
+        "name": "大客户销售",
+        "directionId": "people-connector",
+        "icon": "💎",
+        "description": "维护和深化战略客户关系，推动大额订单成交。",
+        "delta": {
+          "nAch": 0.15,
+          "nPow": 0.1,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "recruiter", "name": "招聘顾问", "directionId": "people-connector",
-        "icon": "🔍", "description": "匹配人才和企业的需求，交付高效的招聘方案。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.05,"SV":0.05,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "recruiter",
+        "name": "招聘顾问",
+        "directionId": "people-connector",
+        "icon": "🔍",
+        "description": "匹配人才和企业的需求，交付高效的招聘方案。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.05,
+          "SV": 0.05,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "community-manager", "name": "社群运营", "directionId": "people-connector",
-        "icon": "🌐", "description": "建立和活跃用户社区，提升用户粘性和品牌忠诚度。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.05,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.05,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "community-manager",
+        "name": "社群运营",
+        "directionId": "people-connector",
+        "icon": "🌐",
+        "description": "建立和活跃用户社区，提升用户粘性和品牌忠诚度。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.05,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.05,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "bd-manager", "name": "商务拓展", "directionId": "people-connector",
-        "icon": "🤝", "description": "寻找和建立商业合作伙伴关系，拓展业务边界。",
-        "delta": { "nAch":0.05,"nPow":0.10,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.10,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "bd-manager",
+        "name": "商务拓展",
+        "directionId": "people-connector",
+        "icon": "🤝",
+        "description": "寻找和建立商业合作伙伴关系，拓展业务边界。",
+        "delta": {
+          "nAch": 0.05,
+          "nPow": 0.1,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.1,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       }
     ],
     "value-driver": [
       {
-        "id": "general-manager", "name": "企业管理者", "directionId": "value-driver",
-        "icon": "🏢", "description": "全面负责企业或事业部的运营、战略和绩效。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":-0.05,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "general-manager",
+        "name": "企业管理者",
+        "directionId": "value-driver",
+        "icon": "🏢",
+        "description": "全面负责企业或事业部的运营、战略和绩效。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": -0.05,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "entrepreneur", "name": "创业者/创始人", "directionId": "value-driver",
-        "icon": "🚀", "description": "从零创建企业，承担风险并将创意转化为商业价值。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.05,"SE":-0.10,"EC":0.15,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "entrepreneur",
+        "name": "创业者/创始人",
+        "directionId": "value-driver",
+        "icon": "🚀",
+        "description": "从零创建企业，承担风险并将创意转化为商业价值。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.05,
+          "SE": -0.1,
+          "EC": 0.15,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "project-manager", "name": "项目管理", "directionId": "value-driver",
-        "icon": "📋", "description": "规划和推进项目执行，确保时间、成本和质量目标达成。",
-        "delta": { "nAch":0.00,"nPow":-0.05,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "project-manager",
+        "name": "项目管理",
+        "directionId": "value-driver",
+        "icon": "📋",
+        "description": "规划和推进项目执行，确保时间、成本和质量目标达成。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": -0.05,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "management-consultant", "name": "管理咨询顾问", "directionId": "value-driver",
-        "icon": "💡", "description": "诊断企业问题，提供战略和组织改进方案。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.05,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.10,"presence":0.00,"search":0.00 }
+        "id": "management-consultant",
+        "name": "管理咨询顾问",
+        "directionId": "value-driver",
+        "icon": "💡",
+        "description": "诊断企业问题，提供战略和组织改进方案。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.05,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.1,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "operations-manager", "name": "运营管理", "directionId": "value-driver",
-        "icon": "⚙️", "description": "优化业务流程和日常运营，提升效率和产出质量。",
-        "delta": { "nAch":-0.05,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "operations-manager",
+        "name": "运营管理",
+        "directionId": "value-driver",
+        "icon": "⚙️",
+        "description": "优化业务流程和日常运营，提升效率和产出质量。",
+        "delta": {
+          "nAch": -0.05,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "investment-manager", "name": "投资经理", "directionId": "value-driver",
-        "icon": "💰", "description": "管理投资组合，评估投资机会和做出投资决策。",
-        "delta": { "nAch":0.10,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":-0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "investment-manager",
+        "name": "投资经理",
+        "directionId": "value-driver",
+        "icon": "💰",
+        "description": "管理投资组合，评估投资机会和做出投资决策。",
+        "delta": {
+          "nAch": 0.1,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": -0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "regional-director", "name": "区域总监/事业部head", "directionId": "value-driver",
-        "icon": "🌍", "description": "负责特定区域或事业部的全盘经营和管理。",
-        "delta": { "nAch":0.00,"nPow":0.05,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "regional-director",
+        "name": "区域总监/事业部head",
+        "directionId": "value-driver",
+        "icon": "🌍",
+        "description": "负责特定区域或事业部的全盘经营和管理。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.05,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "government-official", "name": "政府/事业单位负责人", "directionId": "value-driver",
-        "icon": "🏛️", "description": "在政府或事业单位中担任管理职务，推动政策落地。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.05,"AU":0.00,"SE":0.05,"EC":-0.10,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "government-official",
+        "name": "政府/事业单位负责人",
+        "directionId": "value-driver",
+        "icon": "🏛️",
+        "description": "在政府或事业单位中担任管理职务，推动政策落地。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.05,
+          "AU": 0.0,
+          "SE": 0.05,
+          "EC": -0.1,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "nonprofit-exec", "name": "非营利组织负责人", "directionId": "value-driver",
-        "icon": "🌿", "description": "领导非营利组织，协调资源实现社会公益目标。",
-        "delta": { "nAch":0.00,"nPow":-0.05,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.15,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "nonprofit-exec",
+        "name": "非营利组织负责人",
+        "directionId": "value-driver",
+        "icon": "🌿",
+        "description": "领导非营利组织，协调资源实现社会公益目标。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": -0.05,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.15,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       }
     ],
     "empowerment-companion": [
       {
-        "id": "clinical-psychologist", "name": "心理咨询师", "directionId": "empowerment-companion",
-        "icon": "🧠", "description": "评估心理状态，提供心理咨询和治疗服务。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.10,"presence":0.00,"search":0.05 }
+        "id": "clinical-psychologist",
+        "name": "心理咨询师",
+        "directionId": "empowerment-companion",
+        "icon": "🧠",
+        "description": "评估心理状态，提供心理咨询和治疗服务。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.1,
+          "presence": 0.0,
+          "search": 0.05
+        }
       },
       {
-        "id": "teacher-educator", "name": "教师/教育工作者", "directionId": "empowerment-companion",
-        "icon": "📖", "description": "传授知识、培养学生能力，引导和启发成长。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":-0.05,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.05,"search":0.00 }
+        "id": "teacher-educator",
+        "name": "教师/教育工作者",
+        "directionId": "empowerment-companion",
+        "icon": "📖",
+        "description": "传授知识、培养学生能力，引导和启发成长。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": -0.05,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.05,
+          "search": 0.0
+        }
       },
       {
-        "id": "registered-nurse", "name": "医护人员", "directionId": "empowerment-companion",
-        "icon": "🩺", "description": "提供医疗护理服务，关怀和照护病患的身心健康。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.10,"GM":0.00,"AU":0.00,"SE":0.05,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "registered-nurse",
+        "name": "医护人员",
+        "directionId": "empowerment-companion",
+        "icon": "🩺",
+        "description": "提供医疗护理服务，关怀和照护病患的身心健康。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.1,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.05,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "career-counselor", "name": "生涯规划师", "directionId": "empowerment-companion",
-        "icon": "🧭", "description": "帮助个人探索职业方向，制定生涯发展路径。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.10,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.05 }
+        "id": "career-counselor",
+        "name": "生涯规划师",
+        "directionId": "empowerment-companion",
+        "icon": "🧭",
+        "description": "帮助个人探索职业方向，制定生涯发展路径。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.1,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.05
+        }
       },
       {
-        "id": "social-worker", "name": "社会工作者", "directionId": "empowerment-companion",
-        "icon": "🤲", "description": "服务弱势群体，链接社会资源，促进社会公平。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":-0.05,"SE":0.00,"EC":0.00,"SV":0.00,"CH":-0.05,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "social-worker",
+        "name": "社会工作者",
+        "directionId": "empowerment-companion",
+        "icon": "🤲",
+        "description": "服务弱势群体，链接社会资源，促进社会公平。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": -0.05,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": -0.05,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "occupational-therapist", "name": "职业治疗师", "directionId": "empowerment-companion",
-        "icon": "👐", "description": "帮助患者恢复日常生活和工作的功能能力。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.05,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "occupational-therapist",
+        "name": "职业治疗师",
+        "directionId": "empowerment-companion",
+        "icon": "👐",
+        "description": "帮助患者恢复日常生活和工作的功能能力。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.05,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "dietitian", "name": "营养师/健康管理师", "directionId": "empowerment-companion",
-        "icon": "🥗", "description": "评估营养状况，制定个性化的饮食和健康管理方案。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.05,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.05,"presence":0.00,"search":0.00 }
+        "id": "dietitian",
+        "name": "营养师/健康管理师",
+        "directionId": "empowerment-companion",
+        "icon": "🥗",
+        "description": "评估营养状况，制定个性化的饮食和健康管理方案。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.05,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.05,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "elder-care-worker", "name": "养老护理员", "directionId": "empowerment-companion",
-        "icon": "👴", "description": "为老年人提供日常照护和情感陪伴。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.00,"TF":0.00,"GM":0.00,"AU":-0.05,"SE":0.05,"EC":0.00,"SV":0.10,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.00,"search":0.00 }
+        "id": "elder-care-worker",
+        "name": "养老护理员",
+        "directionId": "empowerment-companion",
+        "icon": "👴",
+        "description": "为老年人提供日常照护和情感陪伴。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.0,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": -0.05,
+          "SE": 0.05,
+          "EC": 0.0,
+          "SV": 0.1,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.0,
+          "search": 0.0
+        }
       },
       {
-        "id": "youth-counselor", "name": "青少年辅导员", "directionId": "empowerment-companion",
-        "icon": "🌟", "description": "引导青少年健康成长，提供情感支持和行为指导。",
-        "delta": { "nAch":0.00,"nPow":0.00,"nAff":0.05,"TF":0.00,"GM":0.00,"AU":0.00,"SE":0.00,"EC":0.00,"SV":0.00,"CH":0.00,"LS":0.00,"wholistAnalytic":0.00,"presence":0.05,"search":0.00 }
+        "id": "youth-counselor",
+        "name": "青少年辅导员",
+        "directionId": "empowerment-companion",
+        "icon": "🌟",
+        "description": "引导青少年健康成长，提供情感支持和行为指导。",
+        "delta": {
+          "nAch": 0.0,
+          "nPow": 0.0,
+          "nAff": 0.05,
+          "TF": 0.0,
+          "GM": 0.0,
+          "AU": 0.0,
+          "SE": 0.0,
+          "EC": 0.0,
+          "SV": 0.0,
+          "CH": 0.0,
+          "LS": 0.0,
+          "wholistAnalytic": 0.0,
+          "presence": 0.05,
+          "search": 0.0
+        }
       }
     ]
   },
@@ -439,22 +1861,97 @@
       "description": "通过人际互动推动 HR 业务落地，核心在于连接人与业务、个体与组织。",
       "icon": "🤝",
       "profiles": [
-        { "field": "nAch", "ideal": 0.6, "direction": "mid", "weight": 0.30 },
-        { "field": "nPow", "ideal": 0.7, "direction": "high", "weight": 0.35 },
-        { "field": "nAff", "ideal": 0.8, "direction": "high", "weight": 0.35 },
-        { "field": "TF", "ideal": 0.3, "direction": "low", "weight": 0.10 },
-        { "field": "GM", "ideal": 0.7, "direction": "high", "weight": 0.20 },
-        { "field": "AU", "ideal": 0.4, "direction": "mid", "weight": 0.05 },
-        { "field": "SE", "ideal": 0.5, "direction": "mid", "weight": 0.05 },
-        { "field": "EC", "ideal": 0.6, "direction": "mid", "weight": 0.10 },
-        { "field": "SV", "ideal": 0.8, "direction": "high", "weight": 0.25 },
-        { "field": "CH", "ideal": 0.5, "direction": "mid", "weight": 0.10 },
-        { "field": "LS", "ideal": 0.5, "direction": "mid", "weight": 0.15 },
-        { "field": "wholistAnalytic", "ideal": 0.5, "direction": "mid", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.7, "direction": "high", "weight": 0.60 },
-        { "field": "search", "ideal": 0.5, "direction": "mid", "weight": 0.40 }
+        {
+          "field": "nAch",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.3
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.35
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.35
+        },
+        {
+          "field": "TF",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.1
+        },
+        {
+          "field": "GM",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.2
+        },
+        {
+          "field": "AU",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "SE",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "EC",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "SV",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.25
+        },
+        {
+          "field": "CH",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "LS",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.15
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.6
+        },
+        {
+          "field": "search",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.4
+        }
       ],
-      "gameWeights": { "G1": 0.30, "G2": 0.25, "G3": 0.20, "G4": 0.25 }
+      "gameWeights": {
+        "G1": 0.3,
+        "G2": 0.25,
+        "G3": 0.2,
+        "G4": 0.25
+      }
     },
     "creative": {
       "id": "creative",
@@ -463,22 +1960,97 @@
       "description": "运用文字、策划、视频等技能进行内容创作，打造优质内容和文化氛围。",
       "icon": "🎨",
       "profiles": [
-        { "field": "nAch", "ideal": 0.7, "direction": "high", "weight": 0.33 },
-        { "field": "nPow", "ideal": 0.3, "direction": "low", "weight": 0.33 },
-        { "field": "nAff", "ideal": 0.5, "direction": "mid", "weight": 0.34 },
-        { "field": "TF", "ideal": 0.5, "direction": "mid", "weight": 0.08 },
-        { "field": "GM", "ideal": 0.4, "direction": "mid", "weight": 0.08 },
-        { "field": "AU", "ideal": 0.8, "direction": "high", "weight": 0.28 },
-        { "field": "SE", "ideal": 0.3, "direction": "low", "weight": 0.05 },
-        { "field": "EC", "ideal": 0.9, "direction": "high", "weight": 0.25 },
-        { "field": "SV", "ideal": 0.4, "direction": "mid", "weight": 0.05 },
-        { "field": "CH", "ideal": 0.7, "direction": "high", "weight": 0.13 },
-        { "field": "LS", "ideal": 0.6, "direction": "mid", "weight": 0.08 },
-        { "field": "wholistAnalytic", "ideal": 0.3, "direction": "low", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.6, "direction": "mid", "weight": 0.40 },
-        { "field": "search", "ideal": 0.8, "direction": "high", "weight": 0.60 }
+        {
+          "field": "nAch",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.33
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.33
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.34
+        },
+        {
+          "field": "TF",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "GM",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "AU",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.28
+        },
+        {
+          "field": "SE",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "EC",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.25
+        },
+        {
+          "field": "SV",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "CH",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.13
+        },
+        {
+          "field": "LS",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.4
+        },
+        {
+          "field": "search",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.6
+        }
       ],
-      "gameWeights": { "G1": 0.30, "G2": 0.25, "G3": 0.25, "G4": 0.20 }
+      "gameWeights": {
+        "G1": 0.3,
+        "G2": 0.25,
+        "G3": 0.25,
+        "G4": 0.2
+      }
     },
     "analytical": {
       "id": "analytical",
@@ -487,22 +2059,97 @@
       "description": "利用 AI 思维和工具分析人力资源数据，研究组织特性和员工心理，得出洞察推动专业提升。",
       "icon": "🔍",
       "profiles": [
-        { "field": "nAch", "ideal": 0.7, "direction": "high", "weight": 0.45 },
-        { "field": "nPow", "ideal": 0.3, "direction": "low", "weight": 0.30 },
-        { "field": "nAff", "ideal": 0.4, "direction": "mid", "weight": 0.25 },
-        { "field": "TF", "ideal": 0.8, "direction": "high", "weight": 0.30 },
-        { "field": "GM", "ideal": 0.4, "direction": "mid", "weight": 0.08 },
-        { "field": "AU", "ideal": 0.5, "direction": "mid", "weight": 0.10 },
-        { "field": "SE", "ideal": 0.6, "direction": "mid", "weight": 0.05 },
-        { "field": "EC", "ideal": 0.3, "direction": "low", "weight": 0.05 },
-        { "field": "SV", "ideal": 0.3, "direction": "low", "weight": 0.05 },
-        { "field": "CH", "ideal": 0.6, "direction": "mid", "weight": 0.22 },
-        { "field": "LS", "ideal": 0.4, "direction": "mid", "weight": 0.15 },
-        { "field": "wholistAnalytic", "ideal": 0.8, "direction": "high", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.5, "direction": "mid", "weight": 0.50 },
-        { "field": "search", "ideal": 0.4, "direction": "mid", "weight": 0.50 }
+        {
+          "field": "nAch",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.45
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.3
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.25
+        },
+        {
+          "field": "TF",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 0.3
+        },
+        {
+          "field": "GM",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "AU",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "SE",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.05
+        },
+        {
+          "field": "EC",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "SV",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "CH",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.22
+        },
+        {
+          "field": "LS",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.15
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.8,
+          "direction": "high",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.5
+        },
+        {
+          "field": "search",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.5
+        }
       ],
-      "gameWeights": { "G1": 0.30, "G2": 0.25, "G3": 0.25, "G4": 0.20 }
+      "gameWeights": {
+        "G1": 0.3,
+        "G2": 0.25,
+        "G3": 0.25,
+        "G4": 0.2
+      }
     },
     "technical": {
       "id": "technical",
@@ -511,22 +2158,97 @@
       "description": "利用前沿科技助力 HR 场景下的用户体验和效率提升，涵盖 AI 招聘、机器人助手、智能问答等。",
       "icon": "⚙️",
       "profiles": [
-        { "field": "nAch", "ideal": 0.7, "direction": "high", "weight": 0.40 },
-        { "field": "nPow", "ideal": 0.3, "direction": "low", "weight": 0.30 },
-        { "field": "nAff", "ideal": 0.4, "direction": "mid", "weight": 0.30 },
-        { "field": "TF", "ideal": 0.9, "direction": "high", "weight": 0.30 },
-        { "field": "GM", "ideal": 0.5, "direction": "mid", "weight": 0.10 },
-        { "field": "AU", "ideal": 0.5, "direction": "mid", "weight": 0.10 },
-        { "field": "SE", "ideal": 0.5, "direction": "mid", "weight": 0.08 },
-        { "field": "EC", "ideal": 0.5, "direction": "mid", "weight": 0.12 },
-        { "field": "SV", "ideal": 0.3, "direction": "low", "weight": 0.05 },
-        { "field": "CH", "ideal": 0.6, "direction": "mid", "weight": 0.15 },
-        { "field": "LS", "ideal": 0.4, "direction": "mid", "weight": 0.10 },
-        { "field": "wholistAnalytic", "ideal": 0.7, "direction": "high", "weight": 1.00 },
-        { "field": "presence", "ideal": 0.5, "direction": "mid", "weight": 0.40 },
-        { "field": "search", "ideal": 0.5, "direction": "mid", "weight": 0.60 }
+        {
+          "field": "nAch",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 0.4
+        },
+        {
+          "field": "nPow",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.3
+        },
+        {
+          "field": "nAff",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.3
+        },
+        {
+          "field": "TF",
+          "ideal": 0.9,
+          "direction": "high",
+          "weight": 0.3
+        },
+        {
+          "field": "GM",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "AU",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "SE",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.08
+        },
+        {
+          "field": "EC",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.12
+        },
+        {
+          "field": "SV",
+          "ideal": 0.3,
+          "direction": "low",
+          "weight": 0.05
+        },
+        {
+          "field": "CH",
+          "ideal": 0.6,
+          "direction": "mid",
+          "weight": 0.15
+        },
+        {
+          "field": "LS",
+          "ideal": 0.4,
+          "direction": "mid",
+          "weight": 0.1
+        },
+        {
+          "field": "wholistAnalytic",
+          "ideal": 0.7,
+          "direction": "high",
+          "weight": 1.0
+        },
+        {
+          "field": "presence",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.4
+        },
+        {
+          "field": "search",
+          "ideal": 0.5,
+          "direction": "mid",
+          "weight": 0.6
+        }
       ],
-      "gameWeights": { "G1": 0.25, "G2": 0.25, "G3": 0.25, "G4": 0.25 }
+      "gameWeights": {
+        "G1": 0.25,
+        "G2": 0.25,
+        "G3": 0.25,
+        "G4": 0.25
+      }
     }
   }
 }
