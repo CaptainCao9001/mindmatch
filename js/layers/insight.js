@@ -19,11 +19,12 @@ async function getApi() {
 
 /**
  * 构建 AI 解读 Prompt
- * @param {object} profile   - UnifiedProfile（integrator.js 输出）
- * @param {object} translation - translator.js 输出
+ * @param {object} profile      - UnifiedProfile（integrator.js 输出）
+ * @param {object} translation  - translator.js 输出
+ * @param {string} [behaviorNarrative=''] - behavior-narrative.js 的叙事文本
  * @returns {string}
  */
-function buildInsightPrompt(profile, translation) {
+function buildInsightPrompt(profile, translation, behaviorNarrative = '') {
   const { dimensions, meta } = profile;
 
   // 维度分数摘要（取前 6 高 + 前 2 低）
@@ -35,15 +36,6 @@ function buildInsightPrompt(profile, translation) {
   const transSummary = translation && translation.sections
     ? translation.sections.map((t) => `【${t.gameName || t.gameId}】${t.summary || ''}`).join('\n')
     : '（无翻译结果）';
-
-  // 行为摘要
-  const behaviors = [];
-  if (meta) {
-    if (meta.g1TopDrive) behaviors.push(`G1最高驱动力：${meta.g1TopDrive}`);
-    if (meta.g2TopAnchors) behaviors.push(`G2前3锚点：${meta.g2TopAnchors.join('、')}`);
-    if (meta.g3Type) behaviors.push(`G3认知类型：${meta.g3Type}`);
-    if (meta.g4Type) behaviors.push(`G4意义类型：${meta.g4Type}`);
-  }
 
   return `你是 MindMatch 的 AI 解读引擎。你的任务不是生成测评报告，而是帮用户「看到自己不曾察觉的地方」。
 
@@ -61,8 +53,8 @@ ${lowDims}
 ### 规则翻译摘要
 ${transSummary}
 
-### 游戏行为摘要
-${behaviors.length ? behaviors.join('\n') : '（无行为数据）'}
+### 行为叙事——你如何与游戏互动
+${behaviorNarrative || '（无行为叙事数据）'}
 
 ---
 
@@ -71,22 +63,39 @@ ${behaviors.length ? behaviors.join('\n') : '（无行为数据）'}
 严格按以下 JSON 格式输出，不要输出任何 JSON 以外的内容：
 
 {
-  "oneLiner": "一句话总结，15 字以内，适合做 Hero 展示，用第二人称",
-  "overall": "整体画像段落，120-150 字，跨维度交叉描述，用第二人称「你」，像朋友聊天，不像测评报告，不列举分数，讲这些分数意味着什么",
-  "highlights": [
-    "亮点1（维度组合洞察，20-30 字）",
-    "亮点2（反差或独特性，20-30 字）",
-    "亮点3（一致性或深层动机，20-30 字）"
+  "gameBehaviors": [
+    {
+      "game": "G1 核心驱动力",
+      "behavior": "先描述玩家做了什么（引用行为叙事中的具体数据：几秒、几张卡、哪个场景等），40-60 字，用第二人称「你」",
+      "comment": "再评价这个行为意味着什么（分析背后的心理模式：为什么快/慢、为什么翻多/翻少），40-60 字，用第二人称「你」"
+    },
+    {
+      "game": "G2 职业锚",
+      "behavior": "同上：描述翻牌行为和锚点选择",
+      "comment": "同上：评价探索风格和锚点组合的含义"
+    },
+    {
+      "game": "G3 认知风格",
+      "behavior": "同上：描述分组/排序节奏和结果",
+      "comment": "同上：评价认知节奏和自知程度"
+    },
+    {
+      "game": "G4 意义建构",
+      "behavior": "同上：描述临在感和追寻感的模式",
+      "comment": "同上：评价意义唤起模式的含义"
+    }
   ],
-  "tension": "矛盾或张力描述，50 字以内，如果用户各维度无显著矛盾则返回 null"
+  "summary": "跨游戏总结，120-150 字，用第二人称「你」。不重复各段 behavior/comment 已经说过的话，而是提炼贯穿四个游戏的核心模式——这些行为共同揭示了一个什么样的人。不要堆砌维度标签，要说这个人的特质意味着什么。"
 }
 
 ## 风格约束
 - 用「你」，不用「用户」
 - 像朋友聊天，不像测评报告
-- 不重复规则文案，要有增量信息
+- behavior 段必须引用行为叙事中的具体数据（秒数、张数、场景名）
+- comment 段必须解释行为背后的心理模式——不要只重复行为描述
+- summary 要跨游戏提炼一致模式，不要逐游戏复述
 - 不夸「你很优秀」「你很棒」，只说特质意味着什么
-- oneLiner 要有画面感，不要泛泛而谈`;
+- 不重复规则文案，要有增量信息`;
 }
 
 // ---------- 核心函数 ----------
@@ -96,11 +105,12 @@ ${behaviors.length ? behaviors.join('\n') : '（无行为数据）'}
  * @param {object} profile
  * @returns {string}
  */
-function getProfileHash(profile) {
+function getProfileHash(profile, behaviorNarrative = '') {
   const dims = JSON.stringify(profile.dimensions || {});
+  const seed = dims + '|' + (behaviorNarrative || '');
   let hash = 0;
-  for (let i = 0; i < dims.length; i++) {
-    const char = dims.charCodeAt(i);
+  for (let i = 0; i < seed.length; i++) {
+    const char = seed.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
     hash |= 0;
   }
@@ -109,18 +119,19 @@ function getProfileHash(profile) {
 
 /**
  * 调用 AI 生成人格洞察
- * @param {object} profile      - UnifiedProfile
- * @param {object} translation  - translator.js 输出
+ * @param {object} profile           - UnifiedProfile
+ * @param {object} translation       - translator.js 输出
  * @param {object} [options]
- * @param {boolean} [options.skipCache=false] - 跳过缓存强制重新调用
+ * @param {boolean} [options.skipCache=false]  - 跳过缓存强制重新调用
+ * @param {string} [options.behaviorNarrative] - 行为叙事文本
  * @returns {Promise<object|null>} - 结构化洞察结果，失败返回 null
  */
 export async function generateInsight(profile, translation, options = {}) {
-  const { skipCache = false } = options;
+  const { skipCache = false, behaviorNarrative = '' } = options;
 
   // 1. 检查缓存
   if (!skipCache) {
-    const hash = getProfileHash(profile);
+    const hash = getProfileHash(profile, behaviorNarrative);
     try {
       const cached = localStorage.getItem(hash);
       if (cached) {
@@ -131,14 +142,14 @@ export async function generateInsight(profile, translation, options = {}) {
   }
 
   // 2. 构建 Prompt
-  const prompt = buildInsightPrompt(profile, translation);
+  const prompt = buildInsightPrompt(profile, translation, behaviorNarrative);
 
   // 3. 调用 API（混元主，DeepSeek 降级）
   log('[Insight] 正在调用 AI...');
   const api = await getApi();
   const raw = await api.callWithFallback(prompt, {
     temperature: 0.8,
-    maxTokens: 1024,
+    maxTokens: 2048,
     timeout: 35000,
   });
 
@@ -156,13 +167,11 @@ export async function generateInsight(profile, translation, options = {}) {
     result = JSON.parse(jsonStr);
 
     // 验证必要字段
-    if (!result.oneLiner || !result.overall || !Array.isArray(result.highlights)) {
+    if (!result.gameBehaviors || !Array.isArray(result.gameBehaviors) || !result.summary) {
       logWarn('[Insight] API 返回格式不完整，尝试补全');
       result = {
-        oneLiner: result.oneLiner || '你是一个独特的人',
-        overall: result.overall || '你的思维特质组合颇具个性，值得深入探索。',
-        highlights: result.highlights || ['维度组合有亮点', '特质鲜明', '有独特优势'],
-        tension: result.tension || null,
+        gameBehaviors: result.gameBehaviors || [],
+        summary: result.summary || '你的思维特质组合颇具个性，值得深入探索。',
       };
     }
   } catch (err) {
@@ -173,7 +182,7 @@ export async function generateInsight(profile, translation, options = {}) {
 
   // 5. 写入缓存
   try {
-    const hash = getProfileHash(profile);
+    const hash = getProfileHash(profile, behaviorNarrative);
     localStorage.setItem(hash, JSON.stringify(result));
   } catch { /* ignore */ }
 

@@ -47,11 +47,12 @@ export const DiscardStrategy = {
   },
 
   // ═══ renderStage1: 百团大战 16→8 ═══
-  /** @returns {Promise<string[]>} 选中的卡片 ID 列表 */
+  /** @returns {Promise<{selected: string[], cardsFlipped: number, flippedCardIds: string[]}>} */
   renderStage1(container, allCards, stageCfg) {
     return new Promise(resolve => {
       const shuffled = shuffle(allCards);
       const selected = new Set();
+      const flippedCards = new Set();  // 翻牌记录
       const max = stageCfg.maxSelect;
 
       function updateUI() {
@@ -110,12 +111,14 @@ export const DiscardStrategy = {
         el.addEventListener('click', (e) => {
           if (!el.classList.contains('is-flipped') && !e.target.closest('button')) {
             el.classList.add('is-flipped');
+            flippedCards.add(card.id);
           }
         });
         el.addEventListener('keydown', (e) => {
           if ((e.key === 'Enter' || e.key === ' ') && !el.classList.contains('is-flipped')) {
             e.preventDefault();
             el.classList.add('is-flipped');
+            flippedCards.add(card.id);
           }
         });
       });
@@ -149,7 +152,7 @@ export const DiscardStrategy = {
 
       document.getElementById('js-g2-confirm').addEventListener('click', () => {
         if (selected.size >= 2 && selected.size <= max) {
-          resolve([...selected]);
+          resolve({ selected: [...selected], cardsFlipped: flippedCards.size, flippedCardIds: [...flippedCards] });
         }
       });
     });
@@ -196,6 +199,7 @@ export const DiscardStrategy = {
           <div class="g2-table-row__info">
             <span class="g2-table-row__name">${esc(card.front)}</span>
             <span class="g2-table-row__detail">${esc(card.detail)}</span>
+            <span class="g2-table-row__phase2">${esc(card.phase2 || card.detail)}</span>
           </div>
           <div class="g2-table-row__actions">
             <button class="btn btn-primary btn-sm g2-btn-keep" data-id="${card.id}" ${selected.has(card.id) ? '' : 'style="opacity:0.4"'}>${esc(stageCfg.joinLabel)}</button>

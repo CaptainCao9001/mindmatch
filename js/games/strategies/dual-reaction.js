@@ -94,6 +94,7 @@ export const DualReactionStrategy = {
       `;
 
       let presenceChoice = null;
+      let reactionOneTime = 0;
 
       // 反应① 点击处理
       const r1Opts = container.querySelectorAll('#js-g4-r1-card .g4-option');
@@ -102,6 +103,7 @@ export const DualReactionStrategy = {
           r1Opts.forEach(b => b.classList.remove('g4-option--chosen'));
           btn.classList.add('g4-option--chosen');
           presenceChoice = btn.dataset.id;
+          reactionOneTime = Math.round(performance.now() - startTime);  // 记录反应①完成时刻
 
           // 显示反应②卡片
           const r2Card = document.getElementById('js-g4-r2-card');
@@ -117,8 +119,9 @@ export const DualReactionStrategy = {
               b2.classList.add('g4-option--chosen');
 
               const reactionTime = Math.round(performance.now() - startTime);
+              const reactionTwoMs = Math.round(performance.now() - startTime - reactionOneTime);
               setTimeout(() => {
-                resolve({ presenceChoice, searchChoice: b2.dataset.id, reactionTime });
+                resolve({ presenceChoice, searchChoice: b2.dataset.id, reactionTime, reactionOneMs: reactionOneTime, reactionTwoMs });
               }, 300);
             }, { once: true });
           });

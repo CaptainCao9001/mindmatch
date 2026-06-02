@@ -23,8 +23,8 @@ function _autoDetectCloudFunctionUrl() {
   if (match) {
     return `https://${match[1]}.service.tcloudbase.com/proxy`;
   }
-  // CloudStudio 等沙箱域名 → 需要手动配置
-  return '';
+  // CloudStudio / 其他沙箱域名 → fallback 到 CloudBase 云函数
+  return 'https://mindmatch-d0gz847n4e29e3181.service.tcloudbase.com/proxy';
 }
 
 // ---------- 配置 ----------

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>行为叙事管道验证</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace; background: #0f0f1a; color: #e0e0f0; padding: 24px; font-size: 13px; }
+    h1 { font-size: 18px; margin-bottom: 6px; text-align: center; }
+    .subtitle { text-align: center; color: #666; margin-bottom: 20px; }
+    .tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .tab { padding: 6px 14px; border-radius: 6px; border: 1px solid #333; background: transparent; color: #999; cursor: pointer; font-size: 12px; }
+    .tab.active { background: #7c3aed; border-color: #7c3aed; color: white; }
+    .card { background: #1a1a2e; border: 1px solid #2a2a40; border-radius: 10px; padding: 16px; margin-bottom: 12px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .card h3 { font-size: 14px; color: #7c3aed; margin-bottom: 6px; }
+    .tag { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 3px; margin: 1px 3px; background: #1d103d; color: #a060f0; }
+    .narrative { background: #111; border: 1px solid #222; border-radius: 8px; padding: 14px; line-height: 1.8; white-space: pre-line; color: #c0c0d0; margin-top: 8px; max-width: 780px; margin-left: auto; margin-right: auto; }
+    .raw { font-size: 11px; color: #666; overflow-x: auto; }
+    .pass { color: #40d070; }
+    .fail { color: #f04040; }
+    .check { font-size: 11px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <h1>行为叙事管道验证</h1>
+  <p class="subtitle">不调 AI — 只验证 extractBehaviorNarrative + formatBehaviorNarrative 提取结果</p>
+  <div class="tabs" id="tabs"></div>
+  <div id="result"></div>
+
+  <script type="module">
+    import { extractBehaviorNarrative, formatBehaviorNarrative } from '../js/layers/behavior-narrative.js?v=20260602e';
+
+    const profiles = [
+      {
+        id: 'intuitive-fast', label: '直觉型快速决策者',
+        data: (() => { const n = Date.now(); return { game1:{ gameId:'game1',version:'1.0.0',dimensions:{nAch:8.2,nPow:3.5,nAff:4.1},decisions:[{scenarioId:'s1',chosenOptionId:'s1_a',decisionTime:920},{scenarioId:'s2',chosenOptionId:'s2_b',decisionTime:1340},{scenarioId:'s3',chosenOptionId:'s3_a',decisionTime:810},{scenarioId:'s4',chosenOptionId:'s4_d',decisionTime:1580},{scenarioId:'s5',chosenOptionId:'s5_c',decisionTime:1100}],meta:{totalTime:6140,elapsedMs:45000,decisionCount:5,scenarioIds:['s1','s2','s3','s4','s5'],completedAt:n}},game2:{gameId:'game2',version:'1.0.0',dimensions:{TF:9.0,GM:5.0,AU:4.0,SE:3.5,EC:6.0,SV:2.5,CH:5.5,LS:4.5},behaviorSummary:{primaryAnchor:'TF',secondaryAnchor:'EC',bottomAnchor:'SV'},decisions:[],meta:{totalTime:38000,elapsedMs:38000,decisionCount:16,cardsFlipped:6,stage1Kept:6,stage2Kept:4,stage3Kept:2,completedAt:n}},game3:{gameId:'game3',version:'1.0.0',dimensions:{wholistAnalytic:-0.2},behaviorSummary:{dominantStyle:'整体型',flexibility:5.5,impulseScore:8.0},decisions:[],meta:{stage1Time:12000,stage2Time:14000,greenCount:4,yellowCount:2,redCount:2,totalTime:26000,elapsedMs:52000,decisionCount:8,completedAt:n}},game4:{gameId:'game4',version:'1.0.0',dimensions:{presence:7.5,search:6.0},behaviorSummary:{profileType:'成长型'},decisions:[{scenarioId:'s1',reactionPresence:'s1_pA',reactionSearch:'s1_sA',reactionTimeMs:4500,reactionOneMs:1200,reactionTwoMs:3300},{scenarioId:'s2',reactionPresence:'s2_pA',reactionSearch:'s2_sB',reactionTimeMs:3800,reactionOneMs:800,reactionTwoMs:3000},{scenarioId:'s3',reactionPresence:'s3_pA',reactionSearch:'s3_sA',reactionTimeMs:5100,reactionOneMs:1500,reactionTwoMs:3600},{scenarioId:'s4',reactionPresence:'s4_pA',reactionSearch:'s4_sA',reactionTimeMs:4200,reactionOneMs:1100,reactionTwoMs:3100},{scenarioId:'s5',reactionPresence:'s5_pA',reactionSearch:'s5_sB',reactionTimeMs:3900,reactionOneMs:950,reactionTwoMs:2950},{scenarioId:'s6',reactionPresence:'s6_pB',reactionSearch:'s6_sA',reactionTimeMs:6800,reactionOneMs:2200,reactionTwoMs:4600}],meta:{totalTime:28400,elapsedMs:70000,reactionCount:6,avgReactionTimeMs:4716,completedAt:n}}}; })()
+      },
+      {
+        id: 'deliberate-slow', label: '审慎型慢速决策者',
+        data: (() => { const n = Date.now(); return { game1:{ gameId:'game1',version:'1.0.0',dimensions:{nAch:6.5,nPow:7.2,nAff:5.0},decisions:[{scenarioId:'s1',chosenOptionId:'s1_b',decisionTime:6200},{scenarioId:'s2',chosenOptionId:'s2_a',decisionTime:5100},{scenarioId:'s3',chosenOptionId:'s3_c',decisionTime:5800},{scenarioId:'s4',chosenOptionId:'s4_a',decisionTime:7100},{scenarioId:'s5',chosenOptionId:'s5_a',decisionTime:4400}],meta:{totalTime:28600,elapsedMs:58000,decisionCount:5,scenarioIds:['s1','s2','s3','s4','s5'],completedAt:n}},game2:{gameId:'game2',version:'1.0.0',dimensions:{TF:7.5,GM:5.5,AU:4.0,SE:3.0,EC:4.5,SV:6.0,CH:4.0,LS:5.5},behaviorSummary:{primaryAnchor:'TF',secondaryAnchor:'SV',bottomAnchor:'SE'},decisions:[],meta:{totalTime:72000,elapsedMs:72000,decisionCount:16,cardsFlipped:13,stage1Kept:6,stage2Kept:4,stage3Kept:2,completedAt:n}},game3:{gameId:'game3',version:'1.0.0',dimensions:{wholistAnalytic:0.45},behaviorSummary:{dominantStyle:'分析型',flexibility:4.0,impulseScore:3.0},decisions:[],meta:{stage1Time:28000,stage2Time:12000,greenCount:3,yellowCount:3,redCount:2,totalTime:40000,elapsedMs:65000,decisionCount:8,completedAt:n}},game4:{gameId:'game4',version:'1.0.0',dimensions:{presence:4.5,search:7.0},behaviorSummary:{profileType:'探索型'},decisions:[{scenarioId:'s1',reactionPresence:'s1_pB',reactionSearch:'s1_sA',reactionTimeMs:5600,reactionOneMs:3800,reactionTwoMs:1800},{scenarioId:'s2',reactionPresence:'s2_pB',reactionSearch:'s2_sA',reactionTimeMs:4800,reactionOneMs:3200,reactionTwoMs:1600},{scenarioId:'s3',reactionPresence:'s3_pA',reactionSearch:'s3_sA',reactionTimeMs:5200,reactionOneMs:3400,reactionTwoMs:1800},{scenarioId:'s4',reactionPresence:'s4_pB',reactionSearch:'s4_sA',reactionTimeMs:6100,reactionOneMs:4200,reactionTwoMs:1900},{scenarioId:'s5',reactionPresence:'s5_pB',reactionSearch:'s5_sA',reactionTimeMs:4500,reactionOneMs:2900,reactionTwoMs:1600},{scenarioId:'s6',reactionPresence:'s6_pA',reactionSearch:'s6_sB',reactionTimeMs:3800,reactionOneMs:2600,reactionTwoMs:1200}],meta:{totalTime:29800,elapsedMs:72000,reactionCount:6,avgReactionTimeMs:5000,completedAt:n}}}; })()
+      },
+      {
+        id: 'balanced-explorer', label: '均衡探索型',
+        data: (() => { const n = Date.now(); return { game1:{ gameId:'game1',version:'1.0.0',dimensions:{nAch:7.0,nPow:4.5,nAff:5.8},decisions:[{scenarioId:'s1',chosenOptionId:'s1_c',decisionTime:2400},{scenarioId:'s2',chosenOptionId:'s2_b',decisionTime:3100},{scenarioId:'s3',chosenOptionId:'s3_a',decisionTime:2600},{scenarioId:'s4',chosenOptionId:'s4_c',decisionTime:2800},{scenarioId:'s5',chosenOptionId:'s5_b',decisionTime:2200}],meta:{totalTime:13100,elapsedMs:48000,decisionCount:5,scenarioIds:['s1','s2','s3','s4','s5'],completedAt:n}},game2:{gameId:'game2',version:'1.0.0',dimensions:{GM:8.0,AU:7.5,TF:4.0,SE:4.5,EC:7.0,SV:3.5,CH:5.0,LS:6.0},behaviorSummary:{primaryAnchor:'GM',secondaryAnchor:'AU',bottomAnchor:'SV'},decisions:[],meta:{totalTime:55000,elapsedMs:55000,decisionCount:16,cardsFlipped:11,stage1Kept:6,stage2Kept:4,stage3Kept:2,completedAt:n}},game3:{gameId:'game3',version:'1.0.0',dimensions:{wholistAnalytic:-0.1},behaviorSummary:{dominantStyle:'平衡型',flexibility:6.5,impulseScore:5.0},decisions:[],meta:{stage1Time:18000,stage2Time:15000,greenCount:3,yellowCount:3,redCount:2,totalTime:33000,elapsedMs:60000,decisionCount:8,completedAt:n}},game4:{gameId:'game4',version:'1.0.0',dimensions:{presence:6.0,search:6.5},behaviorSummary:{profileType:'成长型'},decisions:[{scenarioId:'s1',reactionPresence:'s1_pA',reactionSearch:'s1_sA',reactionTimeMs:4000,reactionOneMs:2000,reactionTwoMs:2000},{scenarioId:'s2',reactionPresence:'s2_pA',reactionSearch:'s2_sA',reactionTimeMs:3800,reactionOneMs:1900,reactionTwoMs:1900},{scenarioId:'s3',reactionPresence:'s3_pA',reactionSearch:'s3_sB',reactionTimeMs:4200,reactionOneMs:2100,reactionTwoMs:2100},{scenarioId:'s4',reactionPresence:'s4_pB',reactionSearch:'s4_sA',reactionTimeMs:3500,reactionOneMs:1700,reactionTwoMs:1800},{scenarioId:'s5',reactionPresence:'s5_pA',reactionSearch:'s5_sA',reactionTimeMs:3600,reactionOneMs:1800,reactionTwoMs:1800},{scenarioId:'s6',reactionPresence:'s6_pA',reactionSearch:'s6_sB',reactionTimeMs:4400,reactionOneMs:2200,reactionTwoMs:2200}],meta:{totalTime:23500,elapsedMs:68000,reactionCount:6,avgReactionTimeMs:3916,completedAt:n}}}; })()
+      },
+      {
+        id: 'high-variance', label: '高波动矛盾型',
+        data: (() => { const n = Date.now(); return { game1:{ gameId:'game1',version:'1.0.0',dimensions:{nAch:5.0,nPow:8.5,nAff:3.0},decisions:[{scenarioId:'s1',chosenOptionId:'s1_b',decisionTime:7200},{scenarioId:'s2',chosenOptionId:'s2_a',decisionTime:1100},{scenarioId:'s3',chosenOptionId:'s3_b',decisionTime:5800},{scenarioId:'s4',chosenOptionId:'s4_c',decisionTime:950},{scenarioId:'s5',chosenOptionId:'s5_a',decisionTime:3900}],meta:{totalTime:18950,elapsedMs:52000,decisionCount:5,scenarioIds:['s1','s2','s3','s4','s5'],completedAt:n}},game2:{gameId:'game2',version:'1.0.0',dimensions:{GM:8.5,LS:7.0,AU:6.5,EC:5.5,TF:4.0,SE:3.5,SV:3.0,CH:4.5},behaviorSummary:{primaryAnchor:'GM',secondaryAnchor:'LS',bottomAnchor:'SV'},decisions:[],meta:{totalTime:28000,elapsedMs:28000,decisionCount:16,cardsFlipped:5,stage1Kept:6,stage2Kept:4,stage3Kept:2,completedAt:n}},game3:{gameId:'game3',version:'1.0.0',dimensions:{wholistAnalytic:0.30},behaviorSummary:{dominantStyle:'分析型',flexibility:3.5,impulseScore:3.5},decisions:[],meta:{stage1Time:25000,stage2Time:20000,greenCount:3,yellowCount:3,redCount:2,totalTime:45000,elapsedMs:70000,decisionCount:8,completedAt:n}},game4:{gameId:'game4',version:'1.0.0',dimensions:{presence:7.0,search:8.0},behaviorSummary:{profileType:'成长型'},decisions:[{scenarioId:'s1',reactionPresence:'s1_pA',reactionSearch:'s1_sA',reactionTimeMs:3500,reactionOneMs:2200,reactionTwoMs:1300},{scenarioId:'s2',reactionPresence:'s2_pB',reactionSearch:'s2_sA',reactionTimeMs:5200,reactionOneMs:3800,reactionTwoMs:1400},{scenarioId:'s3',reactionPresence:'s3_pA',reactionSearch:'s3_sA',reactionTimeMs:4100,reactionOneMs:2600,reactionTwoMs:1500},{scenarioId:'s4',reactionPresence:'s4_pA',reactionSearch:'s4_sA',reactionTimeMs:3800,reactionOneMs:2400,reactionTwoMs:1400},{scenarioId:'s5',reactionPresence:'s5_pB',reactionSearch:'s5_sA',reactionTimeMs:4900,reactionOneMs:3400,reactionTwoMs:1500},{scenarioId:'s6',reactionPresence:'s6_pA',reactionSearch:'s6_sB',reactionTimeMs:4400,reactionOneMs:2900,reactionTwoMs:1500}],meta:{totalTime:26000,elapsedMs:65000,reactionCount:6,avgReactionTimeMs:4316,completedAt:n}}}; })()
+      },
+    ];
+
+    // 渲染 tabs
+    const tabs = document.getElementById('tabs');
+    profiles.forEach((p, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'tab' + (i === 0 ? ' active' : '');
+      btn.textContent = p.label;
+      btn.addEventListener('click', () => {
+        tabs.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        show(p);
+      });
+      tabs.appendChild(btn);
+    });
+
+    function show(profile) {
+      const bn = extractBehaviorNarrative(profile.data);
+      const text = formatBehaviorNarrative(bn);
+
+      // 验证检查
+      const checks = [];
+      if (bn.g1 && bn.g1.anchors && bn.g1.anchors.length >= 2) checks.push({ pass: true, msg: 'G1: 锚点提取成功 (' + bn.g1.anchors.length + '个)' });
+      else checks.push({ pass: false, msg: 'G1: 锚点不足' });
+      if (bn.g2 && bn.g2.explorationStyle) checks.push({ pass: true, msg: 'G2: 探索风格=' + bn.g2.explorationStyle + ' 翻' + bn.g2.cardsFlipped + '选' + bn.g2.cardsSelected });
+      else checks.push({ pass: false, msg: 'G2: 提取失败' });
+      if (bn.g3 && bn.g3.cognitiveRhythm) checks.push({ pass: true, msg: 'G3: 认知节奏=' + bn.g3.cognitiveRhythm + ' impulse=' + bn.g3.impulseScore });
+      else checks.push({ pass: false, msg: 'G3: 提取失败' });
+      if (bn.g4 && bn.g4.meaningStyle) checks.push({ pass: true, msg: 'G4: 意义模式=' + bn.g4.meaningStyle + ' 共鸣="' + bn.g4.resonantLabel + '"' });
+      else checks.push({ pass: false, msg: 'G4: 提取失败' });
+
+      document.getElementById('result').innerHTML = `
+        <div class="card">
+          <h3>${profile.label} <span class="tag">${profile.id}</span></h3>
+          <div style="margin-bottom:8px">
+            ${checks.map(c => `<div class="check ${c.pass ? 'pass' : 'fail'}">${c.pass ? '✓' : '✗'} ${c.msg}</div>`).join('')}
+          </div>
+        </div>
+        <div class="narrative">${text}</div>
+        <div style="text-align:center;margin-top:12px">
+          <details>
+            <summary style="color:#666;cursor:pointer;font-size:11px">查看原始 JSON</summary>
+            <pre class="raw" style="max-width:780px;margin:8px auto;overflow-x:auto">${JSON.stringify(bn, null, 2)}</pre>
+          </details>
+        </div>
+      `;
+    }
+
+    // 默认展示第一个
+    show(profiles[0]);
+  </script>
+</body>
+</html>

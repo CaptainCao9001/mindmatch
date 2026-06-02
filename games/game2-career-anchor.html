@@ -493,6 +493,15 @@ body::after {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.g2-table-row__phase2 {
+  color: hsla(35,18%,62%,0.72);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  display: block;
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px dashed hsla(36,20%,28%,0.3);
+}
 .g2-table-row__actions {
   display: flex;
   gap: var(--space-2);
@@ -874,7 +883,9 @@ async function run() {
 
   // Phase 1: 阶段一 — 百团大战
   const stage1Cards = CARDS;
-  const s1Selected = await DiscardStrategy.renderStage1(root, stage1Cards, STAGES[0]);
+  const s1Result = await DiscardStrategy.renderStage1(root, stage1Cards, STAGES[0]);
+  const s1Selected = s1Result.selected;
+  const cardsFlipped = s1Result.cardsFlipped;
   keptCards = s1Selected;
   stage1Kept = s1Selected.length;
   // 记录决策
@@ -948,6 +959,7 @@ async function run() {
       totalTime: Math.round(performance.now() - startTime),
       elapsedMs: Math.round(performance.now() - startTime),
       decisionCount: allDecisions.length,
+      cardsFlipped,
       stage1Kept,
       stage2Kept,
       stage3Kept,

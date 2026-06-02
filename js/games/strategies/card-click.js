@@ -123,7 +123,7 @@ export const CardClickStrategy = {
 
           // 短暂停留后自动推进（让用户看到确认反馈）
           setTimeout(() => {
-            resolve({ chosenOptionId: optionId, decisionTime });
+            resolve({ scenarioId: scenario.id, chosenOptionId: optionId, decisionTime });
           }, SELECTED_DELAY_MS);
         });
       });

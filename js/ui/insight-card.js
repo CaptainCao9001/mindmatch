@@ -58,83 +58,131 @@ const INSIGHT_CSS = `
   color: var(--color-text, #f0f0f0);
 }
 
-/* 整体画像 */
-.insight-overall {
-  color: var(--color-text-secondary, #a0a0b8);
-  font-size: var(--text-base);
-  line-height: 1.8;
+/* 游戏行为卡片 */
+.insight-game-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
   margin-bottom: var(--space-5);
 }
 
-/* 亮点列表 */
-.insight-highlights {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--space-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.insight-highlight-item {
-  display: flex;
-  gap: var(--space-3);
-  align-items: flex-start;
-  padding: var(--space-3) var(--space-4);
+.insight-game-item {
+  padding: var(--space-4);
   background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-md);
   border-left: 3px solid var(--color-primary, #7c3aed);
 }
 
-.insight-highlight-icon {
-  font-size: var(--text-base);
-  flex-shrink: 0;
-  margin-top: 2px;
+.insight-game-title {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-primary, #7c3aed);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
 }
 
-.insight-highlight-text {
+.insight-game-behavior {
+  color: var(--color-text-secondary, #a0a0b8);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-3);
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+.insight-game-comment {
   color: var(--color-text, #f0f0f0);
   font-size: var(--text-sm);
-  line-height: 1.6;
+  line-height: 1.7;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-primary, #7c3aed);
+  font-weight: 500;
 }
 
-/* 矛盾/张力 */
-.insight-tension {
-  padding: var(--space-3) var(--space-4);
-  background: rgba(245, 158, 11, 0.08);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+/* 跨游戏总结 */
+.insight-summary {
+  padding: var(--space-4);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(124, 58, 237, 0.02));
+  border: 1px solid rgba(124, 58, 237, 0.15);
   border-radius: var(--radius-md);
-  margin-bottom: var(--space-4);
-  color: var(--color-warning, #f59e0b);
-  font-size: var(--text-sm);
-  line-height: 1.6;
+  color: var(--color-text, #f0f0f0);
+  font-size: var(--text-base);
+  line-height: 1.8;
 }
 
-/* 加载骨架屏 */
+.insight-summary-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-primary, #7c3aed);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+/* 加载进度 */
 .insight-loading {
   display: flex;
   flex-direction: column;
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  gap: var(--space-5);
+}
+
+.insight-loading-header {
+  display: flex;
   align-items: center;
-  padding: var(--space-8) var(--space-4);
-  gap: var(--space-4);
+  justify-content: center;
+  gap: var(--space-3);
+  color: var(--color-primary, #7c3aed);
+  font-size: var(--text-base);
+  font-weight: 600;
 }
 
-.insight-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid rgba(124, 58, 237, 0.2);
-  border-top-color: var(--color-primary, #7c3aed);
-  border-radius: 50%;
-  animation: insightSpin 0.8s linear infinite;
+.insight-loading-icon {
+  font-size: var(--text-xl);
+  animation: insightPulse 2s ease-in-out infinite;
 }
 
-@keyframes insightSpin {
-  to { transform: rotate(360deg); }
+@keyframes insightPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.95); }
 }
 
-.insight-loading-text {
-  color: var(--color-text-muted, #6b6b80);
+.insight-progress-wrap {
+  width: 100%;
+  height: 4px;
+  background: rgba(124, 58, 237, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.insight-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-primary, #7c3aed), #a78bfa, var(--color-primary, #7c3aed));
+  background-size: 200% 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+  animation: insightShimmer 1.5s linear infinite;
+}
+
+@keyframes insightShimmer {
+  from { background-position: 200% 0; }
+  to { background-position: 0 0; }
+}
+
+.insight-stage-icon {
+  text-align: center;
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-1);
+}
+
+.insight-stage-text {
+  text-align: center;
+  color: var(--color-text-secondary, #a0a0b8);
   font-size: var(--text-sm);
+  line-height: 1.5;
+  transition: opacity 0.3s ease;
 }
 
 /* 失败态 */
@@ -253,7 +301,7 @@ export function renderInsightTrigger(containerId, onClick) {
 }
 
 /**
- * 渲染加载态
+ * 渲染加载态（分阶段进度条）
  * @param {string} [containerId] - 默认 'insightCardContainer'
  */
 export function renderInsightLoading(containerId) {
@@ -261,40 +309,99 @@ export function renderInsightLoading(containerId) {
   const container = document.getElementById(containerId || 'insightCardContainer');
   if (!container) return;
 
+  const stages = [
+    { pct: 20, icon: '🎯', text: '正在分析核心驱动力…' },
+    { pct: 40, icon: '⚓', text: '正在评估职业锚点…' },
+    { pct: 60, icon: '🧩', text: '正在理解认知风格…' },
+    { pct: 80, icon: '💡', text: '正在解读意义建构…' },
+    { pct: 95, icon: '✨', text: '正在汇总洞察…' },
+  ];
+
   container.innerHTML = `
     <div class="insight-section">
       <div class="insight-card">
         <div class="insight-loading">
-          <div class="insight-spinner"></div>
-          <div class="insight-loading-text">正在分析你的思维特质...</div>
+          <div class="insight-loading-header">
+            <span class="insight-loading-icon">🧠</span>
+            <span>AI 正在深度解读</span>
+          </div>
+          <div class="insight-progress-wrap">
+            <div class="insight-progress-bar" id="insightProgressBar" style="width:0%"></div>
+          </div>
+          <div>
+            <div class="insight-stage-icon" id="insightStageIcon">🎯</div>
+            <div class="insight-stage-text" id="insightStageText">正在分析核心驱动力…</div>
+          </div>
         </div>
       </div>
     </div>
   `;
+
+  // 分阶段推进进度条（4s × 5 阶段）
+  const bar = document.getElementById('insightProgressBar');
+  const icon = document.getElementById('insightStageIcon');
+  const text = document.getElementById('insightStageText');
+  if (!bar || !icon || !text) return;
+
+  let stageIdx = 0;
+  const intervalMs = 4000;
+
+  function nextStage() {
+    if (stageIdx >= stages.length) return;
+    const s = stages[stageIdx];
+    bar.style.width = `${s.pct}%`;
+    icon.textContent = s.icon;
+    text.textContent = s.text;
+    stageIdx++;
+  }
+
+  nextStage(); // 第 0 秒立即显示第一阶段
+  const timer = setInterval(() => {
+    if (stageIdx >= stages.length) {
+      clearInterval(timer);
+      return;
+    }
+    nextStage();
+  }, intervalMs);
+
+  // 将 timer 存到 DOM 上，成功态渲染时清除
+  container._insightTimer = timer;
 }
 
 /**
  * 渲染成功态
  * @param {string} [containerId] - 默认 'insightCardContainer'
- * @param {object} data - { oneLiner, overall, highlights, tension }
+ * @param {object} data - { gameBehaviors, summary }
  */
 export function renderInsightSuccess(containerId, data) {
   ensureCss();
   const container = document.getElementById(containerId || 'insightCardContainer');
   if (!container) return;
 
-  const icons = ['✨', '⚡', '🎯'];
-  const highlightsHtml = (data.highlights || [])
-    .map((h, i) => `
-      <li class="insight-highlight-item">
-        <span class="insight-highlight-icon">${icons[i] || '◆'}</span>
-        <span class="insight-highlight-text">${h}</span>
-      </li>
-    `)
+  // 清除加载态计时器
+  if (container._insightTimer) { clearInterval(container._insightTimer); container._insightTimer = null; }
+
+  const gameIcons = { 'G1': '🎯', 'G2': '⚓', 'G3': '🧩', 'G4': '💡' };
+
+  const gameBehaviorsHtml = (data.gameBehaviors || [])
+    .map(gb => {
+      const gameTag = gb.game ? gb.game.substring(0, 2) : '';
+      const icon = gameIcons[gameTag] || '◆';
+      return `
+        <div class="insight-game-item">
+          <div class="insight-game-title">${icon} ${gb.game || ''}</div>
+          <div class="insight-game-behavior">${gb.behavior || ''}</div>
+          <div class="insight-game-comment">${gb.comment || ''}</div>
+        </div>
+      `;
+    })
     .join('');
 
-  const tensionHtml = data.tension
-    ? `<div class="insight-tension">⚠️ ${data.tension}</div>`
+  const summaryHtml = data.summary
+    ? `<div class="insight-summary">
+        <div class="insight-summary-label">🧠 总结</div>
+        ${data.summary}
+      </div>`
     : '';
 
   container.innerHTML = `
@@ -304,10 +411,8 @@ export function renderInsightSuccess(containerId, data) {
           <span class="insight-header-icon">🧠</span>
           <h3>AI 深度解读</h3>
         </div>
-        <div class="insight-oneliner">${data.oneLiner || '你是一个独特的人'}</div>
-        <div class="insight-overall">${data.overall || ''}</div>
-        <ul class="insight-highlights">${highlightsHtml}</ul>
-        ${tensionHtml}
+        <div class="insight-game-list">${gameBehaviorsHtml}</div>
+        ${summaryHtml}
         <div class="insight-cached-hint">💡 已缓存，刷新页面无需重新生成</div>
       </div>
     </div>
@@ -333,6 +438,9 @@ export function renderInsightError(containerId, onRetry, lastError) {
   ensureCss();
   const container = document.getElementById(containerId || 'insightCardContainer');
   if (!container) return;
+
+  // 清除加载态计时器
+  if (container._insightTimer) { clearInterval(container._insightTimer); container._insightTimer = null; }
 
   const errorDetail = lastError ? `<p style="font-size:12px;color:#6b6b80;margin-top:8px;">错误详情: ${lastError}</p>` : '';
 

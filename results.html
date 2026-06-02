@@ -85,7 +85,7 @@
 
   <!-- ========== App Script ========== -->
   <script type="module">
-    import { clear } from './js/core/store.js';
+    import { clear, load } from './js/core/store.js';
 
     const VER = `?v=${window.__MM_VER__ || '1'}`;
 
@@ -104,6 +104,9 @@
     let _renderInsightLoading = null;
     let _renderInsightSuccess = null;
     let _renderInsightError = null;
+    let _extractBehaviorNarrative = null;
+    let _formatBehaviorNarrative = null;
+    let _behaviorNarrativeText = '';
 
     async function loadCoreModules() {
       const [integratorMod, translatorMod, portraitMod, chartsMod] = await Promise.all([
@@ -122,9 +125,10 @@
 
     async function loadAIModules() {
       try {
-        const [insightMod, cardMod] = await Promise.all([
+        const [insightMod, cardMod, bnMod] = await Promise.all([
           import(`./js/layers/insight.js${VER}`),
           import(`./js/ui/insight-card.js${VER}`),
+          import(`./js/layers/behavior-narrative.js${VER}`),
         ]);
         _generateInsight = insightMod.generateInsight;
         _hasInsightCache = insightMod.hasInsightCache;
@@ -132,6 +136,8 @@
         _renderInsightLoading = cardMod.renderInsightLoading;
         _renderInsightSuccess = cardMod.renderInsightSuccess;
         _renderInsightError = cardMod.renderInsightError;
+        _extractBehaviorNarrative = bnMod.extractBehaviorNarrative;
+        _formatBehaviorNarrative = bnMod.formatBehaviorNarrative;
         console.log('[MindMatch] AI 模块加载成功 ✅');
         return true;
       } catch (e) {
@@ -177,10 +183,17 @@
         if (count === 4) {
           const aiReady = await loadAIModules();
           if (aiReady) {
+            // 提取行为叙事
+            if (_extractBehaviorNarrative && _formatBehaviorNarrative) {
+              const rawData = { game1: load('game1'), game2: load('game2'), game3: load('game3'), game4: load('game4') };
+              const bn = _extractBehaviorNarrative(rawData);
+              _behaviorNarrativeText = _formatBehaviorNarrative(bn);
+              console.log('[MindMatch] 行为叙事提取完成');
+            }
             // 检查是否有缓存的 AI 解读
             if (_hasInsightCache && _hasInsightCache(_profile)) {
               console.log('[MindMatch] 命中 AI 缓存，直接渲染');
-              const result = await _generateInsight(_profile, _translation);
+              const result = await _generateInsight(_profile, _translation, { behaviorNarrative: _behaviorNarrativeText });
               if (result) {
                 _renderInsightSuccess('insightCardContainer', result);
                 document.getElementById('insightTriggerContainer').style.display = 'none';
@@ -351,7 +364,7 @@
 
       try {
         console.log('[MindMatch] 调用 _generateInsight...');
-        const result = await _generateInsight(_profile, _translation, { skipCache: false });
+        const result = await _generateInsight(_profile, _translation, { skipCache: false, behaviorNarrative: _behaviorNarrativeText });
 
         if (result) {
           console.log('[MindMatch] AI 解读生成成功');
