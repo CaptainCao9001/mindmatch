@@ -190,6 +190,52 @@ function readMeta() {
   return { userId: null, completedGames: [] };
 }
 
+// ---------- 职业对话数据 ----------
+
+const CAREER_GUIDE_KEY = STORAGE_PREFIX + 'career_guide';
+
+/**
+ * 保存职业对话数据
+ * @param {object} data - 包含 { state, collected, history, profileSummary, result }
+ */
+export function saveCareerGuide(data) {
+  const backend = getBackend();
+  try {
+    const existing = loadCareerGuide() || {};
+    const merged = { ...existing, ...data, updatedAt: Date.now() };
+    backend.setItem(CAREER_GUIDE_KEY, JSON.stringify(merged));
+  } catch {
+    logWarn('保存职业对话数据失败');
+  }
+}
+
+/**
+ * 读取职业对话数据
+ * @returns {object|null}
+ */
+export function loadCareerGuide() {
+  const backend = getBackend();
+  try {
+    const raw = backend.getItem(CAREER_GUIDE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 检查是否完成了全部4个游戏（G1-G4）
+ * @returns {boolean}
+ */
+export function hasAllGameData() {
+  const meta = readMeta();
+  return meta && meta.completedGames &&
+    meta.completedGames.includes('game1') &&
+    meta.completedGames.includes('game2') &&
+    meta.completedGames.includes('game3') &&
+    meta.completedGames.includes('game4');
+}
+
 // ---------- 测试模式 ----------
 
 /**

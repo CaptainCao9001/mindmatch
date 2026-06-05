@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>六帧手记 — MindMatch</title>
-<script>window.__MM_VER__ = '20260601c';</script>
-<link rel="stylesheet" href="../css/base.css?v=20260603a">
-<link rel="stylesheet" href="../css/components.css?v=20260603a">
-<link rel="stylesheet" href="../css/games.css?v=20260603a">
+<script>window.__MM_VER__ = '20260603e';</script>
+<link rel="stylesheet" href="../css/base.css?v=20260603e">
+<link rel="stylesheet" href="../css/components.css?v=20260603e">
+<link rel="stylesheet" href="../css/games.css?v=20260603e">
 <style>
 /* ================================================================
    G4 暗房洗印 — 深红 safelight · 显影盘 · 底片浮现
@@ -202,21 +202,6 @@ body { background: var(--dr-bg); }
   font-family: system-ui,-apple-system,sans-serif;
 }
 
-/* ========== 场景插图 — Safelight 下的底片 ========== */
-.g4-scene__illustration {
-  margin-bottom: var(--space-8);
-  text-align: center;
-}
-.g4-scene__illustration img {
-  max-width: 320px; width: 100%; height: auto;
-  border-radius: 2px;
-  border: 1px solid hsla(0,25%,20%,0.45);
-  /* 暗房红光调色：降亮 + 棕褐 + 去饱和 + 红移 */
-  filter: brightness(0.75) sepia(0.35) saturate(0.45) hue-rotate(-10deg);
-  box-shadow: 0 0 24px hsla(0,55%,18%,0.18);
-  transition: filter 0.8s ease;
-}
-
 /* ========== 反应卡片 —「药水工序」========== */
 .g4-reaction-card {
   background: hsla(0,12%,5%,0.65);
@@ -371,10 +356,34 @@ body { background: var(--dr-bg); }
 }
 
 /* ========== 响应式 ========== */
-@media (max-width:640px) {
-  .g4-scene { padding:var(--space-6) var(--space-5); }
-  .g4-scene__title { font-size:var(--text-2xl); }
-  .g4-option { padding:var(--space-4) var(--space-5); }
+@media (max-width: 768px) {
+  .g4-scene { padding: var(--space-7) var(--space-6); }
+  .g4-scene__title { font-size: var(--text-2xl); }
+}
+
+@media (max-width: 640px) {
+  .g4-scene { padding: var(--space-6) var(--space-5); }
+  .g4-scene__title { font-size: var(--text-2xl); }
+  .g4-option { padding: var(--space-4) var(--space-5); }
+}
+
+@media (max-width: 480px) {
+  .g4-intro { padding: var(--space-10) var(--space-3); }
+  .g4-intro__title { font-size: var(--text-2xl); }
+  .g4-scene { padding: var(--space-4) var(--space-3); }
+  .g4-scene__title { font-size: var(--text-lg); }
+  .g4-scene__story { font-size: var(--text-sm); line-height: 1.7; }
+  .g4-scene__tag { font-size: 10px; padding: 2px 8px; }
+  .g4-option { padding: var(--space-3) var(--space-4); font-size: var(--text-xs); }
+  .g4-reaction-card__prompt { font-size: 10px; }
+  .g4-reaction-card { padding: var(--space-4); }
+  .g4-completion { padding: var(--space-10) var(--space-3); }
+  .g4-completion__title { font-size: var(--text-2xl); }
+  .g4-completion__type { padding: var(--space-4); }
+  .g4-type__emoji { font-size: 2rem; }
+  .g4-type__label { font-size: var(--text-base); }
+  .g4-type__title { font-size: var(--text-base); }
+  .g4-type__desc { font-size: var(--text-xs); }
 }
 </style>
 </head>
@@ -389,10 +398,10 @@ body { background: var(--dr-bg); }
 // G4 游戏页面（线性循环: 6场景 × 双重反应）
 // ============================================================
 
-import { SCENARIOS, GAME_CONFIG } from '../js/games/game4-data.js?v=20260603a';
-import { DualReactionStrategy } from '../js/games/strategies/dual-reaction.js?v=20260603a';
-import { save } from '../js/core/store.js?v=20260603a';
-import { clamp } from '../js/core/utils.js?v=20260603a';
+import { SCENARIOS, GAME_CONFIG } from '../js/games/game4-data.js?v=20260603e';
+import { DualReactionStrategy } from '../js/games/strategies/dual-reaction.js?v=20260603e';
+import { save } from '../js/core/store.js?v=20260603e';
+import { clamp } from '../js/core/utils.js?v=20260603e';
 
 async function run() {
   const root = document.getElementById('js-game-root');

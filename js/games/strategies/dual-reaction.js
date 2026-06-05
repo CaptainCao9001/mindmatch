@@ -63,10 +63,6 @@ export const DualReactionStrategy = {
           <h2 class="g4-scene__title">${esc(scenario.title)}</h2>
           <p class="g4-scene__story">${esc(scenario.story)}</p>
 
-          <div class="g4-scene__illustration">
-            <img src="images/${esc(scenario.id)}.png" alt="" loading="lazy" />
-          </div>
-
           <!-- 反应①: Presence — 独立卡片 -->
           <div class="g4-reaction-card" id="js-g4-r1-card">
             <p class="g4-reaction-card__prompt">${esc(scenario.reactions.presence.prompt)}</p>
@@ -142,7 +138,7 @@ export const DualReactionStrategy = {
         <div class="g4-completion animate-scale-in">
           <div class="g4-completion__icon" aria-hidden="true">📖</div>
           <h2 class="g4-completion__title">六帧手记已经翻完了</h2>
-          <p class="g4-completion__subtitle">你的答案，不是某一个画面给的——而是六个画面叠加后，浮现出来的那个东西。</p>
+          <p class="g4-completion__subtitle">答案不在某一个画面里，而是六个画面叠在一起后，自然浮现出来的那个东西。</p>
 
           <div class="g4-completion__type">
             <span class="g4-type__emoji">${t.emoji}</span>

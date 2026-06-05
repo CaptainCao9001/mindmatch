@@ -7,7 +7,7 @@
 //   用户无需在客户端配置 Key，打开页面即可使用 AI 功能
 // ============================================================
 
-import { log, logWarn, logError } from './utils.js?v=20260603a';
+import { log, logWarn, logError } from './utils.js?v=20260603b';
 
 // ---------- 环境检测 ----------
 const _isLocalhost = typeof location !== 'undefined' &&
@@ -287,26 +287,38 @@ export async function callDeepseek(prompt, options = {}) {
 }
 
 /**
- * 带降级的调用：混元失败 → 自动尝试 DeepSeek
+ * 带降级的调用：主 provider 失败 → 自动尝试备选
+ *
+ * @param {string} prompt
+ * @param {object} options
+ * @param {string} [options.preferredProvider='hunyuan'] — 'hunyuan' 或 'deepseek'，指定主 provider
  */
 export async function callWithFallback(prompt, options = {}) {
   loadKeysFromStorage();
 
-  const hunyuanResult = await callHunyuan(prompt, options);
-  if (hunyuanResult !== null) {
-    return hunyuanResult;
+  const { preferredProvider = 'hunyuan' } = options;
+
+  // 主 provider
+  const primaryFn = preferredProvider === 'deepseek' ? callDeepseek : callHunyuan;
+  const fallbackFn = preferredProvider === 'deepseek' ? callHunyuan : callDeepseek;
+  const primaryName = preferredProvider === 'deepseek' ? 'DeepSeek' : '混元';
+  const fallbackName = preferredProvider === 'deepseek' ? '混元' : 'DeepSeek';
+
+  const primaryResult = await primaryFn(prompt, options);
+  if (primaryResult !== null) {
+    return primaryResult;
   }
 
-  log('混元不可用，尝试 DeepSeek 降级...');
+  log(`${primaryName} 不可用，尝试 ${fallbackName} 降级...`);
 
-  const deepseekResult = await callDeepseek(prompt, options);
-  if (deepseekResult !== null) {
-    log('已降级到 DeepSeek');
+  const fallbackResult = await fallbackFn(prompt, options);
+  if (fallbackResult !== null) {
+    log(`已降级到 ${fallbackName}`);
   } else {
     logWarn('所有 API 均不可用');
   }
 
-  return deepseekResult;
+  return fallbackResult;
 }
 
 /**

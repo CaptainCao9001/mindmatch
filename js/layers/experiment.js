@@ -1,5 +1,5 @@
 // ============================================================
-// M: experiment.js — 方向验证实验 AI 层
+// M: experiment.js — 方向探索 AI 层
 // 职责: 构建 Prompt + 调用混元 API，返回结构化实验结果
 // 模式: 镜像 insight.js（Prompt 构建 + API 调用 + 缓存）
 // ============================================================
@@ -18,7 +18,7 @@ async function getApi() {
 // ---------- Prompt 模板 ----------
 
 /**
- * 构建方向验证实验的 Prompt
+ * 构建方向探索的 Prompt
  * @param {object} profile           - UnifiedProfile（14 维）
  * @param {Array}  directionReport   - directionMatch() 的输出（方向排名数组）
  * @param {string} translationText   - translator 翻译文本
@@ -144,7 +144,7 @@ function getExperimentHash(profile, directionReport) {
 }
 
 /**
- * 调用 AI 生成方向验证实验
+ * 调用 AI 生成方向探索
  * @param {object} profile           - UnifiedProfile
  * @param {Array}  directionReport   - directionMatch() 输出
  * @param {string} translationText   - 翻译文本
@@ -178,6 +178,7 @@ export async function generateExperiments(profile, directionReport, translationT
     temperature: 0.8,
     maxTokens: 2048,
     timeout: 35000,
+    preferredProvider: 'deepseek',
   });
 
   if (!raw) {

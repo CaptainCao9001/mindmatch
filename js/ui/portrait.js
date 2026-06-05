@@ -58,6 +58,8 @@ export function renderPortrait(containerId, data) {
 
     if (section) {
       // 已完成——渲染详细内容
+      // G3 维度名特殊处理：避免和标题"认知风格"重复，显示风格标签
+      const G3_LEVEL_LABELS = { high: '分析型', medium: '平衡型', low: '整体型' };
       card.innerHTML = `
         <div class="portrait-card-header">
           <span class="portrait-card-icon">${GAME_ICONS[gameId]}</span>
@@ -68,7 +70,7 @@ export function renderPortrait(containerId, data) {
           <div class="portrait-dims">
             ${section.dimensions.map(d => `
               <div class="portrait-dim ${d.level}">
-                <span class="portrait-dim-name">${d.name}</span>
+                <span class="portrait-dim-name">${gameId === 'game3' ? (G3_LEVEL_LABELS[d.level] || d.name) : d.name}</span>
                 <span class="portrait-dim-score">${d.score}${typeof d.score === 'number' ? (Math.abs(d.score) <= 1 && d.id === 'wholistAnalytic' ? '' : '/10') : ''}</span>
               </div>
             `).join('')}

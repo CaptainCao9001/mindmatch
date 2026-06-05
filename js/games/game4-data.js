@@ -18,7 +18,7 @@ export const SCENARIOS = [
         prompt: '看到这段记忆，你的感受更接近',
         options: [
           { id: 's1_pA', text: '原来不知不觉已经走到这里了', score: +1 },
-          { id: 's1_pB', text: '就……普通的一天而已', score: -1 },
+          { id: 's1_pB', text: '没什么特别的，普通的一天', score: -1 },
         ],
       },
       search: {
@@ -134,7 +134,7 @@ export const SCENARIOS = [
       search: {
         prompt: '接下来你更想',
         options: [
-          { id: 's6_sA', text: '他转了，我呢？', score: +1 },
+          { id: 's6_sA', text: '他找到了想走的路，我会找到我的吗？', score: +1 },
           { id: 's6_sB', text: '有些关系不会因为距离而变', score: -1 },
         ],
       },
@@ -178,7 +178,7 @@ export const GAME_CONFIG = {
   intro: {
     subtitle: '第四站',
     title: '时光交汇',
-    description: '有些事，平时想不起来。可它们一直都在。像口袋里一枚忘了的硬币，像不知什么时候就绿了的树。已经走过的路，正在走的路，还没走到的路——六个画面，从过去、现在和还没来的日子里轻轻浮上来。不用想太多。只是看着，让心慢慢回答。',
+    description: '已经走过的路、正在走的路、还没走到的地方——六个画面，从记忆里轻轻浮上来。不用分析，不用判断。看着它们，听听心里那个声音。',
     estimatedTime: '约 3-5 分钟',
     ctaText: '轻轻翻开',
   },

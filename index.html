@@ -3,26 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MindMatch — 帮你看到自己不曾察觉的地方</title>
-  <meta name="description" content="通过 4 个投射式小游戏，10-15 分钟，生成你的专属思维肖像与岗位匹配分析。">
-  <script>window.__MM_VER__ = '20260603a';</script>
-  <link rel="stylesheet" href="css/base.css?v=20260603a">
-  <link rel="stylesheet" href="css/components.css?v=20260603a">
-  <link rel="stylesheet" href="css/index.css?v=20260603a">
+  <title>MindMatch — 认识自己，从一次取舍开始</title>
+  <meta name="description" content="4 个轻量小游戏，不考知识，不测对错。从你的每一次取舍中，还原你真正在意的东西。">
+  <script>window.__MM_VER__ = '20260603g';</script>
+  <link rel="stylesheet" href="css/base.css?v=20260603g">
+  <link rel="stylesheet" href="css/components.css?v=20260603g">
+  <link rel="stylesheet" href="css/index.css?v=20260603g">
 </head>
-<body>
+<body style="margin:0;background:#0d0d12;">
+
+<!-- Demo 提示 -->
+<div style="
+  width:100%;padding:8px;text-align:center;
+  background:hsla(48,100%,50%,0.13);
+  border-bottom:1px solid hsla(48,100%,50%,0.25);
+  color:hsl(48,100%,52%);
+  font-size:14px;
+  font-weight:500;
+  letter-spacing:.03em;
+  font-family:system-ui,-apple-system,sans-serif;
+">🛠 开发中 Demo · 结果仅供体验参考，不构成专业建议</div>
 
 <main class="page-landing">
 
   <!-- ========== Hero ========== -->
   <section class="hero">
     <h1 class="hero__brand">Mind<span>Match</span></h1>
-    <p class="hero__tagline">帮你看到自己不曾察觉的地方</p>
+    <p class="hero__tagline">认识自己，从一次取舍开始</p>
 
     <div class="hero__intro">
-      这不是测试，是帮你了解自己。<br>
-      通过 4 个小游戏，观察你在压力下的真实倾向，<br>
-      生成你的专属思维肖像。
+      4 个轻量小游戏，不考知识，不测对错。<br>
+      从你的每一次取舍中，还原你真正在意的东西。
     </div>
 
     <div class="hero__time">
@@ -47,6 +58,27 @@
       查看我的思维肖像
       <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
+  </div>
+
+  <!-- ========== Career Guide CTA ========== -->
+  <div class="career-guide-cta" style="text-align:center;padding:var(--space-6) var(--space-4);max-width:600px;margin:0 auto;">
+    <a href="career-guide.html" style="
+      display:inline-flex;align-items:center;gap:8px;
+      padding:12px 28px;
+      background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(16,185,129,0.08));
+      border:1px solid rgba(124,58,237,0.25);
+      border-radius:12px;
+      color:var(--color-text);
+      font-size:15px;
+      font-weight:500;
+      text-decoration:none;
+      transition:all .25s;
+    " onmouseover="this.style.borderColor='rgba(124,58,237,0.5)';this.style.transform='translateY(-1px)'"
+       onmouseout="this.style.borderColor='rgba(124,58,237,0.25)';this.style.transform='translateY(0)'">
+      🧭 直接探索职业方向
+      <svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    </a>
+    <p style="color:var(--color-text-muted);font-size:12px;margin-top:8px;">不想做测评？直接和 AI 聊聊你的职业方向</p>
   </div>
 
   <!-- ========== Footer ========== -->

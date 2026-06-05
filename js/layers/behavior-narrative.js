@@ -15,8 +15,8 @@ const G1_SLOW_MS = 3600;       // 快于 G1_FAST 算直觉，慢于此算审慎
 const G1_VAR_HIGH = 2.5;       // max/avg > 这个算高波动
 const G1_TREND_RATIO = 0.7;    // 前/后 < 这个算变速
 
-const G2_FLIP_TARGET = 1.2;    // flip/kept <= 这个算目标型
-const G2_FLIP_EXPLORE = 2.0;   // flip/kept >= 这个算探索型
+const G2_VIEW_TARGET = 1.2;    // view/kept <= 这个算目标型
+const G2_VIEW_EXPLORE = 2.0;   // view/kept >= 这个算探索型
 const G2_ANCHOR_GAP = 3.0;     // primary-secondary >= 这个算差距明显
 
 const G3_IMPULSE_HIGH = 7;     // impulse >= 这个算直觉型
@@ -124,14 +124,14 @@ function extractG2(game2) {
   if (!game2 || !game2.meta) return null;
 
   const { meta, behaviorSummary } = game2;
-  const cardsFlipped = meta.cardsFlipped || 0;
+  const cardsViewed = meta.cardsViewed || 0;
   const cardsSelected = meta.stage1Kept || 0;
-  const flipRatio = cardsSelected > 0 ? cardsFlipped / cardsSelected : 0;
+  const viewRatio = cardsSelected > 0 ? cardsViewed / cardsSelected : 0;
 
   // 探索风格
   let explorationStyle;
-  if (flipRatio <= G2_FLIP_TARGET) explorationStyle = '目标型';
-  else if (flipRatio >= G2_FLIP_EXPLORE) explorationStyle = '探索型';
+  if (viewRatio <= G2_VIEW_TARGET) explorationStyle = '目标型';
+  else if (viewRatio >= G2_VIEW_EXPLORE) explorationStyle = '探索型';
   else explorationStyle = '均衡型';
 
   // 锚差距
@@ -151,7 +151,7 @@ function extractG2(game2) {
 
   return {
     explorationStyle,
-    cardsFlipped,
+    cardsViewed,
     cardsSelected,
     primaryAnchor,
     primaryLabel: anchorLabels[primaryAnchor] || primaryAnchor,
@@ -316,7 +316,7 @@ export function formatBehaviorNarrative(bn) {
   // G2
   if (bn.g2) {
     const g2 = bn.g2;
-    let text = `你属于${g2.explorationStyle}（${g2.cardsFlipped}/${g2.cardsSelected + g2.cardsFlipped} 张卡翻看了 ${g2.cardsFlipped} 张）`;
+    let text = `你属于${g2.explorationStyle}（查看了 ${g2.cardsViewed} 个社团，最终加入 ${g2.cardsSelected} 个）`;
     text += `，核心锚是${g2.primaryLabel}和${g2.secondaryLabel}`;
     text += `（${g2.gapNote}，差 ${g2.anchorGap} 分）`;
     parts.push(text);

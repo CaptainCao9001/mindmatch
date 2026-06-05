@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>平行宇宙观察站 — MindMatch</title>
-<script>window.__MM_VER__ = '20260601h';</script>
-<link rel="stylesheet" href="../css/base.css?v=20260603a">
-<link rel="stylesheet" href="../css/components.css?v=20260603a">
-<link rel="stylesheet" href="../css/games.css?v=20260603a">
+<script>window.__MM_VER__ = '20260603f';</script>
+<link rel="stylesheet" href="../css/base.css?v=20260603b">
+<link rel="stylesheet" href="../css/components.css?v=20260603b">
+<link rel="stylesheet" href="../css/games.css?v=20260603b">
 <style>
 /* ========== G3 专属样式 ========== */
 
@@ -292,6 +292,8 @@ body::before {
   box-shadow:0 2px 16px hsla(260,35%,30%,0.2);
 }
 .g3-card--dragging { opacity:0.3; transform:scale(0.95); }
+.g3-card--selected { border-color:hsla(200,80%,65%,0.8); box-shadow:0 0 12px hsla(200,80%,65%,0.35); transform:translateY(-1px); }
+
 .g3-card__title { font-weight:600; font-size:var(--text-sm); display:block; margin-bottom:var(--space-1); color:hsla(240,25%,88%,0.95); }
 .g3-card__detail { color:hsla(230,15%,60%,0.75); font-size:var(--text-xs); line-height:1.4; margin:0; }
 
@@ -301,12 +303,38 @@ body::before {
 .g3-card--red    { background:hsla(0,22%,10%,0.55); border-color:hsla(0,28%,22%,0.55); }
 .g3-card--pool   { background:hsla(240,25%,10%,0.55); border-color:hsla(240,18%,28%,0.4); }
 
-/* 移动端 */
+/* 移动端 — 纵向滚动布局 */
 @media (max-width:700px) {
-  .g3-layout { flex-direction:column; }
+  .g3-layout { flex-direction:column; gap:var(--space-4); }
   .g3-pool { flex:none; position:static; }
+  .g3-pool__cards { max-height:40vh; overflow-y:auto; }
+  .g3-zones { flex:none; }
 }
 
+@media (max-width:640px) {
+  .g3-fragment-grid { grid-template-columns:1fr; }
+  .g3-group-counter { gap:var(--space-3); }
+}
+
+@media (max-width:480px) {
+  .g3-intro { padding: var(--space-10) var(--space-3); }
+  .g3-intro__title { font-size: var(--text-2xl); }
+  .g3-intro__desc { padding: 0 var(--space-2); font-size: var(--text-xs); }
+  .g3-stage__title { font-size: var(--text-2xl); }
+  .g3-pool__cards { grid-template-columns: 1fr; }
+  .g3-pool { padding: var(--space-3); }
+  .g3-zone { padding: var(--space-2) var(--space-3); min-height: 70px; }
+  .g3-card { padding: var(--space-2) var(--space-3); }
+  .g3-card__title { font-size: var(--text-xs); }
+  .g3-sort-card { padding: var(--space-3) var(--space-4); gap: var(--space-3); }
+  .g3-sort-card__title { font-size: var(--text-sm); }
+  .g3-sort-card__rank { font-size: var(--text-base); }
+  .g3-completion { padding: var(--space-8) var(--space-3); }
+  .g3-completion__title { font-size: var(--text-2xl); }
+  .g3-completion__style-tag { font-size: var(--text-lg); padding: var(--space-2) var(--space-4); }
+  .g3-continuum { gap: var(--space-2); }
+  .g3-continuum__label { font-size: 10px; }
+}
 /* ========== 阶段二 — 拖拽排序 ========== */
 .g3-sort-list { display:flex; flex-direction:column; gap:var(--space-3); max-width:500px; margin:0 auto; }
 .g3-sort-card {
@@ -375,11 +403,6 @@ body::before {
 .g3-completion__desc { color:hsla(230,18%,68%,0.8); max-width:480px; margin:0 auto var(--space-6); line-height:1.7; }
 .g3-completion__message { color:hsla(230,18%,68%,0.8); font-size:var(--text-base); white-space:pre-line; margin-bottom:var(--space-8); }
 .g3-completion__nav { display:flex; gap:var(--space-4); justify-content:center; flex-wrap:wrap; }
-
-@media (max-width:640px) {
-  .g3-fragment-grid { grid-template-columns:1fr; }
-  .g3-group-counter { gap:var(--space-3); }
-}
 
 /* ============================================================
  * G3 按钮 & 边框 — 太空主题统一
@@ -479,10 +502,10 @@ body::before {
 // G3 游戏页面（两阶段编排 + 计算流水线）
 // ============================================================
 
-  import { FRAGMENTS, FRAGMENT_DIMENSIONS, GROUPS, RANK_WEIGHTS, FEEDBACK_TEXT, GAME_CONFIG } from '../js/games/game3-data.js?v=20260603a';
-  import { FocusSortStrategy } from '../js/games/strategies/focus-sort.js?v=20260603a';
-  import { save } from '../js/core/store.js?v=20260603a';
-  import { clamp } from '../js/core/utils.js?v=20260603a';
+  import { FRAGMENTS, FRAGMENT_DIMENSIONS, GROUPS, RANK_WEIGHTS, FEEDBACK_TEXT, GAME_CONFIG } from '../js/games/game3-data.js?v=20260603b';
+  import { FocusSortStrategy } from '../js/games/strategies/focus-sort.js?v=20260603b';
+  import { save } from '../js/core/store.js?v=20260603b';
+  import { clamp } from '../js/core/utils.js?v=20260603b';
 
 // ---------- 编排器 ----------
 

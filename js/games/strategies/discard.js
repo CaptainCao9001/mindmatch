@@ -1,6 +1,6 @@
 // ============================================================
-// Strategy: discard.js — 翻牌抛弃策略（G2 职业锚）
-// 职责: 三阶段批处理 UI 渲染（翻牌 + 保留/抛弃 + 拍立得选择）
+// Strategy: discard.js — 逐步抛弃策略（G2 职业锚）
+// 职责: 三阶段批处理 UI 渲染（列表浏览 + 保留/抛弃 + 故事卡选择）
 // 接口: 每个阶段方法返回 Promise，resolve 时返回选中的卡片列表
 // ============================================================
 
@@ -32,11 +32,30 @@ export const DiscardStrategy = {
   renderIntro(container, config) {
     return new Promise(resolve => {
       const intro = config.intro || {};
+      const stages = STAGES;
+      const stageIcons = ['🎪', '📚', '🧳'];
       container.innerHTML = `
         <div class="g2-intro animate-fade-in">
           <p class="g2-intro__subtitle">${esc(intro.subtitle)}</p>
           <h2 class="g2-intro__title">${esc(intro.title)}</h2>
           <p class="g2-intro__desc">${intro.description}</p>
+
+          <div class="g2-intro__stages">
+            ${stages.map((s, i) => `
+              <div class="g2-intro__stage-card">
+                <div class="g2-intro__stage-top">
+                  <span class="g2-intro__stage-icon">${stageIcons[i]}</span>
+                  <div>
+                    <span class="g2-intro__stage-num">阶段${i + 1}</span>
+                    <span class="g2-intro__stage-name">${esc(s.name)}</span>
+                  </div>
+                </div>
+                <p class="g2-intro__stage-sub">${esc(s.subtitle)}</p>
+                <p class="g2-intro__stage-desc">${esc(s.description)}</p>
+              </div>
+            `).join('')}
+          </div>
+
           ${intro.estimatedTime ? `<p class="g2-intro__time">⏱ ${esc(intro.estimatedTime)}</p>` : ''}
           <button class="btn btn-primary btn-lg g2-intro__cta" id="js-g2-start">${esc(intro.ctaText)}</button>
         </div>
@@ -46,21 +65,49 @@ export const DiscardStrategy = {
     });
   },
 
-  // ═══ renderStage1: 百团大战 16→8 ═══
-  /** @returns {Promise<{selected: string[], cardsFlipped: number, flippedCardIds: string[]}>} */
+  // ═══ renderStage1: 百团大战 16→8 — 左右分栏 ═══
+  /** @returns {Promise<{selected: string[], cardsViewed: number, viewedCardIds: string[]}>} */
   renderStage1(container, allCards, stageCfg) {
     return new Promise(resolve => {
       const shuffled = shuffle(allCards);
       const selected = new Set();
-      const flippedCards = new Set();  // 翻牌记录
+      const viewedCards = new Set();    // 点击左侧列表查看过的卡片
+      let activeCardId = null;          // 当前右侧展示的卡片
+
       const max = stageCfg.maxSelect;
 
       function updateUI() {
         const count = selected.size;
         document.getElementById('js-g2-count').textContent = count;
-        document.getElementById('js-g2-confirm').disabled = count < 2 || count > max;
-        document.getElementById('js-g2-confirm').textContent =
-          count < 2 ? `至少选 2 张（已选 ${count}）` : count > max ? `最多选 ${max} 张` : `确认选择（${count}/${max}）`;
+        const confirmBtn = document.getElementById('js-g2-confirm');
+        confirmBtn.disabled = count < 2 || count > max;
+        confirmBtn.textContent =
+          count < 2 ? `至少选 2 个（已选 ${count}）` : count > max ? `最多选 ${max} 个` : `确认选择（${count}/${max}）`;
+      }
+
+      function updateList() {
+        // 更新左侧列表的选中/激活状态
+        document.querySelectorAll('.g2-club-item').forEach(el => {
+          const id = el.dataset.id;
+          el.classList.toggle('g2-club-item--active', id === activeCardId);
+          el.classList.toggle('g2-club-item--joined', selected.has(id));
+        });
+      }
+
+      function showDetail(card) {
+        activeCardId = card.id;
+        viewedCards.add(card.id);
+        const panel = document.getElementById('js-g2-detail');
+        const isJoined = selected.has(card.id);
+        panel.innerHTML = `
+          <div class="g2-detail__name">${esc(card.front)}</div>
+          <p class="g2-detail__text">${esc(card.detail)}</p>
+          <button class="btn btn-primary g2-detail__join" id="js-g2-join" data-id="${card.id}">
+            ${isJoined ? '✓ 已加入 — 点击退出' : esc(stageCfg.joinLabel)}
+          </button>
+        `;
+        panel.classList.add('g2-detail--visible');
+        updateList();
       }
 
       container.innerHTML = `
@@ -71,64 +118,46 @@ export const DiscardStrategy = {
             <p class="g2-stage__subtitle">${esc(stageCfg.subtitle)}</p>
           </div>
           <p class="g2-stage__desc">${esc(stageCfg.description)}</p>
-          <p class="g2-stage__hint">${esc(stageCfg.instruction)}</p>
-          <div class="g2-card-grid" id="js-g2-grid"></div>
+
+          <div class="g2-split">
+            <div class="g2-split__list" id="js-g2-list"></div>
+            <div class="g2-split__detail" id="js-g2-detail">
+              <div class="g2-detail__placeholder">← 点击左侧社团查看详情</div>
+            </div>
+          </div>
+
           <div class="g2-stage__bar">
             <span class="g2-stage__count">已选：<strong id="js-g2-count">0</strong></span>
-            <button class="btn btn-primary" id="js-g2-confirm" disabled>至少选 2 张（已选 0）</button>
+            <button class="btn btn-primary" id="js-g2-confirm" disabled>至少选 2 个（已选 0）</button>
           </div>
         </div>
       `;
 
-      // 渲染所有卡片
-      const grid = document.getElementById('js-g2-grid');
+      // 渲染左侧列表
+      const list = document.getElementById('js-g2-list');
       shuffled.forEach(card => {
-        const el = document.createElement('div');
-        el.className = 'g2-card';
-        el.tabIndex = 0;
-        el.setAttribute('role', 'button');
-        el.setAttribute('aria-label', `${esc(card.front)} - 点击翻牌查看详情`);
-        el.innerHTML = `
-          <div class="g2-card__inner">
-            <div class="g2-card__front">
-              <span class="g2-card__name">${esc(card.front)}</span>
-              <span class="g2-card__flip-hint">点击查看</span>
-              <span class="g2-card__stamp">已加入</span>
-            </div>
-            <div class="g2-card__back">
-              <span class="g2-card__back-name">${esc(card.front)}</span>
-              <p class="g2-card__detail">${esc(card.detail)}</p>
-              <div class="g2-card__actions">
-                <button class="btn btn-primary btn-sm g2-card__join" data-id="${card.id}">${esc(stageCfg.joinLabel)}</button>
-              </div>
-              <span class="g2-card__stamp">已加入</span>
-            </div>
-          </div>
+        const item = document.createElement('div');
+        item.className = 'g2-club-item';
+        item.dataset.id = card.id;
+        item.tabIndex = 0;
+        item.setAttribute('role', 'button');
+        item.setAttribute('aria-label', `查看 ${card.front} 详情`);
+        item.innerHTML = `
+          <span class="g2-club-item__name">${esc(card.front)}</span>
+          <span class="g2-club-item__check">✓</span>
         `;
-        grid.appendChild(el);
-
-        // 翻牌
-        el.addEventListener('click', (e) => {
-          if (!el.classList.contains('is-flipped') && !e.target.closest('button')) {
-            el.classList.add('is-flipped');
-            flippedCards.add(card.id);
-          }
+        item.addEventListener('click', () => showDetail(card));
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDetail(card); }
         });
-        el.addEventListener('keydown', (e) => {
-          if ((e.key === 'Enter' || e.key === ' ') && !el.classList.contains('is-flipped')) {
-            e.preventDefault();
-            el.classList.add('is-flipped');
-            flippedCards.add(card.id);
-          }
-        });
+        list.appendChild(item);
       });
 
-      // 加入按钮事件（委托）
-      grid.addEventListener('click', (e) => {
-        const btn = e.target.closest('.g2-card__join');
+      // 右侧加入按钮事件（委托）
+      document.getElementById('js-g2-detail').addEventListener('click', (e) => {
+        const btn = e.target.closest('#js-g2-join');
         if (!btn) return;
         const cardId = btn.dataset.id;
-        e.stopPropagation(); // 阻止冒泡到卡片翻牌
 
         if (selected.has(cardId)) {
           selected.delete(cardId);
@@ -137,22 +166,15 @@ export const DiscardStrategy = {
           selected.add(cardId);
         }
 
-        // 高亮卡片
-        grid.querySelectorAll('.g2-card').forEach(el => {
-          const joinBtn = el.querySelector('.g2-card__join');
-          if (joinBtn && selected.has(joinBtn.dataset.id)) {
-            el.classList.add('g2-card--kept');
-          } else {
-            el.classList.remove('g2-card--kept');
-          }
-        });
-
+        // 重新渲染当前详情
+        const card = allCards.find(c => c.id === cardId);
+        if (card) showDetail(card);
         updateUI();
       });
 
       document.getElementById('js-g2-confirm').addEventListener('click', () => {
         if (selected.size >= 2 && selected.size <= max) {
-          resolve({ selected: [...selected], cardsFlipped: flippedCards.size, flippedCardIds: [...flippedCards] });
+          resolve({ selected: [...selected], cardsViewed: viewedCards.size, viewedCardIds: [...viewedCards] });
         }
       });
     });
@@ -198,7 +220,6 @@ export const DiscardStrategy = {
         row.innerHTML = `
           <div class="g2-table-row__info">
             <span class="g2-table-row__name">${esc(card.front)}</span>
-            <span class="g2-table-row__detail">${esc(card.detail)}</span>
             <span class="g2-table-row__phase2">${esc(card.phase2 || card.detail)}</span>
           </div>
           <div class="g2-table-row__actions">
@@ -281,10 +302,10 @@ export const DiscardStrategy = {
         el.setAttribute('role', 'checkbox');
         el.setAttribute('aria-checked', 'false');
         el.setAttribute('aria-label', `选择: ${esc(card.front)}`);
+        const storyText = card.phase2 || card.detail || '';
         el.innerHTML = `
-          <div class="g2-polaroid__img"></div>
-          <div class="g2-polaroid__text">${esc(card.front)}</div>
-          <div class="g2-polaroid__sub">${esc(card.detail.substring(0, 30))}...</div>
+          <div class="g2-polaroid__label">${esc(card.front)}</div>
+          <div class="g2-polaroid__story">${esc(storyText)}</div>
         `;
 
         el.addEventListener('click', () => {

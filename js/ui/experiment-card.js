@@ -1,12 +1,12 @@
 // ============================================================
-// experiment-card.js — 方向验证实验卡片 UI 组件
+// experiment-card.js — 方向探索卡片 UI 组件
 // 职责: 渲染按钮态/加载态/结果态/错误态
 // 依赖: ../core/utils.js（仅 log，容错）
 // ============================================================
 
 const EXPERIMENT_CSS = `
 .experiment-section {
-  max-width: 800px;
+  max-width: 680px;
   margin: var(--space-8) auto 0;
   padding: 0 var(--space-4);
 }
@@ -48,7 +48,7 @@ const EXPERIMENT_CSS = `
   border: 1px solid rgba(124, 58, 237, 0.25);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
-  max-width: 800px;
+  max-width: 680px;
   margin: var(--space-8) auto 0;
 }
 
@@ -111,7 +111,7 @@ const EXPERIMENT_CSS = `
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  max-width: 800px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 0 var(--space-4);
 }
@@ -137,6 +137,7 @@ const EXPERIMENT_CSS = `
 .experiment-card-top {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-3);
   margin-bottom: var(--space-3);
 }
@@ -155,6 +156,7 @@ const EXPERIMENT_CSS = `
   color: var(--color-text-secondary, #a0a0b8);
   font-size: var(--text-sm);
   line-height: 1.8;
+  text-align: center;
 }
 
 /* 收尾语 */
@@ -217,7 +219,7 @@ function ensureCss() {
 // ---------- 渲染函数 ----------
 
 /**
- * 渲染「生成我的验证实验」按钮
+ * 渲染「生成我的方向探索」按钮
  * @param {string} containerId
  * @param {function} onClick - 按钮点击回调
  */
@@ -230,7 +232,7 @@ export function renderExperimentButton(containerId, onClick) {
     <div class="experiment-btn-wrap">
       <button class="experiment-btn" id="experimentBtn">
         <span class="experiment-btn-icon">🧪</span>
-        <span>生成我的验证实验</span>
+        <span>生成我的方向探索</span>
       </button>
     </div>
   `;
@@ -255,7 +257,7 @@ export function renderExperimentLoading(containerId) {
       <div class="experiment-loading-inner">
         <div class="experiment-loading-header">
           <span class="experiment-loading-icon">🧠</span>
-          <span>AI 正在生成验证实验</span>
+          <span>AI 正在生成方向探索</span>
         </div>
         <div class="experiment-loading-text">正在调用AI对你的行为进行分析</div>
       </div>

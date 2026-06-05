@@ -154,16 +154,26 @@ export function renderG3Slider(containerId, wholistAnalytic) {
   const chart = initChart(containerId);
   if (!chart) return;
 
+  // 风格标签
+  const styleLabel = wholistAnalytic > 0.01
+    ? '分析型'
+    : wholistAnalytic < -0.01
+      ? '整体型'
+      : '平衡型';
+  const scoreText = wholistAnalytic >= 0.01
+    ? `+${wholistAnalytic.toFixed(2)}`
+    : wholistAnalytic.toFixed(2);
+
   chart.setOption({
     backgroundColor: 'transparent',
-    grid: { left: 50, right: 50, top: 35, bottom: 35 },
+    grid: { left: 10, right: 70, top: 35, bottom: 35 },
     xAxis: { type: 'value', min: -1, max: 1, show: false },
     yAxis: {
       type: 'category',
-      data: ['认知风格'],
+      data: [''],
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: '#9ca3af', fontSize: 12 },
+      axisLabel: { show: false },
     },
     series: [{
       type: 'bar',
@@ -177,11 +187,10 @@ export function renderG3Slider(containerId, wholistAnalytic) {
       label: {
         show: true,
         position: 'right',
-        formatter: wholistAnalytic >= 0
-          ? `分析型 +${wholistAnalytic.toFixed(2)}`
-          : `整体型 ${wholistAnalytic.toFixed(2)}`,
-        color: '#9ca3af',
-        fontSize: 12,
+        formatter: `${styleLabel} ${scoreText}`,
+        color: '#d1d5db',
+        fontSize: 13,
+        fontWeight: 'bold',
       },
     }],
     animation: true,

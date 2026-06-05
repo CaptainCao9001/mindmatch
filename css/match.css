@@ -59,6 +59,12 @@
 }
 
 /* ---------- Content Area ---------- */
+.match-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
 .match-content {
   max-width: 800px;
   margin: 0 auto;
@@ -365,7 +371,32 @@
 }
 
 /* ---------- Responsive ---------- */
+
+/* ---- Tablet (≤768px) ---- */
+@media (max-width: 768px) {
+  .match-container {
+    padding: 0 var(--space-3);
+  }
+
+  .match-direction-card {
+    padding: var(--space-4);
+  }
+}
+
+/* ---- Mobile Landscape (≤640px) ---- */
 @media (max-width: 640px) {
+  .match-hero {
+    padding: var(--space-4) var(--space-4) var(--space-6);
+  }
+
+  .match-hero h1 {
+    font-size: var(--text-2xl);
+  }
+
+  .match-container {
+    padding: 0 var(--space-3);
+  }
+
   .match-card {
     flex-direction: column;
   }
@@ -385,6 +416,179 @@
 
   .match-breakdown-label {
     width: 60px;
+  }
+
+  .match-direction-card {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .match-job-item {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .match-job-bar {
+    width: 60px;
+  }
+
+  .match-job-score {
+    min-width: 28px;
+  }
+
+  .match-mode-tabs {
+    margin-top: var(--space-2);
+  }
+
+  .match-mode-tab {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+  }
+}
+
+/* ---- Mobile Portrait (≤480px) ---- */
+@media (max-width: 480px) {
+  .match-topbar {
+    padding: var(--space-3);
+    justify-content: center;
+  }
+
+  .match-hero {
+    padding: var(--space-4) var(--space-3) var(--space-4);
+  }
+
+  .match-hero h1 {
+    font-size: var(--text-xl);
+  }
+
+  .match-hero .match-subtitle {
+    font-size: var(--text-xs);
+  }
+
+  .match-container {
+    padding: 0 var(--space-2);
+  }
+
+  .match-panel-header h2 {
+    font-size: var(--text-xl);
+  }
+
+  .match-panel-desc {
+    font-size: var(--text-xs);
+    padding: 0 var(--space-2);
+  }
+
+  .match-direction-card {
+    flex-direction: column;
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .match-card-header-row {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .match-card-titles h3 {
+    font-size: var(--text-base);
+  }
+
+  .match-card-slogan {
+    font-size: var(--text-xs);
+  }
+
+  .match-card-desc {
+    font-size: var(--text-xs);
+  }
+
+  .match-card-icon {
+    font-size: var(--text-xl);
+  }
+
+  .match-score-ring {
+    width: 44px;
+    height: 44px;
+  }
+
+  .match-score-num {
+    font-size: var(--text-xs);
+  }
+
+  .match-score-label {
+    font-size: 10px;
+  }
+
+  .match-breakdown-label {
+    width: 48px;
+    font-size: 10px;
+  }
+
+  .match-breakdown-val {
+    width: 24px;
+    font-size: 10px;
+  }
+
+  .match-card-bar {
+    height: 3px;
+  }
+
+  .match-card-meta {
+    flex-direction: column;
+    gap: var(--space-1);
+    font-size: 10px;
+  }
+
+  .match-job-item {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+
+  .match-job-rank {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .match-job-icon {
+    font-size: 14px;
+  }
+
+  .match-job-name {
+    font-size: var(--text-xs);
+  }
+
+  .match-job-bar {
+    width: 40px;
+    height: 4px;
+  }
+
+  .match-job-score {
+    font-size: var(--text-xs);
+    min-width: 24px;
+  }
+
+  .match-mode-tabs {
+    gap: var(--space-1);
+  }
+
+  .match-mode-tab {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-xs);
+  }
+
+  .match-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .match-footer {
+    padding: var(--space-3);
+  }
+
+  .match-methodology {
+    font-size: 10px;
   }
 }
 
@@ -587,22 +791,28 @@
   color: white;
 }
 
-/* ---------- v2.0 Responsive ---------- */
-@media (max-width: 640px) {
-  .match-direction-card {
-    flex-direction: column;
-  }
-
-  .match-job-item {
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .match-job-bar {
-    width: 60px;
-  }
-
-  .match-job-score {
-    min-width: 28px;
-  }
+/* ---------- Panel visibility ---------- */
+.match-panel--hidden {
+  display: none;
 }
+
+/* ---------- Panel Header ---------- */
+.match-panel-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+  padding-top: var(--space-4);
+}
+
+.match-panel-header h2 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-2);
+}
+
+.match-panel-desc {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+

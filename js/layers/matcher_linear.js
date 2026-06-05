@@ -27,7 +27,7 @@ const GAME_GROUPS = {
  * @param {number} [sigma=0.25] — 带宽/宽容度，越小越严格
  * @returns {number} — 匹配度 [0, 1]，精确到 ideal 时 = 1.0
  */
-function gaussianMatch(actual, ideal, sigma = 0.25) {
+function gaussianMatch(actual, ideal, sigma = 0.20) {
   const diff = actual - ideal;
   return Math.exp(-(diff * diff) / (2 * sigma * sigma));
 }
@@ -48,7 +48,7 @@ function _phase1GameScore(userProfile, jobProfile, gameId) {
     const pf = jobProfile.profiles.find(p => p.field === field);
     if (!pf) continue;
     const actual = userProfile[field];
-    const match = gaussianMatch(actual, pf.ideal, pf.bandwidth || 0.25);
+    const match = gaussianMatch(actual, pf.ideal, pf.bandwidth || 0.20);
     const dimWs = match * pf.weight;
     wSum += dimWs;
     tW += pf.weight;

@@ -47,6 +47,8 @@ export const FocusSortStrategy = {
 
       // 碎片池列表（未归类的卡片 ID）
       let poolIds = fragments.map(f => f.id);
+      // 移动端点击选择状态
+      let selectedCardId = null;
 
       function getCardsInZone(zone) {
         return Object.entries(groups).filter(([, z]) => z === zone).map(([id]) => id);
@@ -67,10 +69,11 @@ export const FocusSortStrategy = {
         const f = fragments.find(x => x.id === id);
         const zone = groups[id];
         const cssClass = zone ? `g3-card--${zone}` : 'g3-card--pool';
+        const selectedClass = (selectedCardId === id) ? 'g3-card--selected' : '';
         return `
-          <div class="g3-card ${cssClass}" draggable="true" data-id="${esc(id)}"
+          <div class="g3-card ${cssClass} ${selectedClass}" draggable="true" data-id="${esc(id)}"
                role="button" tabindex="0" aria-grabbed="false"
-               aria-label="${esc(f.title)} — ${zone ? GROUPS.find(g => g.key === zone)?.label || '' : '待分类'}，可拖拽">
+               aria-label="${esc(f.title)} — ${zone ? GROUPS.find(g => g.key === zone)?.label || '' : '待分类'}，可拖拽或点击归类">
             <span class="g3-card__title">${esc(f.title)}</span>
             <p class="g3-card__detail">${esc(f.detail)}</p>
           </div>`;
@@ -97,6 +100,7 @@ export const FocusSortStrategy = {
 
         updateCounters();
         bindDragEvents();
+        bindClickEvents();
       }
 
       function updateCounters() {
@@ -176,6 +180,73 @@ export const FocusSortStrategy = {
         }
       }
 
+      // --- 移动端点击选择 ---
+
+      function clearSelection() {
+        selectedCardId = null;
+        // 移除所有选中态
+        document.querySelectorAll('.g3-card--selected').forEach(el => {
+          el.classList.remove('g3-card--selected');
+        });
+      }
+
+      function bindClickEvents() {
+        // 碎片池卡片：点击选中/取消选中
+        const poolCards = document.querySelectorAll('#js-g3-pool-cards .g3-card');
+        poolCards.forEach(card => {
+          card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = card.dataset.id;
+            if (selectedCardId === id) {
+              clearSelection();
+            } else {
+              clearSelection();
+              selectedCardId = id;
+              card.classList.add('g3-card--selected');
+            }
+          });
+        });
+
+        // 已归区卡片：点击移回池中
+        const zoneCards = document.querySelectorAll('[id^="js-g3-zone-body-"] .g3-card');
+        zoneCards.forEach(card => {
+          card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearSelection();
+            moveCard(card.dataset.id, null);
+          });
+        });
+
+        // 三区区域本体：点击将选中的卡片移入
+        const allZones = document.querySelectorAll('.g3-zone');
+        allZones.forEach(zone => {
+          const zoneKey = zone.dataset.zone;
+          zone.addEventListener('click', (e) => {
+            // 只在点击区域空白处时触发（不是点击卡片）
+            if (e.target.closest('.g3-card')) return;
+            if (!selectedCardId) return;
+            moveCard(selectedCardId, zoneKey);
+            clearSelection();
+          });
+        });
+
+        // 碎片池空白区：取消选中
+        const poolEl = document.getElementById('js-g3-pool');
+        if (poolEl) {
+          poolEl.addEventListener('click', (e) => {
+            if (e.target.closest('.g3-card')) return;
+            clearSelection();
+          });
+        }
+
+        // 全局点击空白处取消选中
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.g3-card') && !e.target.closest('.g3-zone') && !e.target.closest('#js-g3-pool')) {
+            clearSelection();
+          }
+        });
+      }
+
       function moveCard(id, targetZone) {
         const currentZone = groups[id];
         // 已在目标区，不用动
@@ -234,7 +305,7 @@ export const FocusSortStrategy = {
           </div>
 
           <div class="g3-stage__bar">
-            <span class="g3-stage__hint-text">拖拽卡片到对应区域</span>
+            <span class="g3-stage__hint-text">点击卡片选中，再点区域归入；已归区卡片点击可移回</span>
             <button class="btn btn-primary" id="js-g3-confirm1" disabled>至少选 2 张「这就是我」（已选 0）</button>
           </div>
         </div>
@@ -332,7 +403,7 @@ export const FocusSortStrategy = {
             <p class="g3-stage__subtitle">哪个最像你？</p>
           </div>
           <p class="g3-stage__desc">现在只看「这就是我」的记忆碎片。如果必须排出先后——哪个最像你？</p>
-          <p class="g3-stage__hint-text" style="text-align:center;color:var(--color-text-muted);font-size:var(--text-sm);margin-bottom:var(--space-4);">拖拽卡片排序 — 排第一的最像你</p>
+          <p class="g3-stage__hint-text" style="text-align:center;color:var(--color-text-muted);font-size:var(--text-sm);margin-bottom:var(--space-4);">拖拽卡片排序，或点 ▲▼ 调整 — 排第一的最像你</p>
           <div class="g3-sort-list" id="js-g3-sort-list"></div>
           <div class="g3-stage__bar g3-stage__bar--center">
             <span></span>

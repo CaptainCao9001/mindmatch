@@ -15,7 +15,7 @@ import { log } from '../core/utils.js?v=20260602e';
  * @param {number} [sigma=0.25] — 带宽
  * @returns {number} — 匹配度 [0, 1]
  */
-function gaussianMatch(actual, ideal, sigma = 0.25) {
+function gaussianMatch(actual, ideal, sigma = 0.20) {
   const diff = actual - ideal;
   return Math.exp(-(diff * diff) / (2 * sigma * sigma));
 }
@@ -38,7 +38,7 @@ function buildMatchMatrix(userProfile, jobs) {
       const pf = job.profiles.find(p => p.field === field);
       if (!pf) return 0;
       const actual = userProfile[field] != null ? userProfile[field] : 0;
-      return gaussianMatch(actual, pf.ideal, pf.bandwidth || 0.25);
+      return gaussianMatch(actual, pf.ideal, pf.bandwidth || 0.20);
     });
   });
 

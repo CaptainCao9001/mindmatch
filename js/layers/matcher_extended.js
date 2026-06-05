@@ -172,6 +172,15 @@ export function directionMatch(profile, directions) {
       };
     });
 
+    // 分数对比度拉伸：以均值为中心放大偏差，避免 6 方向分数挤在一起
+    merged.forEach(m => {
+      const rawScore = m.score;
+      const mean = merged.reduce((sum, x) => sum + x.score, 0) / merged.length;
+      const K = 1.4; // 对比度系数
+      const stretched = mean + (rawScore - mean) * K;
+      m.score = Math.round(clamp(stretched, 0, 100));
+    });
+
     // 按 score 降序
     merged.sort((a, b) => b.score - a.score);
 

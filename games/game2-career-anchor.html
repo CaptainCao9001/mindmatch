@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>时光回溯 — MindMatch</title>
 <script>window.__MM_VER__ = '20260601l';</script>
-<link rel="stylesheet" href="../css/base.css?v=20260603a">
-<link rel="stylesheet" href="../css/components.css?v=20260603a">
-<link rel="stylesheet" href="../css/games.css?v=20260603a">
+<link rel="stylesheet" href="../css/base.css?v=20260603b">
+<link rel="stylesheet" href="../css/components.css?v=20260603b">
+<link rel="stylesheet" href="../css/games.css?v=20260603b">
 <style>
 /* ============================================================
  * G2 校园黄昏主题
@@ -119,6 +119,58 @@ body::after {
   color: hsla(36,18%,52%,0.6);
   font-size: var(--text-sm);
   margin-bottom: var(--space-8);
+}
+
+/* 三阶段预览区 */
+.g2-intro__stages {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  max-width: 680px;
+  margin: 0 auto var(--space-6);
+  text-align: left;
+}
+.g2-intro__stage-card {
+  background: hsla(34,28%,10%,0.48);
+  border: 1px solid hsla(36,28%,28%,0.32);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  backdrop-filter: blur(4px);
+}
+.g2-intro__stage-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.g2-intro__stage-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.g2-intro__stage-num {
+  display: block;
+  font-size: 0.68rem;
+  color: hsla(36,18%,48%,0.6);
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+.g2-intro__stage-name {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: hsla(38,30%,76%,0.92);
+}
+.g2-intro__stage-sub {
+  font-size: 0.7rem;
+  color: hsla(36,20%,54%,0.6);
+  margin: 0 0 var(--space-2);
+  line-height: 1.4;
+}
+.g2-intro__stage-desc {
+  font-size: var(--text-xs);
+  color: hsla(35,18%,62%,0.72);
+  line-height: 1.6;
+  margin: 0;
 }
 
 /* 开始按钮 — 金色暖光 */
@@ -251,200 +303,132 @@ body::after {
 }
 
 /* ============================================================
- * 阶段一：卡片网格 — 布告栏传单
+ * 阶段一：左右分栏 — 社团列表 + 详情
  * ============================================================ */
-.g2-card-grid {
+.g2-split {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: 280px 1fr;
   gap: var(--space-4);
-}
-.g2-card {
-  perspective: 800px;
-  height: 240px;
-  cursor: pointer;
-  outline: none;
-  border-radius: var(--radius-lg);
-  position: relative;
-}
-.g2-card:focus-visible {
-  box-shadow: 0 0 0 3px hsla(36,55%,55%,0.5);
-}
-.g2-card__inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.5s ease;
-  transform-style: preserve-3d;
-}
-.g2-card.is-flipped .g2-card__inner { transform: rotateY(180deg); }
-.g2-card__front,
-.g2-card__back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: var(--radius-lg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-6);
+  min-height: 420px;
+  margin-bottom: var(--space-4);
 }
 
-/* 正面 — 泛黄传单 */
-.g2-card__front {
-  background: hsla(38,25%,14%,0.62);
-  border: 1px solid hsla(36,28%,32%,0.38);
+/* 左侧列表 */
+.g2-split__list {
+  background: hsla(34,22%,10%,0.48);
+  border: 1px solid hsla(36,22%,26%,0.32);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  overflow-y: auto;
+  max-height: 520px;
   backdrop-filter: blur(4px);
-  box-shadow:
-    0 2px 12px hsla(30,20%,5%,0.3),
-    inset 0 0 24px hsla(36,30%,8%,0.04);
-}
-.g2-card__front:hover {
-  border-color: hsla(36,40%,44%,0.55);
-  box-shadow:
-    0 4px 18px hsla(36,40%,20%,0.25),
-    inset 0 0 28px hsla(36,35%,12%,0.06);
 }
 
-/* 图钉小圆点装饰 */
-.g2-card__front::before {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle, hsla(38,50%,55%,0.7), hsla(30,40%,35%,0.8));
-  border-radius: 50%;
-  box-shadow: 0 1px 3px hsla(30,30%,10%,0.4);
+.g2-club-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  border: 1px solid transparent;
+  outline: none;
+  margin-bottom: 2px;
 }
-.g2-card.is-flipped .g2-card__front { pointer-events: none; }
-.g2-card__name {
-  font-size: var(--text-lg);
-  font-weight: 600;
-  text-align: center;
-  color: hsla(38,25%,82%,0.9);
-  margin-top: var(--space-2);
+.g2-club-item:hover {
+  background: hsla(36,28%,18%,0.5);
+  border-color: hsla(36,28%,32%,0.35);
 }
-.g2-card__flip-hint {
-  color: hsla(36,18%,50%,0.55);
-  font-size: var(--text-xs);
-  margin-top: var(--space-3);
+.g2-club-item:focus-visible {
+  box-shadow: 0 0 0 2px hsla(36,55%,55%,0.5);
 }
-
-/* 背面 — 暖光详情卡 */
-.g2-card__back {
-  background: hsla(34,35%,12%,0.7);
-  border: 1px solid hsla(36,40%,40%,0.45);
-  transform: rotateY(180deg);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 0 20px hsla(36,45%,25%,0.15);
+.g2-club-item--active {
+  background: hsla(36,32%,18%,0.62);
+  border-color: hsla(36,40%,38%,0.5);
 }
-.g2-card__back-name {
-  font-size: var(--text-base);
-  font-weight: 700;
-  margin-bottom: var(--space-3);
+.g2-club-item--joined {
+  background: hsla(38,40%,16%,0.55);
+}
+.g2-club-item--joined .g2-club-item__name {
   color: hsl(38,55%,62%);
 }
-.g2-card__detail {
-  color: hsla(35,22%,72%,0.82);
+.g2-club-item__name {
   font-size: var(--text-sm);
-  line-height: 1.6;
-  text-align: center;
-  margin-bottom: var(--space-4);
+  font-weight: 500;
+  color: hsla(36,20%,72%,0.88);
+  line-height: 1.4;
+}
+.g2-club-item__check {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: hsl(38,70%,55%);
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s;
+  flex-shrink: 0;
+  margin-left: var(--space-2);
+}
+.g2-club-item--joined .g2-club-item__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 右侧详情面板 */
+.g2-split__detail {
+  background: hsla(34,25%,12%,0.52);
+  border: 1px solid hsla(36,25%,26%,0.32);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(4px);
+  transition: border-color 0.3s;
+}
+.g2-split__detail.g2-detail--visible {
+  border-color: hsla(36,35%,36%,0.45);
+}
+.g2-detail__placeholder {
   flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
+  color: hsla(36,18%,48%,0.5);
+  font-size: var(--text-sm);
 }
-.g2-card__actions { display: flex; gap: var(--space-3); }
-
-/* 加入按钮 — 暖色 */
-.g2-card__join {
+.g2-detail__name {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: hsl(38,55%,62%);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid hsla(36,22%,28%,0.35);
+}
+.g2-detail__text {
+  color: hsla(35,20%,72%,0.85);
+  font-size: var(--text-base);
+  line-height: 1.8;
+  flex: 1;
+  margin-bottom: var(--space-5);
+}
+.g2-detail__join {
+  align-self: flex-start;
   background: linear-gradient(180deg, hsla(36,58%,34%,0.78), hsla(28,48%,20%,0.82));
   border: 1px solid hsla(36,45%,42%,0.45);
   color: hsl(40,58%,74%);
   border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-3) var(--space-5);
   font-size: var(--text-sm);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 0 12px hsla(36,50%,35%,0.15);
 }
-.g2-card__join:hover {
+.g2-detail__join:hover {
   background: linear-gradient(180deg, hsla(36,62%,40%,0.85), hsla(28,52%,24%,0.88));
   border-color: hsla(36,55%,50%,0.6);
   box-shadow: 0 0 18px hsla(36,55%,40%,0.25);
   color: hsl(40,62%,82%);
-}
-
-/* 已选择卡片高亮 — 金色光晕边框 + 盖章 */
-.g2-card--kept {
-  outline: none;
-  border-radius: var(--radius-lg);
-}
-.g2-card--kept .g2-card__front,
-.g2-card--kept .g2-card__back {
-  border-color: hsla(38,82%,58%,0.85);
-  border-width: 2px;
-  background: linear-gradient(135deg, hsla(36,55%,28%,0.78), hsla(28,42%,18%,0.75));
-  box-shadow:
-    0 0 28px hsla(38,80%,50%,0.35),
-    0 0 64px hsla(36,60%,40%,0.18),
-    0 0 100px hsla(36,50%,32%,0.08),
-    inset 0 1px 0 hsla(38,70%,60%,0.15),
-    inset 0 0 32px hsla(36,50%,20%,0.12);
-  animation: g2-kept-border-pulse 0.6s ease-out;
-}
-@keyframes g2-kept-border-pulse {
-  0%   { 
-    border-color: hsla(38,95%,65%,1); 
-    box-shadow: 0 0 48px hsla(38,85%,55%,0.6), 0 0 90px hsla(36,70%,48%,0.35), 0 0 140px hsla(36,55%,38%,0.15), inset 0 1px 0 hsla(38,80%,68%,0.3), inset 0 0 40px hsla(36,60%,28%,0.15); 
-  }
-  100% { 
-    border-color: hsla(38,82%,58%,0.85); 
-    box-shadow: 0 0 28px hsla(38,80%,50%,0.35), 0 0 64px hsla(36,60%,40%,0.18), 0 0 100px hsla(36,50%,32%,0.08), inset 0 1px 0 hsla(38,70%,60%,0.15), inset 0 0 32px hsla(36,50%,20%,0.12); 
-  }
-}
-
-/* 右下角「已加入」小章 — 视觉冲击版（现在放在 front/back 内部） */
-.g2-card__stamp {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 12px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  color: hsl(0,0%,96%);
-  text-shadow: 0 1px 2px hsla(0,60%,20%,0.5);
-  background: linear-gradient(135deg, hsl(0,70%,44%), hsl(0,62%,36%));
-  border: 2px solid hsla(0,75%,52%,0.9);
-  border-radius: 4px;
-  transform: rotate(-16deg) scale(0);
-  opacity: 0;
-  pointer-events: none;
-  line-height: 1.4;
-  box-shadow:
-    0 0 16px hsla(0,70%,45%,0.5),
-    0 0 36px hsla(0,60%,38%,0.25),
-    inset 0 1px 0 hsla(0,80%,60%,0.3);
-  transition: none;
-}
-.g2-card--kept .g2-card__stamp {
-  animation: g2-stamp-down 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
-}
-@keyframes g2-stamp-down {
-  0%   { transform: rotate(-16deg) scale(1.8); opacity: 0; }
-  50%  { transform: rotate(-16deg) scale(0.9); opacity: 0.95; }
-  70%  { transform: rotate(-16deg) scale(1.06); opacity: 0.92; }
-  85%  { transform: rotate(-16deg) scale(0.98); opacity: 0.94; }
-  100% { transform: rotate(-16deg) scale(1); opacity: 0.9; }
 }
 
 /* ============================================================
@@ -494,13 +478,11 @@ body::after {
   white-space: nowrap;
 }
 .g2-table-row__phase2 {
-  color: hsla(35,18%,62%,0.72);
+  color: hsla(35,18%,65%,0.8);
   font-size: var(--text-sm);
   line-height: 1.7;
   display: block;
-  margin-top: var(--space-3);
-  padding-top: var(--space-3);
-  border-top: 1px dashed hsla(36,20%,28%,0.3);
+  margin-top: var(--space-2);
 }
 .g2-table-row__actions {
   display: flex;
@@ -535,81 +517,58 @@ body::after {
 .g2-btn-drop:hover { opacity: 1 !important; background: hsla(30,25%,20%,0.55); border-color: hsla(30,20%,32%,0.4); }
 
 /* ============================================================
- * 阶段三：拍立得 — 黄昏光线增强
+ * 阶段三：故事卡 — 黄昏光线增强（替换原拍立得）
  * ============================================================ */
 .g2-polaroid-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-6);
-  padding: var(--space-4) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
 }
 .g2-polaroid {
-  width: 220px;
-  background: linear-gradient(180deg, hsl(40,28%,86%), hsl(36,22%,78%));
-  border-radius: 4px;
-  padding: var(--space-3) var(--space-3) var(--space-6);
-  box-shadow:
-    0 4px 16px hsla(30,25%,5%,0.4),
-    0 0 30px hsla(36,50%,25%,0.08);
+  background: hsla(36,28%,86%,0.06);
+  border: 1px solid hsla(36,30%,30%,0.35);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-4) var(--space-5);
   cursor: pointer;
   outline: none;
-  transition: transform 0.3s, box-shadow 0.3s, filter 0.5s;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, filter 0.5s;
+  backdrop-filter: blur(4px);
+  position: relative;
 }
 .g2-polaroid:hover {
-  transform: scale(1.05) rotate(0deg) !important;
-  box-shadow:
-    0 8px 28px hsla(30,30%,5%,0.5),
-    0 0 40px hsla(36,55%,35%,0.15);
+  transform: scale(1.02) rotate(0deg) !important;
+  border-color: hsla(36,40%,42%,0.55);
+  box-shadow: 0 4px 20px hsla(36,40%,20%,0.22);
 }
 .g2-polaroid:focus-visible {
-  box-shadow: 0 0 0 3px hsla(36,55%,55%,0.5), 0 4px 16px hsla(30,25%,5%,0.4);
+  box-shadow: 0 0 0 3px hsla(36,55%,55%,0.5);
 }
 .g2-polaroid--chosen {
-  transform: scale(1.08) rotate(0deg) !important;
+  transform: scale(1.02) rotate(0deg) !important;
+  border-color: hsla(38,72%,52%,0.75) !important;
+  border-width: 2px;
   box-shadow:
-    0 0 0 3px hsla(36,55%,52%,0.65),
-    0 8px 28px hsla(36,55%,35%,0.3),
-    0 0 44px hsla(36,50%,28%,0.18);
+    0 0 24px hsla(38,70%,45%,0.28),
+    0 0 50px hsla(36,55%,32%,0.12);
 }
 .g2-polaroid:not(.g2-polaroid--chosen) {
-  filter: sepia(0.5) brightness(0.65);
+  filter: brightness(0.72) sepia(0.25);
 }
-
-/* 拍立得照片区域 — 渐变模拟不同照片 */
-.g2-polaroid__img {
-  height: 140px;
-  background: linear-gradient(135deg, hsl(38,30%,78%), hsl(34,25%,65%));
-  border-radius: 2px;
-  margin-bottom: var(--space-3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  position: relative;
-  overflow: hidden;
-}
-/* 照片上的微光 */
-.g2-polaroid__img::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 45%;
-  height: 35%;
-  background: linear-gradient(135deg, hsla(42,70%,85%,0.2), transparent);
-  border-radius: 2px 0 0 0;
-}
-.g2-polaroid__text {
+.g2-polaroid__label {
   font-size: var(--text-sm);
   font-weight: 600;
-  color: hsl(30,20%,18%);
-  text-align: center;
+  color: hsl(38,50%,62%);
+  margin-bottom: var(--space-2);
+  display: block;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed hsla(36,22%,30%,0.35);
 }
-.g2-polaroid__sub {
-  font-size: 0.7rem;
-  color: hsl(30,12%,36%);
-  text-align: center;
-  margin-top: var(--space-1);
+.g2-polaroid__story {
+  font-size: var(--text-xs);
+  color: hsla(35,20%,68%,0.82);
+  line-height: 1.7;
+  margin: 0;
 }
 
 /* ============================================================
@@ -843,9 +802,16 @@ body::after {
  * 响应式
  * ============================================================ */
 @media (max-width: 640px) {
-  .g2-card-grid { grid-template-columns: 1fr; }
-  .g2-polaroid-grid { gap: var(--space-4); }
-  .g2-polaroid { width: 180px; }
+  .g2-split {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    min-height: auto;
+  }
+  .g2-split__list {
+    max-height: 200px;
+  }
+  .g2-intro__stages { grid-template-columns: 1fr; }
+  .g2-polaroid-grid { grid-template-columns: 1fr; gap: var(--space-3); }
   .feedback-card { padding: var(--space-6) var(--space-5); margin: 0 var(--space-3); }
 }
 </style>
@@ -862,10 +828,10 @@ body::after {
 // 不使用 engine.js — 三阶段批处理模式与 engine 的场景循环不兼容
 // ============================================================
 
-import { CARDS, DIMENSIONS, STAGES, STAGE_WEIGHTS, FEEDBACK_TEXT, GAME_CONFIG } from '../js/games/game2-data.js?v=20260603a';
-import { DiscardStrategy } from '../js/games/strategies/discard.js?v=20260603a';
-import { save } from '../js/core/store.js?v=20260603a';
-import { normalize, clamp } from '../js/core/utils.js?v=20260603a';
+import { CARDS, DIMENSIONS, STAGES, STAGE_WEIGHTS, FEEDBACK_TEXT, GAME_CONFIG } from '../js/games/game2-data.js?v=20260603b';
+import { DiscardStrategy } from '../js/games/strategies/discard.js?v=20260603b';
+import { save } from '../js/core/store.js?v=20260603b';
+import { normalize, clamp } from '../js/core/utils.js?v=20260603b';
 
 // ---------- 编排器 ----------
 
@@ -885,7 +851,7 @@ async function run() {
   const stage1Cards = CARDS;
   const s1Result = await DiscardStrategy.renderStage1(root, stage1Cards, STAGES[0]);
   const s1Selected = s1Result.selected;
-  const cardsFlipped = s1Result.cardsFlipped;
+  const cardsViewed = s1Result.cardsViewed;
   keptCards = s1Selected;
   stage1Kept = s1Selected.length;
   // 记录决策
@@ -959,7 +925,7 @@ async function run() {
       totalTime: Math.round(performance.now() - startTime),
       elapsedMs: Math.round(performance.now() - startTime),
       decisionCount: allDecisions.length,
-      cardsFlipped,
+      cardsViewed,
       stage1Kept,
       stage2Kept,
       stage3Kept,

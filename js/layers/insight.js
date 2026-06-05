@@ -71,7 +71,7 @@ ${behaviorNarrative || '（无行为叙事数据）'}
     },
     {
       "game": "G2 职业锚",
-      "behavior": "同上：描述翻牌行为和锚点选择",
+      "behavior": "同上：描述浏览查看行为和锚点选择",
       "comment": "同上：评价探索风格和锚点组合的含义"
     },
     {
@@ -151,6 +151,7 @@ export async function generateInsight(profile, translation, options = {}) {
     temperature: 0.8,
     maxTokens: 2048,
     timeout: 35000,
+    preferredProvider: 'deepseek',
   });
 
   if (!raw) {

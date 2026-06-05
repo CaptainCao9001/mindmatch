@@ -2,6 +2,21 @@
  * index.css — 首页/引导页专用样式
  * ============================================================ */
 
+/* ---------- Demo Banner ---------- */
+.demo-banner {
+  width: 100%;
+  padding: 6px var(--space-4);
+  background: hsla(45,80%,50%,0.1);
+  border-bottom: 1px solid hsla(45,80%,50%,0.2);
+  text-align: center;
+  font-size: 13px;
+  color: hsl(45,80%,45%);
+  letter-spacing: 0.02em;
+}
+.demo-banner__icon {
+  margin-right: 4px;
+}
+
 /* ---------- Page Container ---------- */
 .page-landing {
   min-height: 100vh;
@@ -9,20 +24,23 @@
   flex-direction: column;
   align-items: center;
   padding: var(--space-8) var(--space-4) var(--space-12);
+  background:
+    radial-gradient(ellipse 60vw 40vh at 50% 5%, hsla(239,84%,67%,0.06), transparent 60%),
+    radial-gradient(ellipse 40vw 30vh at 80% 40%, hsla(185,55%,25%,0.04), transparent 55%);
 }
 
 /* ---------- Hero Section ---------- */
 .hero {
   text-align: center;
   max-width: 560px;
-  margin: var(--space-12) auto 0;
+  margin: var(--space-16) auto 0;
   animation: fadeSlideUp 0.6s ease-out both;
 }
 
 .hero__brand {
-  font-size: var(--text-4xl);
+  font-size: 3.5rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--color-text);
   margin-bottom: var(--space-2);
 }
@@ -138,6 +156,7 @@
   position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   cursor: pointer;
@@ -147,12 +166,23 @@
   flex-direction: column;
 }
 
+/* Theme-colored left border per game */
+.game-card:nth-child(1) { border-left-color: hsla(185,55%,42%,0.5); } /* G1 — 深海青 */
+.game-card:nth-child(2) { border-left-color: hsla(42,55%,48%,0.5); }  /* G2 — 琥珀金 */
+.game-card:nth-child(3) { border-left-color: hsla(260,50%,52%,0.5); } /* G3 — 星空紫 */
+.game-card:nth-child(4) { border-left-color: hsla(0,45%,42%,0.5); }   /* G4 — 暗房红 */
+
 .game-card:hover {
   border-color: var(--color-border-hover);
   background: var(--color-surface-hover);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px hsla(232, 30%, 0%, 0.3);
 }
+
+.game-card:nth-child(1):hover { border-left-color: hsla(185,65%,50%,0.8); box-shadow: 0 8px 24px hsla(185,30%,10%,0.25); }
+.game-card:nth-child(2):hover { border-left-color: hsla(42,65%,55%,0.8); box-shadow: 0 8px 24px hsla(42,30%,10%,0.25); }
+.game-card:nth-child(3):hover { border-left-color: hsla(260,60%,58%,0.8); box-shadow: 0 8px 24px hsla(260,30%,10%,0.25); }
+.game-card:nth-child(4):hover { border-left-color: hsla(0,55%,52%,0.8); box-shadow: 0 8px 24px hsla(0,30%,10%,0.25); }
 
 .game-card:focus-visible {
   outline: 2px solid var(--color-primary);
@@ -329,6 +359,24 @@
 }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .hero {
+    margin-top: var(--space-10);
+  }
+
+  .hero__brand {
+    font-size: 3rem;
+  }
+
+  .game-grid {
+    max-width: 560px;
+  }
+
+  .game-card {
+    padding: var(--space-5);
+  }
+}
+
 @media (max-width: 480px) {
   .hero {
     margin-top: var(--space-6);
@@ -346,10 +394,15 @@
   .game-grid {
     grid-template-columns: 1fr;
     gap: var(--space-3);
+    max-width: 360px;
   }
 
   .game-card {
     padding: var(--space-4);
+  }
+
+  .game-card__title {
+    font-size: var(--text-base);
   }
 
   .results-cta__btn {

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 核心驱动力</title>
   <script>window.__MM_VER__ = '20260601i';</script>
-  <link rel="stylesheet" href="../css/base.css?v=20260603a">
-  <link rel="stylesheet" href="../css/components.css?v=20260603a">
-  <link rel="stylesheet" href="../css/games.css?v=20260603a">
+  <link rel="stylesheet" href="../css/base.css?v=20260603b">
+  <link rel="stylesheet" href="../css/components.css?v=20260603b">
+  <link rel="stylesheet" href="../css/games.css?v=20260603b">
   <style>
     /* ============================================================
      * G1 深海控制中心主题
@@ -472,10 +472,32 @@
     /* ============================================================
      * 响应式
      * ============================================================ */
+    @media (max-width: 768px) {
+      .scenario-card { padding: var(--space-5) var(--space-6); }
+      .scenario-title { font-size: var(--text-xl); }
+    }
+
     @media (max-width: 640px) {
       .scenario-card { padding: var(--space-4) var(--space-5); }
       .feedback-card { padding: var(--space-6) var(--space-5); margin: 0 var(--space-3); }
       .option-card  { padding: var(--space-3) var(--space-4); }
+      .scenario-title { font-size: var(--text-lg); }
+    }
+
+    @media (max-width: 480px) {
+      .game-intro { padding: var(--space-10) var(--space-3); }
+      .game-intro__title { font-size: var(--text-2xl); }
+      .scenario-card { padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); }
+      .scenario-title { font-size: var(--text-base); }
+      .scenario-description { font-size: var(--text-xs); line-height: 1.6; }
+      .option-card { padding: var(--space-3); gap: var(--space-2); }
+      .option-card__text { font-size: var(--text-xs); }
+      .option-card__label { min-width: 22px; height: 22px; font-size: 10px; }
+      .feedback-card { padding: var(--space-5) var(--space-4); margin: 0 var(--space-2); }
+      .feedback-text { font-size: var(--text-xs); line-height: 1.6; }
+      .game-complete { padding: var(--space-8) var(--space-3); }
+      .game-complete__title { font-size: var(--text-2xl); }
+      .game-complete__desc { font-size: var(--text-xs); padding: 0 var(--space-2); }
     }
   </style>
 </head>
@@ -483,9 +505,9 @@
   <main class="game-container" id="js-game-root"></main>
 
   <script type="module">
-    import { GameEngine } from '../js/games/engine.js?v=20260603a';
-    import { CardClickStrategy } from '../js/games/strategies/card-click.js?v=20260603a';
-    import { GAME1_CONFIG } from '../js/games/game1-data.js?v=20260603a';
+    import { GameEngine } from '../js/games/engine.js?v=20260603b';
+    import { CardClickStrategy } from '../js/games/strategies/card-click.js?v=20260603b';
+    import { GAME1_CONFIG } from '../js/games/game1-data.js?v=20260603b';
 
     const root = document.getElementById('js-game-root');
 
