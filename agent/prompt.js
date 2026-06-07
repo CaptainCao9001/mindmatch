@@ -33,6 +33,7 @@ export function buildSystemPrompt(profile, phaseTurns = 4) {
   parts.push('- ❌ 话说一半断掉（如"你的方向应该是——"后面什么都没有）');
   parts.push('- ❌ 两次连续回复说同样的内容');
   parts.push('- ❌ 用"接下来我给你分析..."开场但后面没有分析内容');
+  parts.push('- ❌ **推进到阶段 N 后，又回头问阶段 N-1 及之前的问题**。如果发现遗漏，在当前阶段补一句即可，不要专门退回去。');
   parts.push('');
   parts.push('### 其他风格规则');
   parts.push('1. **先回应用户，再发问**：每次用户回答后，用 1 句话回应，然后立刻抛出具体追问。回应不是目的，追问才是。');
@@ -163,6 +164,14 @@ export function buildSystemPrompt(profile, phaseTurns = 4) {
   if (profile) {
     parts.push('');
     parts.push('## 用户测评画像');
+    parts.push('');
+    parts.push('### 各阶段画像融入指令（必须遵守）');
+    parts.push('阶段 1（现状了解）：知道专业/工作后，立刻关联画像维度。如"你学XX专业——测评显示你[某维度]很强，这个组合挺有意思。"');
+    parts.push('阶段 2（经验盘点）：用户说了经历后，用行为指标做交叉验证："你刚才说的这段经历，其实很符合你在测评里显示的[某特征]..."');
+    parts.push('阶段 3（内在驱动）：可以用 show_hint 把 Top 方向作为线索抛出："我有个感觉——你可能很适合需要[方向核心能力]的工作..."');
+    parts.push('阶段 4（现实考量）：关联行为指标中的决策风格："你在测评里显示出[决策风格]，选方向的时候可以留意..."');
+    parts.push('阶段 5（过往探索）：如果用户说之前试过的方法效果不好，对比匹配结果："有意思的是，我们的算法其实把[某方向]排得很靠前，你觉得呢？"');
+    parts.push('');
     parts.push('核心特质：' + (profile.topNames || '未提供'));
     if (profile.topDims && profile.topDims.length > 0) {
       parts.push('突出维度：');

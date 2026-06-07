@@ -112,6 +112,30 @@ async function handleChat(sessionId, userMessage, profile) {
   }
 
   sess = session.getSession(sessionId); // 刷新
+
+  // 注入已收集字段到系统消息（让 AI 知道已问过什么，避免重复提问）
+  {
+    const collected = sess.collected || {};
+    const entries = Object.entries(collected).filter(([k, v]) => v && typeof v === 'string' && v.trim());
+    const sysIdx = sess.messages.findIndex(m => m.role === 'system');
+    if (sysIdx >= 0) {
+      let oldContent = sess.messages[sysIdx].content || '';
+      // 移除旧的 [已收集信息] 区块
+      const tagIdx = oldContent.indexOf('\n\n[已收集信息'));
+      if (tagIdx >= 0) {
+        oldContent = oldContent.substring(0, tagIdx);
+      }
+      if (entries.length > 0) {
+        const summary = entries.map(([k, v]) => `${k}=${v}`).join('，');
+        sess.messages[sysIdx].content = oldContent + '\n\n[已收集信息，请勿重复询问：' + summary + ']';
+        session.updateSession(sessionId, { messages: sess.messages });
+      } else {
+        sess.messages[sysIdx].content = oldContent;
+        session.updateSession(sessionId, { messages: sess.messages });
+      }
+    }
+  }
+
   const requestBody = {
     model: 'deepseek-chat',
     messages: sess.messages,
@@ -236,12 +260,17 @@ async function handleChat(sessionId, userMessage, profile) {
         };
       }
 
+      // follow-up：强制 AI 输出非空回复
+      const followUpMessages = [
+        { role: 'system', content: '你必须输出完整的回复内容，绝对不能为空。即使用户消息很短，你也要给出有信息量的回复。用中文回答。' },
+        ...sess.messages
+      ];
       const followUpBody = {
         model: 'deepseek-chat',
-        messages: sess.messages,
+        messages: followUpMessages,
         tools: TOOLS,
         tool_choice: 'auto',
-        temperature: 0.7,
+        temperature: 0.8,  // 稍高温度避免过于保守的空回复
         max_tokens: 1024,
       };
 
