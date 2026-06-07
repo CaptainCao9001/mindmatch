@@ -81,7 +81,9 @@ export function buildSystemPrompt(profile, phaseTurns = 4) {
       goal: '了解用户当前处于什么人生阶段（在校/应届/工作N年/转行中），是什么触发了 ta 今天来探索方向。',
       why: '同一份方向建议，对大二学生和工作 3 年的人完全不同。',
       ask: '可以先问"你现在处于什么阶段？是在校、刚毕业、还是已经工作了？是什么让你今天想聊聊职业方向？"',
-      followup: '如果用户只说了阶段没说触发原因，追问"那是什么让你最近开始想这个问题？"',
+      followup: `如果用户提到自己是学生（本科/研究生/博士等），必须追问"你学什么专业？"——专业是判断职业方向的关键线索。
+如果用户提到自己在职，必须追问"你目前做的是什么工作？大概做了多久？"——了解当前职业才能判断是转型还是深耕。
+如果用户只说了阶段没说触发原因，追问"那是什么让你最近开始想这个问题？"`,
     },
     {
       title: '阶段 2：经验盘点',
@@ -148,7 +150,38 @@ export function buildSystemPrompt(profile, phaseTurns = 4) {
       parts.push('突出维度：');
       profile.topDims.forEach(d => parts.push('- ' + d.name + ': ' + d.score + '分'));
     }
-    parts.push('画像仅供参考——对话中用户自己说的比测评结果更重要。如果用户说的和画像有矛盾，相信用户说的。');
+
+    // 游戏行为摘要
+    if (profile.gameSummaries) {
+      parts.push('');
+      parts.push('### 游戏测评行为摘要（请在对话中自然引用，不要生硬罗列）');
+      const gs = profile.gameSummaries;
+      if (gs.game1) {
+        parts.push('- 核心驱动力：' + gs.game1.summary);
+      }
+      if (gs.game2) {
+        parts.push('- 职业锚：' + gs.game2.summary);
+      }
+      if (gs.game3) {
+        parts.push('- 认知风格：' + gs.game3.summary);
+      }
+      if (gs.game4) {
+        parts.push('- 意义建构：' + gs.game4.summary);
+      }
+    }
+
+    // 行为指标
+    if (profile.behavioralNotes && profile.behavioralNotes.length > 0) {
+      parts.push('');
+      parts.push('### 行为指标（供你理解用户的决策风格）');
+      profile.behavioralNotes.forEach(note => parts.push('- ' + note));
+    }
+
+    parts.push('');
+    parts.push('**画像使用规则**：');
+    parts.push('1. 对话中自然地引用测评结果，比如"你之前测评显示出很强的成就动机，和你刚才说的想做有挑战性的事很一致"');
+    parts.push('2. 不要把测评结果当结论——用它作为追问的切入点，比如"测评显示你倾向于分析型思维，这在刚才的经历里有体现吗？"');
+    parts.push('3. 如果用户说的和画像有矛盾，相信用户说的，不要强行把用户往画像上套。');
   }
 
   // ---- 方向参考 ----
@@ -158,6 +191,5 @@ export function buildSystemPrompt(profile, phaseTurns = 4) {
     parts.push('- ' + d.name + '：' + d.tagline + '（关键技能：' + (d.requiredSkills?.core || []).join('、') + '）');
   });
 
-  return parts.join('
-');
+  return parts.join('\n');
 }

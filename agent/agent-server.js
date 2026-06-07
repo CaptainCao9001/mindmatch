@@ -275,6 +275,31 @@ async function handleChat(sessionId, userMessage, profile) {
         }
       } catch { /* fall through */ }
     }
+
+    // 兜底：如果 follow-up 也没拿到文字回复，生成一个默认过渡语
+    if (!reply && rawToolCalls.length > 0) {
+      const didAdvance = rawToolCalls.some(tc => tc.function?.name === 'advance_phase');
+      const didFinish = rawToolCalls.some(tc => tc.function?.name === 'finish_conversation');
+      const didSave = rawToolCalls.some(tc => tc.function?.name === 'save_collected');
+      let fallback = '';
+      if (didFinish) {
+        fallback = '以上就是我为你整理的方向建议。如果你还有其他问题，随时欢迎再来聊聊！';
+      } else if (didAdvance) {
+        fallback = '好的，让我们继续下一个话题。';
+      } else if (didSave) {
+        fallback = '了解了，继续聊。';
+      } else {
+        fallback = '嗯，我记下了。';
+      }
+      session.addMessage(sessionId, 'assistant', fallback);
+      return {
+        reply: fallback,
+        toolCalls: toolResults,
+        phase: sess.phase,
+        label: sess.phaseLabel,
+        sessionId,
+      };
+    }
   }
 
   // 追加 AI 回复到历史

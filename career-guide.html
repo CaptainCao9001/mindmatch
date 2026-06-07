@@ -152,14 +152,112 @@
     } catch { return false; }
   }
 
+  // ---------- 从游戏数据构建画像摘要 ----------
+  async function buildProfile() {
+    try {
+      const { loadAll } = await import('./js/core/store.js');
+      const data = loadAll();
+      if (!data.game1 && !data.game2 && !data.game3 && !data.game4) return null;
+
+      const dimNames = {
+        nAch: '成就动机', nPow: '权力动机', nAff: '亲和动机',
+        TF: '技术/职能', GM: '综合管理', AU: '自主/独立',
+        SE: '安全/稳定', EC: '创业/创造', SV: '服务/奉献',
+        CH: '纯粹挑战', LS: '生活方式',
+        wholistAnalytic: '认知风格',
+        presence: '意义拥有感', search: '意义寻求倾向',
+      };
+
+      // 收集所有维度分数
+      const allScores = [];
+      const gameSummaries = {};
+      const behavioralNotes = [];
+
+      // G1 核心驱动力
+      if (data.game1) {
+        const dims = data.game1.dimensions || {};
+        const entries = Object.entries(dims).sort((a, b) => b[1] - a[1]);
+        entries.forEach(([k, v]) => allScores.push({ name: dimNames[k] || k, score: Math.round(v * 10) / 10, game: 'G1' }));
+        if (entries.length > 0) {
+          gameSummaries.game1 = { summary: `最强驱动力为${dimNames[entries[0][0]] || entries[0][0]}（${entries[0][1].toFixed(1)}/10）` };
+        }
+        const meta = data.game1.meta || {};
+        const avgTime = meta.decisionCount ? Math.round(meta.totalTime / meta.decisionCount / 100) / 10 : 0;
+        if (avgTime) behavioralNotes.push(`G1核心驱动力：平均每题思考${avgTime}秒`);
+      }
+
+      // G2 职业锚
+      if (data.game2) {
+        const dims = data.game2.dimensions || {};
+        const entries = Object.entries(dims).sort((a, b) => b[1] - a[1]);
+        entries.forEach(([k, v]) => allScores.push({ name: dimNames[k] || k, score: Math.round(v * 10) / 10, game: 'G2' }));
+        const bs = data.game2.behaviorSummary || {};
+        if (bs.primaryAnchor) {
+          gameSummaries.game2 = { summary: `最看重的职业锚是${dimNames[bs.primaryAnchor] || bs.primaryAnchor}` };
+        }
+        const meta = data.game2.meta || {};
+        if (meta.cardsViewed) behavioralNotes.push(`G2职业锚：浏览了${meta.cardsViewed}张卡片后做最终选择`);
+        if (meta.stage1Kept && meta.stage3Kept) {
+          behavioralNotes.push(`G2职业锚：从${meta.stage1Kept.length}张初选 → 最终保留${meta.stage3Kept.length}张`);
+        }
+      }
+
+      // G3 认知风格
+      if (data.game3) {
+        const dims = data.game3.dimensions || {};
+        const entries = Object.entries(dims).sort((a, b) => b[1] - a[1]);
+        entries.forEach(([k, v]) => allScores.push({ name: dimNames[k] || k, score: Math.round(v * 10) / 10, game: 'G3' }));
+        const bs = data.game3.behaviorSummary || {};
+        if (bs.dominantStyle) {
+          gameSummaries.game3 = { summary: `主导认知风格为${bs.dominantStyle}（灵活性${Math.round(bs.flexibility || 0)}/10，冲动性${Math.round(bs.impulseScore || 0)}/10）` };
+        }
+      }
+
+      // G4 意义建构
+      if (data.game4) {
+        const dims = data.game4.dimensions || {};
+        const entries = Object.entries(dims).sort((a, b) => b[1] - a[1]);
+        entries.forEach(([k, v]) => allScores.push({ name: dimNames[k] || k, score: Math.round(v * 10) / 10, game: 'G4' }));
+        const bs = data.game4.behaviorSummary || {};
+        if (bs.profileType) {
+          gameSummaries.game4 = { summary: `意义建构类型为${bs.profileType}` };
+        }
+        const meta = data.game4.meta || {};
+        if (meta.avgReactionTimeMs) {
+          behavioralNotes.push(`G4意义建构：平均反应时间${Math.round(meta.avgReactionTimeMs / 100) / 10}秒`);
+        }
+      }
+
+      // Top 维度（取分数最高的 5 个，去重）
+      const seen = new Set();
+      const topDims = allScores
+        .sort((a, b) => b.score - a.score)
+        .filter(d => { if (seen.has(d.name)) return false; seen.add(d.name); return true; })
+        .slice(0, 5);
+
+      // topNames：取各游戏最高分维度名拼接
+      const topNames = topDims.slice(0, 3).map(d => d.name).join(' + ');
+
+      return {
+        topNames,
+        topDims,
+        gameSummaries,
+        behavioralNotes,
+      };
+    } catch (err) {
+      console.error('[CareerGuide] 构建画像失败:', err);
+      return null;
+    }
+  }
+
   // ---------- 开始对话 ----------
   async function startConversation() {
     renderer.showThinking();
     renderer.showProgress(1, 7, '现状了解');
 
     try {
-      const hasProfile = await checkProfile();
-      const res = await sendToAgent(null, '你好，我想探索自己的职业方向', hasProfile ? 'with_profile' : null);
+      const profile = await buildProfile();
+      const res = await sendToAgent(null, '你好，我想探索自己的职业方向', profile);
       sessionId = res.sessionId;
 
       renderer.hideThinking();
