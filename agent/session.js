@@ -21,14 +21,17 @@ export function createSession(opts = {}) {
   const session = {
     id,
     state: 'START',
+    status: 'active',          // active | completed
     phase: 1,
     phaseLabel: '现状了解',
     phaseTurns: 0,
-    maxPhaseTurns: 3,
+    maxPhaseTurns: 4,          // 每阶段最多 4 轮
+    phaseDepth: null,          // 当前阶段深度 shallow/adequate/deep
     collected: {},
     hints: [],
     messages: [],
     profile: opts.profile || null,
+    finalSummary: '',
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };
@@ -134,7 +137,7 @@ function _saveToFile(id, session) {
   if (!LOCAL_FILE) return;
   try {
     const all = _loadAll();
-    all[id] = { id, state: session.state, phase: session.phase, phaseLabel: session.phaseLabel, phaseTurns: session.phaseTurns, collected: session.collected, hints: session.hints, messages: session.messages, profile: session.profile, updatedAt: session.updatedAt };
+    all[id] = { id, state: session.state, status: session.status, phase: session.phase, phaseLabel: session.phaseLabel, phaseTurns: session.phaseTurns, maxPhaseTurns: session.maxPhaseTurns, phaseDepth: session.phaseDepth, collected: session.collected, hints: session.hints, messages: session.messages, profile: session.profile, finalSummary: session.finalSummary, updatedAt: session.updatedAt };
     writeFileSync(LOCAL_FILE, JSON.stringify(all, null, 2));
   } catch { /* ignore */ }
 }
