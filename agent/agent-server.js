@@ -161,7 +161,13 @@ async function handleChat(sessionId, userMessage, profile) {
     };
   }
 
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    console.error('[Agent] JSON 解析失败:', e.message);
+    return { reply: '抱歉，AI 服务暂时不可用。请稍后再试。', toolCalls: [], phase: sess.phase, label: sess.phaseLabel, error: 'JSON_PARSE' };
+  }
   const choice = data.choices?.[0];
   if (!choice) {
     console.error('[Agent] 无有效回复:', JSON.stringify(data).slice(0, 200));
@@ -239,6 +245,8 @@ async function handleChat(sessionId, userMessage, profile) {
       };
 
       try {
+        const ctrl2 = new AbortController();
+        const timer2 = setTimeout(() => ctrl2.abort(), 30000);
         const followUp = await fetch(DEEPSEEK_URL, {
           method: 'POST',
           headers: {
@@ -246,8 +254,9 @@ async function handleChat(sessionId, userMessage, profile) {
             'Authorization': `Bearer ${key}`,
           },
           body: JSON.stringify(followUpBody),
-          signal: AbortSignal.timeout(30000),
+          signal: ctrl2.signal,
         });
+        clearTimeout(timer2);
 
         if (followUp.ok) {
           const followData = await followUp.json();
@@ -381,6 +390,15 @@ function _phaseToState(phase) {
   };
   return map[phase] || 'COMPLETE';
 }
+
+// ============ 全局错误捕获 ============
+
+process.on('unhandledRejection', (err) => {
+  console.error('[Agent] Unhandled Rejection:', err?.message || err);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[Agent] Uncaught Exception:', err?.message || err);
+});
 
 // ============ 启动 ============
 
