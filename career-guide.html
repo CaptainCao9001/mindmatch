@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 职业方向探索</title>
   <meta name="description" content="通过引导式 AI 对话，探索你的职业方向。结合测评画像，给出个性化的发展建议。">
-  <script>window.__MM_VER__ = '20260603g';</script>
+  <script>window.__MM_VER__ = '20260608a';</script>
   <link rel="stylesheet" href="css/base.css?v=20260603g">
   <link rel="stylesheet" href="css/components.css?v=20260603g">
   <link rel="stylesheet" href="css/career-guide.css?v=20260603g">
@@ -228,6 +228,43 @@
         }
       }
 
+      // ---- 匹配结果 ----
+      let topDirs = [];
+      let topJs = {};
+      try {
+        const { integrate } = await import('./js/layers/integrator.js?v=20260608a');
+        const { matchExtended } = await import('./js/layers/matcher.js?v=20260608a');
+
+        const unifiedProfile = integrate();
+
+        const resp = await fetch('./mock/ideal-profiles.json?v=20260608a');
+        if (!resp.ok) throw new Error('加载 ideal-profiles.json 失败');
+        const idealData = await resp.json();
+
+        const matchResult = matchExtended(unifiedProfile, idealData);
+        const dirRanking = matchResult.directionRanking || [];
+
+        topDirs = dirRanking.slice(0, 3).map(entry => ({
+          id: entry.directionId,
+          name: entry.directionName,
+          icon: entry.directionIcon,
+          score: Math.round(entry.score),
+        }));
+
+        topDirs.forEach(dir => {
+          const full = dirRanking.find(e => e.directionId === dir.id);
+          if (full && full.jobResults) {
+            topJs[dir.id] = full.jobResults.slice(0, 3).map(j => ({
+              name: j.jobName,
+              icon: j.jobIcon,
+              score: Math.round(j.score),
+            }));
+          }
+        });
+      } catch (matchErr) {
+        console.error('[CareerGuide] 匹配计算失败:', matchErr);
+      }
+
       // Top 维度（取分数最高的 5 个，去重）
       const seen = new Set();
       const topDims = allScores
@@ -243,6 +280,8 @@
         topDims,
         gameSummaries,
         behavioralNotes,
+        topDirections: topDirs,
+        topJobs: topJs,
       };
     } catch (err) {
       console.error('[CareerGuide] 构建画像失败:', err);

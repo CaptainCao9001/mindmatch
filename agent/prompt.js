@@ -184,6 +184,35 @@ export function buildSystemPrompt(profile, phaseTurns = 4) {
     parts.push('1. 对话中自然地引用测评结果，比如"你之前测评显示出很强的成就动机，和你刚才说的想做有挑战性的事很一致"');
     parts.push('2. 不要把测评结果当结论——用它作为追问的切入点，比如"测评显示你倾向于分析型思维，这在刚才的经历里有体现吗？"');
     parts.push('3. 如果用户说的和画像有矛盾，相信用户说的，不要强行把用户往画像上套。');
+
+    // ---- 匹配结果 ----
+    if (profile.topDirections && profile.topDirections.length > 0) {
+      parts.push('');
+      parts.push('## 算法匹配结果（双轨混合引擎计算，供你参考和引用）');
+      parts.push('');
+      parts.push('### Top 3 匹配方向：');
+      profile.topDirections.forEach((dir, idx) => {
+        parts.push((idx + 1) + '. **' + dir.name + '** ' + dir.icon + ' — 匹配度 ' + dir.score + '分');
+      });
+      parts.push('');
+      parts.push('### 每个方向下的 Top 3 推荐职业：');
+      profile.topDirections.forEach(dir => {
+        const jobs = profile.topJobs ? (profile.topJobs[dir.id] || []) : [];
+        if (jobs.length > 0) {
+          parts.push('**' + dir.name + '** 方向：');
+          jobs.forEach((j, i) => {
+            parts.push('  ' + (i + 1) + '. ' + j.name + ' ' + j.icon + '（匹配度 ' + j.score + '分）');
+          });
+        }
+      });
+      parts.push('');
+      parts.push('**如何在对话中引用匹配结果（重要）**：');
+      parts.push('1. ❌ 不要直接说"你的匹配结果是XXX"——太生硬，像算命');
+      parts.push('2. ✅ 把匹配结果作为追问切入点："你的测评显示你偏向系统化思维，你之前有做过类似的事吗？"');
+      parts.push('3. ✅ 在阶段 5-6 可以逐步揭晓方向："结合你的测评和刚才聊的，你最适合的方向其实是——系统建构"');
+      parts.push('4. ✅ 如果用户说的内容和匹配结果矛盾，相信用户说的，不要强行纠正');
+      parts.push('5. ✅ 匹配结果是参考，不是结论。用户才是自己人生的专家。');
+    }
   }
 
   // ---- 方向参考 ----
