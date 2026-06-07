@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 职业方向探索</title>
   <meta name="description" content="通过引导式 AI 对话，探索你的职业方向。结合测评画像，给出个性化的发展建议。">
-  <script>window.__MM_VER__ = '20260608a';</script>
+  <script>window.__MM_VER__ = '20260608b';</script>
   <link rel="stylesheet" href="css/base.css?v=20260603g">
   <link rel="stylesheet" href="css/components.css?v=20260603g">
   <link rel="stylesheet" href="css/career-guide.css?v=20260603g">
@@ -232,12 +232,12 @@
       let topDirs = [];
       let topJs = {};
       try {
-        const { integrate } = await import('./js/layers/integrator.js?v=20260608a');
-        const { matchExtended } = await import('./js/layers/matcher.js?v=20260608a');
+        const { integrate } = await import('./js/layers/integrator.js?v=20260608b');
+        const { matchExtended } = await import('./js/layers/matcher.js?v=20260608b');
 
         const unifiedProfile = integrate();
 
-        const resp = await fetch('./mock/ideal-profiles.json?v=20260608a');
+        const resp = await fetch('./mock/ideal-profiles.json?v=20260608b');
         if (!resp.ok) throw new Error('加载 ideal-profiles.json 失败');
         const idealData = await resp.json();
 
@@ -275,14 +275,16 @@
       // topNames：取各游戏最高分维度名拼接
       const topNames = topDims.slice(0, 3).map(d => d.name).join(' + ');
 
-      return {
-        topNames,
-        topDims,
-        gameSummaries,
-        behavioralNotes,
-        topDirections: topDirs,
-        topJobs: topJs,
-      };
+      // 只附加有内容的字段，避免把空对象/空数组注入 Prompt
+      const result = { topNames, topDims };
+      if (Object.keys(gameSummaries).length > 0) result.gameSummaries = gameSummaries;
+      if (behavioralNotes.length > 0) result.behavioralNotes = behavioralNotes;
+      if (topDirs.length > 0) {
+        result.topDirections = topDirs;
+        result.topJobs = topJs;
+      }
+
+      return result;
     } catch (err) {
       console.error('[CareerGuide] 构建画像失败:', err);
       return null;

@@ -153,8 +153,8 @@ export function buildSystemPrompt(profile, phaseTurns = 4) {
       profile.topDims.forEach(d => parts.push('- ' + d.name + ': ' + d.score + '分'));
     }
 
-    // 游戏行为摘要
-    if (profile.gameSummaries) {
+    // 游戏行为摘要（只有在真正有内容时才注入）
+    if (profile.gameSummaries && Object.keys(profile.gameSummaries).length > 0) {
       parts.push('');
       parts.push('### 游戏测评行为摘要（请在对话中自然引用，不要生硬罗列）');
       const gs = profile.gameSummaries;
