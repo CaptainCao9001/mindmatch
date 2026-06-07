@@ -7,7 +7,7 @@ import { randomUUID } from 'crypto';
 
 // 本地存储文件（线上切换为 CloudBase DB 集合）
 const LOCAL_STORE = new Map();
-const LOCAL_FILE = null; // 设为 'agent-sessions.json' 则启用文件持久化
+const LOCAL_FILE = 'agent-sessions.json'; // 本地开发启用文件持久化，防止重启丢 session
 
 /**
  * 创建新会话
