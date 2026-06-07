@@ -3,17 +3,20 @@
 // 本地：Node.js HTTP server (port 8101)
 // 线上：CloudBase SCF handler
 //
-// 结构：
-//   1. 配置 & 工具函数
-//   2. 核心：handleChat（主流程，清晰分步）
-//   3. 辅助函数（ensureSession / checkTurnLimits / injectCollectedFields / callDeepSeek / handleToolCalls）
-//   4. HTTP Server（本地）
-//   5. SCF Handler（线上）
+// 主流程（6 步编排）：
+//   Step 1: ensureSession()     — 创建/校验/已完成拒绝
+//   Step 2: checkTurnLimits()   — 阶段+全局轮次，超限自动推进
+//   Step 3: injectCollectedFields() — 注入已收集字段（避免重复提问）
+//   Step 4: callDeepSeek()      — API 调用（含超时+重试）
+//   Step 5: handleToolCalls()   — 工具执行 + follow-up 补全
+//   Step 6: buildResponse()      — 组装返回对象
 // ============================================================
 
 import { createServer } from 'http';
 import { TOOLS, executeTool } from './tools.js';
-import { buildSystemPrompt } from './prompt.js';
+import { buildSystemPrompt, buildDirectionReference } from './prompt.js';
+import { STAGES, getStageLabel } from './stage-defs.js';
+import { ADVANCE_REPLIES, TOOL_REPLIES, FINISH_REPLY, COMPLETED_REPLY, ERROR_REPLIES, PHASE_LABELS } from './replies.js';
 import * as session from './session.js';
 
 // ==================== 配置 ====================
@@ -27,9 +30,6 @@ let API_KEY = process.env.DEEPSEEK_API_KEY || '';
 function getApiKey() {
   if (!API_KEY) {
     API_KEY = process.env.DEEPSEEK_API_KEY || globalThis.__DEEPSEEK_KEY__ || '';
-  }
-  if (!API_KEY) {
-    console.warn('[Agent] DEEPSEEK_API_KEY 未设置，API 调用将失败');
   }
   return API_KEY;
 }
@@ -49,37 +49,37 @@ async function handleChat(sessionId, userMessage, profile) {
   if (sessResult.error) return sessResult;
 
   // Step 2: 检查轮次限制（超限自动推进阶段）
-  checkTurnLimits(sessResult.sess, sessionId);
+  checkTurnLimits(sessResult.sessionId);
 
   // Step 3: 注入已收集字段到系统消息（避免重复提问）
-  injectCollectedFields(sessionId);
+  injectCollectedFields(sessResult.sessionId);
 
   // Step 4: 调用 DeepSeek API
   const key = getApiKey();
   if (!key) {
-    return buildErrorReply(sessResult.sess, 'NO_API_KEY', '抱歉，AI 服务暂时不可用。请稍后再试。');
+    return buildErrorReply(sessResult.sessionId, 'NO_API_KEY');
   }
 
-  const apiResult = await callDeepSeek(sessionId, key);
+  const apiResult = await callDeepSeek(sessResult.sessionId, key);
   if (apiResult.error) return apiResult;
 
   const { reply, rawToolCalls } = apiResult;
 
   // Step 5: 处理工具调用（如有）
   if (rawToolCalls.length > 0) {
-    const toolResult = await handleToolCalls(sessionId, rawToolCalls, reply, key);
+    const toolResult = await handleToolCalls(sessResult.sessionId, rawToolCalls, reply, key);
     return toolResult;
   }
 
   // Step 6: 普通文本回复
-  return buildSuccessReply(sessionId, reply);
+  return buildSuccessReply(sessResult.sessionId, reply);
 }
 
-// ==================== Session 管理 ====================
+// ==================== Step 1: Session 管理 ====================
 
 /**
  * 确保 session 存在且可接收新消息
- * @returns {object} { sess, error } — error 时返回错误回复对象
+ * @returns {object} { sessionId, error } — error 时返回错误回复对象
  */
 function ensureSession(sessionId, userMessage, profile) {
   let sess = session.getSession(sessionId);
@@ -91,51 +91,52 @@ function ensureSession(sessionId, userMessage, profile) {
     sessionId = sess.id;
     session.addMessage(sessionId, 'user', userMessage);
     console.log(`[Agent] 新会话创建: ${sessionId}`);
-  } else {
-    // 已存在的会话
-    if (sess.status === 'completed') {
-      return {
-        error: {
-          reply: '对话已完成。如需重新探索，请刷新页面开始新的对话。',
-          toolCalls: [],
-          phase: sess.phase,
-          label: sess.phaseLabel,
-          status: 'completed',
-          sessionId,
-        },
-      };
-    }
-    session.addMessage(sessionId, 'user', userMessage);
+    return { sessionId, error: null };
   }
 
-  return { sess, sessionId };
+  // 已存在的会话
+  if (sess.status === 'completed') {
+    return {
+      sessionId,
+      error: {
+        reply: COMPLETED_REPLY,
+        toolCalls: [],
+        phase: sess.phase,
+        label: sess.phaseLabel,
+        status: 'completed',
+        sessionId,
+      },
+    };
+  }
+
+  session.addMessage(sessionId, 'user', userMessage);
+  return { sessionId, error: null };
 }
 
-// ==================== 轮次限制 ====================
+// ==================== Step 2: 轮次限制 ====================
 
 /**
  * 检查阶段轮次和全局轮次，超限则自动推进
  */
-function checkTurnLimits(sess, sessionId) {
+function checkTurnLimits(sessionId) {
+  const sess = session.getSession(sessionId);
+  if (!sess) return;
+
   // 阶段轮次
   let phaseTurns = (sess.phaseTurns || 0) + 1;
   const maxPhaseTurns = sess.maxPhaseTurns || 4;
 
   if (phaseTurns > maxPhaseTurns && sess.phase < 6) {
     const nextPhase = sess.phase + 1;
-    const phaseLabels = {
-      1: '现状了解', 2: '经验盘点', 3: '内在驱动',
-      4: '现实考量', 5: '过往探索', 6: '总结确认', 7: '生成建议',
-    };
+    const label = getStageLabel(nextPhase) || PHASE_LABELS[nextPhase] || '下一个话题';
     console.log(`[Agent] 阶段 ${sess.phase} 轮次超限 (${phaseTurns}/${maxPhaseTurns})，自动推进到阶段 ${nextPhase}`);
     session.updateSession(sessionId, {
       phase: nextPhase,
-      phaseLabel: phaseLabels[nextPhase],
+      phaseLabel: label,
       phaseTurns: 0,
       phaseDepth: null,
-      state: phaseToState(nextPhase),
     });
-    sess = session.getSession(sessionId);
+    sess.phase = nextPhase;
     phaseTurns = 1;
   }
 
@@ -147,16 +148,14 @@ function checkTurnLimits(sess, sessionId) {
       phase: 6,
       phaseLabel: '总结确认',
       phaseTurns: 0,
-      state: 'SUMMARY_CONFIRM',
     });
-    sess = session.getSession(sessionId);
   }
 
   // 更新阶段轮次
   session.updateSession(sessionId, { phaseTurns });
 }
 
-// ==================== 已收集字段注入 ====================
+// ==================== Step 3: 已收集字段注入 ====================
 
 /**
  * 把 session.collected 中的字段注入系统消息
@@ -164,6 +163,8 @@ function checkTurnLimits(sess, sessionId) {
  */
 function injectCollectedFields(sessionId) {
   const sess = session.getSession(sessionId);
+  if (!sess) return;
+
   const collected = sess.collected || {};
 
   // 只保留有实际内容的字段
@@ -191,7 +192,7 @@ function injectCollectedFields(sessionId) {
   session.updateSession(sessionId, { messages: sess.messages });
 }
 
-// ==================== DeepSeek API 调用 ====================
+// ==================== Step 4: DeepSeek API 调用 ====================
 
 /**
  * 调用 DeepSeek API
@@ -199,6 +200,9 @@ function injectCollectedFields(sessionId) {
  */
 async function callDeepSeek(sessionId, key) {
   const sess = session.getSession(sessionId);
+  if (!sess) {
+    return { error: buildErrorReply(sessionId, 'SESSION_NOT_FOUND') };
+  }
 
   const requestBody = {
     model: 'deepseek-chat',
@@ -230,16 +234,12 @@ async function callDeepSeek(sessionId, key) {
     if (!response.ok) {
       const errText = await response.text().catch(() => '');
       console.error(`[Agent] API 错误 ${response.status}: ${errText.slice(0, 200)}`);
-      return {
-        error: buildErrorReply(sess, `API_${response.status}`, '抱歉，AI 服务暂时不可用。请稍后再试。'),
-      };
+      return { error: buildErrorReply(sessionId, `API_${response.status}`) };
     }
   } catch (err) {
     console.error('[Agent] 网络错误:', err.message);
     const errorType = err.name === 'AbortError' ? 'TIMEOUT' : 'NETWORK';
-    return {
-      error: buildErrorReply(sess, errorType, '抱歉，网络好像出了点问题。请稍后再试。'),
-    };
+    return { error: buildErrorReply(sessionId, errorType) };
   }
 
   // 解析响应
@@ -248,33 +248,33 @@ async function callDeepSeek(sessionId, key) {
     data = await response.json();
   } catch (e) {
     console.error('[Agent] JSON 解析失败:', e.message);
-    return {
-      error: buildErrorReply(sess, 'JSON_PARSE', '抱歉，AI 服务暂时不可用。请稍后再试。'),
-    };
+    return { error: buildErrorReply(sessionId, 'JSON_PARSE') };
   }
 
   const choice = data.choices?.[0];
   if (!choice) {
     console.error('[Agent] 无有效回复:', JSON.stringify(data).slice(0, 200));
-    return {
-      error: buildErrorReply(sess, 'EMPTY_RESPONSE', '抱歉，AI 没有返回有效回复。'),
-    };
+    return { error: buildErrorReply(sessionId, 'EMPTY_RESPONSE') };
   }
 
   const msg = choice.message;
   const reply = msg.content || '';
   const rawToolCalls = msg.tool_calls || [];
 
-  return { reply, rawToolCalls };
+  return { reply, rawToolCalls, error: null };
 }
 
-// ==================== 工具调用处理 ====================
+// ==================== Step 5: 工具调用处理 ====================
 
 /**
  * 处理 AI 返回的工具调用
  */
 async function handleToolCalls(sessionId, rawToolCalls, reply, key) {
   const sess = session.getSession(sessionId);
+  if (!sess) {
+    return buildErrorReply(sessionId, 'SESSION_NOT_FOUND');
+  }
+
   const toolResults = [];
 
   console.log(`[Agent] AI 调用了 ${rawToolCalls.length} 个工具:`, rawToolCalls.map(t => t.function?.name).join(', '));
@@ -304,7 +304,7 @@ async function handleToolCalls(sessionId, rawToolCalls, reply, key) {
 
     // 如果 finish_conversation 成功，直接返回
     if (fn.name === 'finish_conversation' && result.ok) {
-      const finalReply = reply || '感谢你的信任，祝你找到心仪的职业方向！';
+      const finalReply = reply || FINISH_REPLY;
       session.addMessage(sessionId, 'assistant', finalReply);
       return {
         reply: finalReply,
@@ -355,11 +355,12 @@ async function handleToolCalls(sessionId, rawToolCalls, reply, key) {
  */
 async function tryFollowUp(sessionId, key) {
   const sess = session.getSession(sessionId);
+  if (!sess) return null;
 
   // 如果对话已结束，不再 follow-up
   if (sess.status === 'completed') {
     return {
-      reply: '对话已完成。如需重新探索，请刷新页面开始新的对话。',
+      reply: COMPLETED_REPLY,
       toolCalls: [],
       phase: 7,
       label: '生成建议',
@@ -426,35 +427,32 @@ function buildFallbackReply(sess, rawToolCalls) {
   const didSave = rawToolCalls.some(tc => tc.function?.name === 'save_collected');
 
   if (didFinish) {
-    return '以上就是我为你整理的方向建议。如果你还有其他问题，随时欢迎再来聊聊！';
+    return FINISH_REPLY;
   }
 
   if (didAdvance) {
-    const prompts = {
-      2: '来说说你做过哪些事情——实习、项目、社团，哪一段让你觉得"这可能是我想做的"？',
-      3: '聊一下你内心觉得"这就是我该做的事"的时刻？',
-      4: '现实层面你最在意什么？城市、薪资、稳定、成长——如果只能保一个，你选哪个？',
-      5: '你之前试过哪些方法来确定方向？做测评、跟人聊、尝试实习——效果怎么样？',
-      6: '我先帮你理一下我们聊到的关键信息。',
-      7: '根据我们聊的内容和你的测评数据，你的方向大概是这样——',
-    };
-    return prompts[sess.phase] || `好了，我们聊聊下一个话题。`;
+    return ADVANCE_REPLIES[sess.phase] || `好了，我们聊聊下一个话题。`;
   }
 
   if (didSave) {
-    return '了解了，继续聊。';
+    return TOOL_REPLIES.save;
   }
 
-  return '嗯，我记下了。';
+  return TOOL_REPLIES.default;
 }
 
-// ==================== 回复构建辅助 ====================
+// ==================== Step 6: 回复构建辅助 ====================
 
 function buildSuccessReply(sessionId, reply) {
   const sess = session.getSession(sessionId);
+  if (!sess) {
+    return buildErrorReply(sessionId, 'SESSION_NOT_FOUND');
+  }
+
   if (reply) {
     session.addMessage(sessionId, 'assistant', reply);
   }
+
   return {
     reply,
     toolCalls: [],
@@ -465,26 +463,19 @@ function buildSuccessReply(sessionId, reply) {
   };
 }
 
-function buildErrorReply(sess, errorCode, errorMessage) {
+function buildErrorReply(sessionId, errorCode) {
+  const sess = session.getSession(sessionId) || { phase: 0, phaseLabel: '', status: 'error' };
+  const errorMessage = ERROR_REPLIES[errorCode] || ERROR_REPLIES.NETWORK;
+
   return {
     reply: errorMessage,
     toolCalls: [],
     phase: sess.phase,
     label: sess.phaseLabel,
     error: errorCode,
+    status: sess.status,
+    sessionId,
   };
-}
-
-// ==================== 阶段工具函数 ====================
-
-function phaseToState(phase) {
-  const map = {
-    1: 'Q1_STAGE', 2: 'Q2_EXPERIENCE',
-    3: 'Q3_MOTIVATION', 4: 'Q4_CONSTRAINT',
-    5: 'Q5_PAST_TRY', 6: 'SUMMARY_CONFIRM',
-    7: 'GENERATE_RESULT',
-  };
-  return map[phase] || 'COMPLETE';
 }
 
 // ==================== HTTP Server（本地调试） ====================
