@@ -219,8 +219,9 @@ async function handleChat(sessionId, userMessage, profile) {
       }
     }
 
-    // 如果 AI 调用了工具但没有文字回复，再调一次让 AI 生成回复
-    if (!reply && rawToolCalls.length > 0) {
+    // 如果 AI 调用了工具但文字回复为空/过短/不完整，再调一次让 AI 生成完整回复
+    const isShortReply = !reply || reply.trim().length < 30 || /[—–-]\s*$/.test(reply.trim());
+    if (isShortReply && rawToolCalls.length > 0) {
       sess = session.getSession(sessionId);
 
       // 如果对话已结束，不再 follow-up
@@ -276,7 +277,7 @@ async function handleChat(sessionId, userMessage, profile) {
       } catch { /* fall through */ }
     }
 
-    // 兜底：如果 follow-up 也没拿到文字回复，生成一个默认过渡语
+    // 兜底：如果 follow-up 也没拿到文字回复，生成带阶段上下文的过渡语
     if (!reply && rawToolCalls.length > 0) {
       const didAdvance = rawToolCalls.some(tc => tc.function?.name === 'advance_phase');
       const didFinish = rawToolCalls.some(tc => tc.function?.name === 'finish_conversation');
@@ -285,7 +286,17 @@ async function handleChat(sessionId, userMessage, profile) {
       if (didFinish) {
         fallback = '以上就是我为你整理的方向建议。如果你还有其他问题，随时欢迎再来聊聊！';
       } else if (didAdvance) {
-        fallback = '好的，让我们继续下一个话题。';
+        const topicMap = { 2: '经验盘点', 3: '内在驱动', 4: '现实考量', 5: '过往探索', 6: '总结确认', 7: '生成建议' };
+        const label = topicMap[sess.phase] || '下一个话题';
+        const prompts = {
+          2: '来说说你做过哪些事情——实习、项目、社团，哪一段让你觉得"这可能是我想做的"？',
+          3: '聊一下你内心觉得"这就是我该做的事"的时刻？',
+          4: '现实层面你最在意什么？城市、薪资、稳定、成长——如果只能保一个，你选哪个？',
+          5: '你之前试过哪些方法来确定方向？做测评、跟人聊、尝试实习——效果怎么样？',
+          6: '我先帮你理一下我们聊到的关键信息。',
+          7: '根据我们聊的内容和你的测评数据，你的方向大概是这样——',
+        };
+        fallback = prompts[sess.phase] || `好了，我们聊聊${label}。`;
       } else if (didSave) {
         fallback = '了解了，继续聊。';
       } else {
