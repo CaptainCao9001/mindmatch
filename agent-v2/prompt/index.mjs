@@ -15,7 +15,7 @@ import { buildProfileContext } from './profile-context.mjs';
  */
 export function buildSystemPrompt(profile) {
   const blocks = [
-    buildRoleBlock(),
+    buildRoleBlock(profile),
     buildStyleBlock(),
     buildStagesBlock(),
     buildExamplesBlock(),
