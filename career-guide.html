@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 职业方向探索</title>
   <meta name="description" content="通过引导式 AI 对话，探索你的职业方向。结合测评画像，给出个性化的发展建议。">
-  <script>window.__MM_VER__ = '20260608f';</script>
-  <link rel="stylesheet" href="css/base.css?v=20260603g">
-  <link rel="stylesheet" href="css/components.css?v=20260603g">
-  <link rel="stylesheet" href="css/career-guide.css?v=20260603g">
+  <script>window.__MM_VER__ = '20260609a';</script>
+  <link rel="stylesheet" href="css/base.css?v=20260609a">
+  <link rel="stylesheet" href="css/components.css?v=20260609a">
+  <link rel="stylesheet" href="css/career-guide.css?v=20260609a">
 </head>
 <body style="margin:0;background:#0d0d12;">
 
@@ -98,13 +98,13 @@
 
 <!-- ========== App Script ========== -->
 <script type="module">
-  import { ChatRenderer } from './js/agent/chat-renderer.js';
-  import { sendToAgent, executeToolCalls } from './js/agent/tool-executor.js';
+  import { ChatRenderer } from './js/agent/chat-renderer.js?v=20260609a';
+  import { sendToAgent, executeToolCalls } from './js/agent/tool-executor.js?v=20260609a';
 
   // ---------- Agent 状态（最小化前端状态） ----------
   let sessionId = null;          // Agent 会话 ID
   let agentPhase = 1;           // 当前阶段号（来自 agent）
-  let agentLabel = '现状了解';   // 阶段标签
+  let agentLabel = '结果共鸣';   // 阶段标签（v2: 4阶段）
   let isProcessing = false;
   const introSection = document.getElementById('intro-section');
   const introProfileHint = document.getElementById('intro-profile-hint');
@@ -144,19 +144,28 @@
     chatContainer.classList.remove('cg-hidden');
   }
 
-  // ---------- 检查本地画像 ----------
-  async function checkProfile() {
+  // ---------- 检查本地画像 -- 内联 localStorage（避免动态 import CDN 坑）----------
+  function checkProfile() {
     try {
-      const { hasAllGameData } = await import('./js/core/store.js');
-      return hasAllGameData();
+      const raw = localStorage.getItem('mindmatch_meta');
+      if (!raw) return false;
+      const meta = JSON.parse(raw);
+      const games = meta.completedGames || [];
+      const hasAll = games.includes('game1') && games.includes('game2') && games.includes('game3') && games.includes('game4');
+      console.log('[CareerGuide] completedGames:', games, 'keys:', Object.keys(JSON.parse(raw)), 'hasAll:', hasAll);
+      return hasAll;
     } catch { return false; }
   }
 
   // ---------- 从游戏数据构建画像摘要 ----------
   async function buildProfile() {
     try {
-      const { loadAll } = await import('./js/core/store.js');
-      const data = loadAll();
+      const data = {
+        game1: JSON.parse(localStorage.getItem('mindmatch_game1') || 'null'),
+        game2: JSON.parse(localStorage.getItem('mindmatch_game2') || 'null'),
+        game3: JSON.parse(localStorage.getItem('mindmatch_game3') || 'null'),
+        game4: JSON.parse(localStorage.getItem('mindmatch_game4') || 'null'),
+      };
       if (!data.game1 && !data.game2 && !data.game3 && !data.game4) return null;
 
       const dimNames = {
@@ -232,12 +241,12 @@
       let topDirs = [];
       let topJs = {};
       try {
-        const { integrate } = await import('./js/layers/integrator.js?v=20260608d');
-        const { matchExtended } = await import('./js/layers/matcher.js?v=20260608d');
+        const { integrate } = await import('./js/layers/integrator.js?v=20260609a');
+        const { matchExtended } = await import('./js/layers/matcher.js?v=20260609a');
 
         const unifiedProfile = integrate();
 
-        const resp = await fetch('./mock/ideal-profiles.json?v=20260608d');
+        const resp = await fetch('./mock/ideal-profiles.json?v=20260609a');
         if (!resp.ok) throw new Error('加载 ideal-profiles.json 失败');
         const idealData = await resp.json();
 
@@ -294,7 +303,7 @@
   // ---------- 开始对话 ----------
   async function startConversation() {
     renderer.showThinking();
-    renderer.showProgress(1, 7, '现状了解');
+    renderer.showProgress(1, 4, '结果共鸣');
 
     try {
       const profile = await buildProfile();
@@ -312,8 +321,8 @@
       }
 
       agentPhase = res.phase || 1;
-      agentLabel = res.label || '现状了解';
-      renderer.showProgress(agentPhase, 7, agentLabel);
+      agentLabel = res.label || '结果共鸣';
+      renderer.showProgress(agentPhase, 4, agentLabel);
 
     } catch (err) {
       renderer.hideThinking();
@@ -350,10 +359,10 @@
 
       agentPhase = res.phase || agentPhase;
       agentLabel = res.label || agentLabel;
-      renderer.showProgress(agentPhase, 7, agentLabel);
+      renderer.showProgress(agentPhase, 4, agentLabel);
 
-      // 阶段 7 = 生成建议完成
-      if (agentPhase >= 7 && res.reply && res.reply.includes('职业方向')) {
+      // 阶段 4 = 对话完成
+      if (agentPhase >= 4 && res.reply && res.reply.includes('职业方向')) {
         renderer.setInputEnabled(false);
         renderer.addMessage('assistant', '对话已完成。如果需要重新开始，请刷新页面。');
         return;
@@ -372,7 +381,7 @@
 
   // ---------- 进度更新 ----------
   function updateProgress() {
-    renderer.showProgress(agentPhase, 7, agentLabel);
+    renderer.showProgress(agentPhase, 4, agentLabel);
   }
 
   // ---------- 辅助 ----------
