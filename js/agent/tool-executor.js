@@ -1,7 +1,11 @@
 // ============================================================
-// tool-executor.js — 前端工具执行器
+// tool-executor.js — 前端工具执行器（v2 适配）
 // 接收 Agent Server 返回的 toolCalls → 映射到 renderer 方法
+// v2: 总阶段数从 7 改为 4，删除 show_hint
 // ============================================================
+
+/** v2 总阶段数 */
+const TOTAL_STAGES_V2 = 4;
 
 /**
  * 执行 Agent 返回的工具调用
@@ -16,19 +20,18 @@ export function executeToolCalls(toolCalls, renderer) {
       case 'advance_phase': {
         const { phase, label } = tc.args;
         if (renderer.showProgress) {
-          renderer.showProgress(phase, 7, label);
-        }
-        break;
-      }
-      case 'show_hint': {
-        // 方向提示：在聊天区插入一个提示卡片
-        if (renderer.addHint) {
-          renderer.addHint(tc.args.direction, tc.args.hint);
+          renderer.showProgress(phase, TOTAL_STAGES_V2, label);
         }
         break;
       }
       case 'save_collected':
         // 前端不需要处理，由 agent server 维护
+        break;
+      case 'finish_conversation':
+        // 对话结束，前端可据此禁用输入框
+        if (renderer.disableInput) {
+          renderer.disableInput();
+        }
         break;
     }
   }
@@ -42,8 +45,8 @@ export function getAgentUrl() {
   if (host === 'localhost' || host === '127.0.0.1') {
     return 'http://localhost:8101/api/agent/chat';
   }
-  // 线上：CloudBase SCF 云函数地址
-  return 'https://mindmatch-d0gz847n4e29e3181.service.tcloudbase.com/agent/chat';
+  // 线上：CloudBase HTTP 访问服务 → agent 云函数
+  return 'https://mindmatch-d0gz847n4e29e3181-1438477634.ap-shanghai.app.tcloudbase.com/agent';
 }
 
 /**
@@ -56,19 +59,30 @@ export function getAgentUrl() {
 export async function sendToAgent(sessionId, message, profile) {
   const url = getAgentUrl();
 
+  // 超时保护（70s，略长于 SCF 60s 超时）
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 70000);
+
   const body = { message };
   if (sessionId) body.sessionId = sessionId;
   if (profile) body.profile = profile;
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
 
-  if (!res.ok) {
-    throw new Error(`Agent server error: ${res.status}`);
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      throw new Error(`Agent server error: ${res.status}`);
+    }
+
+    return res.json();
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  return res.json();
 }

@@ -9,6 +9,13 @@
       "runtime": "Nodejs18.15",
       "handler": "index.main",
       "triggers": []
+    },
+    {
+      "name": "agent",
+      "timeout": 60,
+      "runtime": "Nodejs18.15",
+      "handler": "scf-bridge.main_handler",
+      "triggers": []
     }
   ]
 }

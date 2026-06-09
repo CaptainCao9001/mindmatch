@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindMatch — 职业方向探索报告</title>
+  <link rel="stylesheet" href="css/base.css?v=export2">
+  <link rel="stylesheet" href="css/export.css?v=export2">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <style>
+    /* ========== 报告容器 ========== */
+    .report-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ========== 封面 ========== */
+    .report-cover {
+      text-align: center;
+      padding: 60px 24px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(16,185,129,0.05));
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 16px;
+      margin-bottom: 48px;
+    }
+    .report-cover h1 {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #7c3aed, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+    .report-cover .subtitle {
+      color: #6b6b80;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .report-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .report-tag {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .report-tag--dimension {
+      background: rgba(124,58,237,0.12);
+      color: #a78bfa;
+      border: 1px solid rgba(124,58,237,0.3);
+    }
+    .report-tag--game {
+      background: rgba(16,185,129,0.12);
+      color: #34d399;
+      border: 1px solid rgba(16,185,129,0.3);
+    }
+    .report-tag--game-incomplete {
+      background: rgba(255,255,255,0.05);
+      color: #6b6b80;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .report-generated {
+      color: #4a4a60;
+      font-size: 12px;
+      margin-top: 24px;
+    }
+
+    /* ========== 板块通用 ========== */
+    .report-section {
+      margin-bottom: 48px;
+      padding: 32px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+    }
+    .report-section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #e0e0f0;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .report-section-title .icon {
+      font-size: 24px;
+    }
+
+    /* ========== 14维进度条 ========== */
+    .dimension-group {
+      margin-bottom: 24px;
+    }
+    .dimension-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #a78bfa;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dimension-group--blue .dimension-group-title { color: #60a5fa; }
+    .dimension-group--green .dimension-group-title { color: #34d399; }
+    .dimension-group--red .dimension-group-title { color: #f87171; }
+    .dimension-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .dimension-name {
+      width: 120px;
+      font-size: 13px;
+      color: #b0b0c0;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .dimension-bar-bg {
+      flex: 1;
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .dimension-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+    .dimension-bar-fill--purple { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+    .dimension-bar-fill--blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .dimension-bar-fill--green { background: linear-gradient(90deg, #10b981, #34d399); }
+    .dimension-bar-fill--red { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .dimension-score {
+      width: 40px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e0e0f0;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ========== 规则解读 ========== */
+    .translation-section {
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .translation-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .translation-game-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e0e0f0;
+      margin-bottom: 8px;
+    }
+    .translation-summary {
+      font-size: 14px;
+      color: #b0b0c0;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .translation-dimension {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+    }
+    .translation-dimension-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #a78bfa;
+      min-width: 100px;
+    }
+    .translation-dimension-score {
+      font-size: 12px;
+      color: #6b6b80;
+      margin-top: 2px;
+    }
+    .translation-dimension-desc {
+      font-size: 13px;
+      color: #b0b0c0;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /* ========== 职业方向 ========== */
+    .direction-top1 {
+      padding: 24px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(16,185,129,0.08));
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .direction-top1-label {
+      font-size: 12px;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .direction-top1-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #e0e0f0;
+      margin-bottom: 8px;
+    }
+    .direction-top1-score {
+      font-size: 14px;
+      color: #34d399;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .direction-top1-occupations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .direction-occupation-tag {
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      font-size: 12px;
+      color: #b0b0c0;
+    }
+    .direction-list {
+      list-style: none;
+      padding: 0;
+    }
+    .direction-list-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .direction-rank {
+      font-size: 14px;
+      font-weight: 700;
+      color: #6b6b80;
+      width: 24px;
+      text-align: center;
+    }
+    .direction-name {
+      flex: 1;
+      font-size: 14px;
+      color: #b0b0c0;
+    }
+    .direction-score {
+      font-size: 14px;
+      font-weight: 600;
+      color: #a78bfa;
+    }
+
+    /* ========== AI 洞察 ========== */
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .insight-card {
+      padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+    .insight-card-game {
+      font-size: 12px;
+      color: #a78bfa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .insight-card-behavior {
+      font-size: 14px;
+      color: #e0e0f0;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .insight-card-analysis {
+      font-size: 13px;
+      color: #b0b0c0;
+      line-height: 1.6;
+    }
+    .insight-summary {
+      padding: 20px;
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: 12px;
+      font-size: 14px;
+      color: #b0b0c0;
+      line-height: 1.7;
+    }
+    .behavior-narrative {
+      padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      font-size: 14px;
+      color: #b0b0c0;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    /* ========== 行动建议 ========== */
+    .experiment-list {
+      list-style: none;
+      padding: 0;
+    }
+    .experiment-item {
+      padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      border-left: 3px solid #7c3aed;
+    }
+    .experiment-type {
+      font-size: 11px;
+      color: #a78bfa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .experiment-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e0e0f0;
+      margin-bottom: 8px;
+    }
+    .experiment-desc {
+      font-size: 13px;
+      color: #b0b0c0;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .experiment-rationale {
+      font-size: 12px;
+      color: #6b6b80;
+      font-style: italic;
+    }
+    .generic-suggestions {
+      padding: 20px;
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.15);
+      border-radius: 12px;
+    }
+    .generic-suggestion {
+      padding: 10px 0;
+      font-size: 14px;
+      color: #b0b0c0;
+      line-height: 1.6;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .generic-suggestion:last-child {
+      border-bottom: none;
+    }
+    .generic-suggestion::before {
+      content: '•';
+      color: #34d399;
+      margin-right: 8px;
+      font-weight: 700;
+    }
+
+    /* ========== 空状态 ========== */
+    .report-empty {
+      text-align: center;
+      padding: 40px 24px;
+      color: #6b6b80;
+      font-size: 14px;
+    }
+    .report-empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    /* ========== 操作栏 ========== */
+    .report-actions {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      padding: 16px 24px;
+      background: rgba(18,18,24,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 32px;
+    }
+    .report-btn {
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .report-btn--primary {
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: white;
+      border: none;
+    }
+    .report-btn--primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+    }
+    .report-btn--secondary {
+      background: rgba(255,255,255,0.06);
+      color: #b0b0c0;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .report-btn--secondary:hover {
+      background: rgba(255,255,255,0.1);
+      color: #e0e0f0;
+    }
+
+    /* ========== Toast ========== */
+    .report-toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      background: rgba(16,185,129,0.95);
+      color: white;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .report-toast.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .insight-grid {
+        grid-template-columns: 1fr;
+      }
+      .dimension-name {
+        width: 80px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body style="background: #121218; color: #e0e0f0;">
+
+  <!-- ========== 操作栏 ========== -->
+  <div class="report-actions" id="reportActions">
+    <button id="btnSavePdf" class="report-btn report-btn--primary" onclick="saveAsPDF()">💾 保存为 PDF</button>
+    <button id="btnSaveImage" class="report-btn report-btn--secondary" onclick="saveAsImage()">🖼️ 保存为图片</button>
+    <button class="report-btn report-btn--secondary" onclick="window.close()">✕ 关闭</button>
+  </div>
+
+  <!-- ========== Toast ========== -->
+  <div class="report-toast" id="reportToast"></div>
+
+  <div class="report-container" id="reportContainer">
+    <!-- 由 JS 渲染 -->
+    <div class="report-empty">
+      <div class="report-empty-icon">⏳</div>
+      <p>正在加载报告数据...</p>
+    </div>
+  </div>
+
+  <script>
+    /* ====================================================================
+     *  export-report.html — 独立报告页面
+     *  读取 localStorage['mindmatch_export_data'] 渲染 6 板块
+     *  ==================================================================== */
+
+    const VER = '?v=export1';
+
+    // ---- 工具函数 ----
+    function showToast(msg) {
+      const toast = document.getElementById('reportToast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function getDimensionLabel(key) {
+      const labels = {
+        nAch: '成就动机', nPow: '权力动机', nAff: '亲和动机',
+        TF: '思考/情感', GM: '目标/过程', AU: '自主/统一', SE: '自我/外部',
+        EC: '经济/社区', SV: '安全/价值', CH: '挑战/和谐', LS: '领导/支持',
+        wholistAnalytic: '整体/分析',
+        presence: '当下存在', search: '未来探索',
+      };
+      return labels[key] || key;
+    }
+
+    function getGameLabel(key) {
+      const labels = {
+        escapeRoom: '密室逃脱', careerAnchor: '职业锚', cognitiveStyle: '认知风格', meaningConstruction: '意义建构',
+      };
+      return labels[key] || key;
+    }
+
+    // ---- 读取数据 ----
+    function loadExportData() {
+      try {
+        const raw = localStorage.getItem('mindmatch_export_data');
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error('[Export] 数据解析失败:', e);
+        return null;
+      }
+    }
+
+    // ---- 渲染封面 ----
+    function renderCover(data) {
+      const profile = data.profile || {};
+      const dimensions = profile.dimensions || {};
+      const games = profile.games || {};
+
+      // Top 3 维度
+      const sortedDims = Object.entries(dimensions)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
+
+      // 游戏完成状态
+      const gameList = [
+        { key: 'escapeRoom', label: '密室逃脱' },
+        { key: 'careerAnchor', label: '职业锚' },
+        { key: 'cognitiveStyle', label: '认知风格' },
+        { key: 'meaningConstruction', label: '意义建构' },
+      ];
+      const completedCount = gameList.filter(g => games[g.key] && games[g.key].played).length;
+
+      return `
+        <div class="report-cover">
+          <h1>MindMatch 职业方向探索报告</h1>
+          <p class="subtitle">基于你的思维游戏表现，生成的专属职业方向分析报告</p>
+          ${sortedDims.length > 0 ? `
+            <div class="report-tags">
+              ${sortedDims.map(([k, v]) => `
+                <span class="report-tag report-tag--dimension">${getDimensionLabel(k)} ${v}分</span>
+              `).join('')}
+            </div>
+          ` : ''}
+          <div class="report-tags">
+            ${gameList.map(g => {
+              const done = games[g.key] && games[g.key].played;
+              return `<span class="report-tag ${done ? 'report-tag--game' : 'report-tag--game-incomplete'}">${g.label} ${done ? '✓' : '○'}</span>`;
+            }).join('')}
+          </div>
+          <p class="report-generated">生成时间：${new Date(data.generatedAt || Date.now()).toLocaleString('zh-CN')}</p>
+        </div>
+      `;
+    }
+
+    // ---- 渲染 14 维概览 ----
+    function renderDimensions(data) {
+      const profile = data.profile || {};
+      const dimensions = profile.dimensions || {};
+
+      if (Object.keys(dimensions).length === 0) {
+        return `
+          <div class="report-section">
+            <h2 class="report-section-title"><span class="icon">📊</span>14 维思维概览</h2>
+            <div class="report-empty">暂无维度数据</div>
+          </div>
+        `;
+      }
+
+      const groups = [
+        { name: '成就动机（G1）', cls: '', dims: ['nAch', 'nPow', 'nAff'] },
+        { name: '工作偏好（G2）', cls: 'dimension-group--blue', dims: ['TF', 'GM', 'AU', 'SE', 'EC', 'SV', 'CH', 'LS'] },
+        { name: '认知风格（G3）', cls: 'dimension-group--green', dims: ['wholistAnalytic'] },
+        { name: '存在方式（G4）', cls: 'dimension-group--red', dims: ['presence', 'search'] },
+      ];
+
+      const barColors = ['dimension-bar-fill--purple', 'dimension-bar-fill--blue', 'dimension-bar-fill--green', 'dimension-bar-fill--red'];
+
+      return `
+        <div class="report-section">
+          <h2 class="report-section-title"><span class="icon">📊</span>14 维思维概览</h2>
+          ${groups.map((g, gi) => `
+            <div class="dimension-group ${g.cls}">
+              <div class="dimension-group-title">${g.name}</div>
+              ${g.dims.map(d => {
+                const score = dimensions[d] || 0;
+                return `
+                  <div class="dimension-row">
+                    <span class="dimension-name">${getDimensionLabel(d)}</span>
+                    <div class="dimension-bar-bg">
+                      <div class="dimension-bar-fill ${barColors[gi]}" style="width: ${score}%"></div>
+                    </div>
+                    <span class="dimension-score">${score}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // ---- 渲染规则解读 ----
+    function renderTranslation(data) {
+      const translation = data.translation;
+      if (!translation || !translation.sections || translation.sections.length === 0) {
+        return ''; // 隐藏此板块
+      }
+
+      return `
+        <div class="report-section">
+          <h2 class="report-section-title"><span class="icon">📖</span>规则解读</h2>
+          ${translation.sections.map(s => `
+            <div class="translation-section">
+              <div class="translation-game-title">${getGameLabel(s.game) || s.game}</div>
+              ${s.summary ? `<p class="translation-summary">${s.summary}</p>` : ''}
+              ${s.dimensions ? s.dimensions.map(d => `
+                <div class="translation-dimension">
+                  <div>
+                    <div class="translation-dimension-name">${d.name || getDimensionLabel(d.key)}</div>
+                    ${d.score != null ? `<div class="translation-dimension-score">${d.score} 分</div>` : ''}
+                  </div>
+                  <div class="translation-dimension-desc">${d.description || ''}</div>
+                </div>
+              `).join('') : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // ---- 渲染职业方向 ----
+    function renderMatch(data) {
+      const matchReport = data.matchReport;
+      if (!matchReport || !matchReport.directionRanking || matchReport.directionRanking.length === 0) {
+        return ''; // 隐藏此板块
+      }
+
+      const top1 = matchReport.directionRanking[0];
+      const rest = matchReport.directionRanking.slice(1, 6);
+
+      return `
+        <div class="report-section">
+          <h2 class="report-section-title"><span class="icon">🎯</span>职业方向</h2>
+          <div class="direction-top1">
+            <div class="direction-top1-label">最匹配方向</div>
+            <div class="direction-top1-name">${top1.direction || top1.name || '未知'}</div>
+            <div class="direction-top1-score">匹配度：${top1.score || top1.matchScore || '?'}%</div>
+            ${top1.topOccupations ? `
+              <div class="direction-top1-occupations">
+                ${top1.topOccupations.map(o => `<span class="direction-occupation-tag">${o}</span>`).join('')}
+              </div>
+            ` : ''}
+          </div>
+          ${rest.length > 0 ? `
+            <ul class="direction-list">
+              ${rest.map((d, i) => `
+                <li class="direction-list-item">
+                  <span class="direction-rank">#${i + 2}</span>
+                  <span class="direction-name">${d.direction || d.name || '未知'}</span>
+                  <span class="direction-score">${d.score || d.matchScore || '?'}%</span>
+                </li>
+              `).join('')}
+            </ul>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // ---- 渲染 AI 洞察（含降级） ----
+    function renderInsight(data) {
+      const insight = data.insight;
+      const behaviorNarrative = data.behaviorNarrative;
+
+      // 有 insight 缓存：显示游戏行为卡片
+      if (insight && insight.gameBehaviors && insight.gameBehaviors.length > 0) {
+        return `
+          <div class="report-section">
+            <h2 class="report-section-title"><span class="icon">🔍</span>AI 行为洞察</h2>
+            <div class="insight-grid">
+              ${insight.gameBehaviors.map(b => `
+                <div class="insight-card">
+                  <div class="insight-card-game">${b.game || '游戏'}</div>
+                  <div class="insight-card-behavior">${b.behaviors ? b.behaviors.join('、') : (b.behavior || '')}</div>
+                  <div class="insight-card-analysis">${b.psychology || b.insight || ''}</div>
+                </div>
+              `).join('')}
+            </div>
+            ${insight.summary ? `<div class="insight-summary">${insight.summary}</div>` : ''}
+          </div>
+        `;
+      }
+
+      // 降级：behaviorNarrative 纯文本
+      if (behaviorNarrative) {
+        return `
+          <div class="report-section">
+            <h2 class="report-section-title"><span class="icon">🔍</span>行为分析</h2>
+            <div class="behavior-narrative">${behaviorNarrative}</div>
+          </div>
+        `;
+      }
+
+      // 两者都没有
+      return `
+        <div class="report-section">
+          <h2 class="report-section-title"><span class="icon">🔍</span>AI 行为洞察</h2>
+          <div class="report-empty">
+            <div class="report-empty-icon">📝</div>
+            <p>未生成 AI 洞察</p>
+            <p style="font-size:12px;margin-top:8px">完成全部 4 个游戏后，返回结果页点击「生成 AI 深度解读」</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // ---- 渲染行动建议（含降级） ----
+    function renderExperiment(data) {
+      const experiment = data.experiment;
+
+      // 有 experiment 缓存
+      if (experiment && experiment.experiments && experiment.experiments.length > 0) {
+        const typeIcons = { '信息性': 'ℹ️', '体验性': '🔬', '社交性': '👥', '否定性': '❌' };
+        return `
+          <div class="report-section">
+            <h2 class="report-section-title"><span class="icon">✅</span>行动建议</h2>
+            <div class="experiment-list">
+              ${experiment.experiments.map((e, i) => `
+                <div class="experiment-item">
+                  <div class="experiment-type">${typeIcons[e.type] || '•'} ${e.type || '建议'}</div>
+                  <div class="experiment-title">${i + 1}. ${e.title || ''}</div>
+                  <div class="experiment-desc">${e.description || ''}</div>
+                  ${e.rationale ? `<div class="experiment-rationale">为什么：${e.rationale}</div>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // 降级：通用职业建议
+      const suggestions = [
+        '与 2-3 位你感兴趣领域的从业者进行交流，了解他们日常工作的真实状态',
+        '尝试一个小型项目或实习，验证你对该领域实际工作的感受',
+        '参加相关行业的线上线下活动，拓展人脉并了解行业动态',
+        '阅读该领域的经典书籍或课程，建立系统性认知框架',
+        '反思你的核心价值观和长期目标，确保职业选择与个人追求一致',
+      ];
+
+      return `
+        <div class="report-section">
+          <h2 class="report-section-title"><span class="icon">✅</span>行动建议</h2>
+          <div class="generic-suggestions">
+            <p style="font-size:13px;color:#6b6b80;margin-bottom:16px">以下为通用职业探索建议：</p>
+            ${suggestions.map(s => `<div class="generic-suggestion">${s}</div>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // ---- 保存为 PDF ----
+    async function saveAsPDF() {
+      const btn = document.getElementById('btnSavePdf');
+      if (!window.html2pdf) {
+        showToast('⚠️ PDF 库加载失败，请使用浏览器打印功能');
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = '⏳ 生成中...';
+
+      const actions = document.getElementById('reportActions');
+      actions.style.display = 'none'; // 隐藏操作栏
+
+      const opt = {
+        margin: [10, 10],
+        filename: `MindMatch报告_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#121218' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      try {
+        await html2pdf().set(opt).from(document.getElementById('reportContainer')).save();
+        showToast('✅ PDF 已下载');
+      } catch (e) {
+        console.error('[Export] PDF 生成失败:', e);
+        showToast('❌ PDF 生成失败，请重试');
+      } finally {
+        actions.style.display = '';
+        btn.disabled = false;
+        btn.textContent = '💾 保存为 PDF';
+      }
+    }
+
+    // ---- 保存为图片 ----
+    async function saveAsImage() {
+      const btn = document.getElementById('btnSaveImage');
+      if (!window.html2canvas) {
+        showToast('⚠️ 图片库加载失败，请使用浏览器截图');
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = '⏳ 生成中...';
+
+      try {
+        const canvas = await html2canvas(document.getElementById('reportContainer'), {
+          scale: 2,
+          backgroundColor: '#121218',
+          useCORS: true,
+          logging: false
+        });
+        const link = document.createElement('a');
+        link.download = `MindMatch报告_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('✅ 图片已下载');
+      } catch (e) {
+        console.error('[Export] 图片生成失败:', e);
+        showToast('❌ 图片生成失败，请重试');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🖼️ 保存为图片';
+      }
+    }
+
+    // ---- 主渲染 ----
+    function renderReport() {
+      const data = loadExportData();
+      if (!data) {
+        document.getElementById('reportContainer').innerHTML = `
+          <div class="report-empty">
+            <div class="report-empty-icon">⚠️</div>
+            <p>未找到报告数据</p>
+            <p style="font-size:12px;margin-top:8px">请先在结果页点击「导出报告」生成数据</p>
+            <button class="report-btn report-btn--secondary" onclick="window.close()" style="margin-top:16px">关闭</button>
+          </div>
+        `;
+        return;
+      }
+
+      // 存到全局供复制用
+      window.__exportData = data;
+
+      const container = document.getElementById('reportContainer');
+      container.innerHTML = `
+        ${renderCover(data)}
+        ${renderDimensions(data)}
+        ${renderTranslation(data)}
+        ${renderMatch(data)}
+        ${renderInsight(data)}
+        ${renderExperiment(data)}
+      `;
+    }
+
+    // ---- 启动 ----
+    renderReport();
+  </script>
+</body>
+</html>

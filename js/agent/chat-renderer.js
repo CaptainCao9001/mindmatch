@@ -18,6 +18,7 @@ export class ChatRenderer {
     this.thinkingEl = null;
     this._sendCallback = null;
     this._boundHandlers = {};
+    this._thinkingTimers = []; // 渐进式提示定时器
 
     this._bindEvents();
   }
@@ -55,10 +56,14 @@ export class ChatRenderer {
   }
 
   /**
-   * 显示"正在思考..."加载动画
+   * 显示"正在思考..."加载动画（带渐进式提示）
+   * 自动三阶段变化：
+   *   0s → AI 正在思考...
+   *   3s → 正在启动服务，请稍候...
+   *   8s → 服务启动中，请耐心等待...
    */
   showThinking() {
-    this.hideThinking(); // 先移除旧的
+    this.hideThinking(); // 先移除旧的 + 清除定时器
 
     const wrapper = document.createElement('div');
     wrapper.className = 'cg-message cg-message--assistant';
@@ -71,18 +76,34 @@ export class ChatRenderer {
 
     const bubble = document.createElement('div');
     bubble.className = 'cg-bubble cg-bubble--assistant cg-bubble--thinking';
-    bubble.innerHTML = '<span class="cg-dot"></span><span class="cg-dot"></span><span class="cg-dot"></span>';
+    bubble.innerHTML = this._buildThinkingHTML('AI 正在思考...');
     wrapper.appendChild(bubble);
 
     this.container.appendChild(wrapper);
     this.thinkingEl = wrapper;
     this._scrollToBottom();
+
+    // 阶段 2：3s 后更新
+    const t1 = setTimeout(() => {
+      this._updateThinkingBubble('正在启动服务，请稍候...');
+    }, 3000);
+
+    // 阶段 3：8s 后更新
+    const t2 = setTimeout(() => {
+      this._updateThinkingBubble('服务启动中，请耐心等待...');
+    }, 8000);
+
+    this._thinkingTimers.push(t1, t2);
   }
 
   /**
-   * 隐藏加载动画
+   * 隐藏加载动画 + 清除所有定时器
    */
   hideThinking() {
+    // 清除所有渐进式定时器
+    this._thinkingTimers.forEach(t => clearTimeout(t));
+    this._thinkingTimers = [];
+
     if (this.thinkingEl) {
       this.thinkingEl.remove();
       this.thinkingEl = null;
@@ -90,6 +111,19 @@ export class ChatRenderer {
     // 也移除遗留的
     const legacy = document.getElementById('cg-thinking');
     if (legacy) legacy.remove();
+  }
+
+  // ---------- 内部：更新 thinking 气泡文字 ----------
+  _updateThinkingBubble(text) {
+    if (!this.thinkingEl) return;
+    const bubble = this.thinkingEl.querySelector('.cg-bubble--thinking');
+    if (bubble) {
+      bubble.innerHTML = this._buildThinkingHTML(text);
+    }
+  }
+
+  _buildThinkingHTML(text) {
+    return `<span class="cg-thinking-text">${this._esc(text)}</span><span class="cg-dot"></span><span class="cg-dot"></span><span class="cg-dot"></span>`;
   }
 
   // ---------- 结果面板 ----------

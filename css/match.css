@@ -343,6 +343,38 @@
   margin: 0;
 }
 
+/* ---------- Career Guide CTA ---------- */
+.match-career-guide-cta {
+  max-width: 800px;
+  margin: var(--space-8) auto 0;
+  padding: 0 var(--space-4);
+  text-align: center;
+}
+.match-career-guide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(124,58,237,0.08));
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 14px;
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .25s;
+}
+.match-career-guide-btn:hover {
+  border-color: rgba(16,185,129,0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 24px rgba(16,185,129,0.12);
+}
+.match-career-guide-cta p {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  margin-top: 10px;
+}
+
 /* ---------- Bottom Bar ---------- */
 .match-bottom {
   max-width: 800px;
@@ -351,6 +383,7 @@
   display: flex;
   justify-content: center;
   gap: var(--space-4);
+  flex-wrap: wrap;
 }
 
 .match-bottom .btn-secondary {
@@ -368,6 +401,26 @@
 .match-bottom .btn-secondary:hover {
   border-color: var(--color-primary-dim);
   color: var(--color-text);
+}
+
+/* 导出报告按钮 — 紫色高亮 */
+.match-bottom .btn-export {
+  background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(124,58,237,0.08));
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--color-text);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.match-bottom .btn-export:hover {
+  border-color: rgba(124,58,237,0.5);
+  color: var(--color-text);
+  box-shadow: 0 4px 24px rgba(124,58,237,0.12);
+  transform: translateY(-1px);
 }
 
 /* ---------- Responsive ---------- */

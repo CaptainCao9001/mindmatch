@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 职业方向探索</title>
   <meta name="description" content="通过引导式 AI 对话，探索你的职业方向。结合测评画像，给出个性化的发展建议。">
-  <script>window.__MM_VER__ = '20260609b';</script>
-  <link rel="stylesheet" href="css/base.css?v=20260609b">
-  <link rel="stylesheet" href="css/components.css?v=20260609b">
-  <link rel="stylesheet" href="css/career-guide.css?v=20260609b">
+  <script>window.__MM_VER__ = '20260610d';</script>
+  <link rel="stylesheet" href="css/base.css?v=20260610d">
+  <link rel="stylesheet" href="css/components.css?v=20260610d">
+  <link rel="stylesheet" href="css/career-guide.css?v=20260610d">
 </head>
 <body style="margin:0;background:#0d0d12;">
 
@@ -28,9 +28,9 @@
 
   <!-- ========== Top Nav ========== -->
   <nav class="cg-nav">
-    <a href="index.html">
+    <a href="results.html">
       <svg viewBox="0 0 24 24" width="16" height="16"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      返回首页
+      我的肖像
     </a>
   </nav>
 
@@ -98,8 +98,8 @@
 
 <!-- ========== App Script ========== -->
 <script type="module">
-  import { ChatRenderer } from './js/agent/chat-renderer.js?v=20260609b';
-  import { sendToAgent, executeToolCalls } from './js/agent/tool-executor.js?v=20260609b';
+  import { ChatRenderer } from './js/agent/chat-renderer.js?v=20260610d';
+  import { sendToAgent, executeToolCalls } from './js/agent/tool-executor.js?v=20260610d';
 
   // ---------- Agent 状态（最小化前端状态） ----------
   let sessionId = null;          // Agent 会话 ID
@@ -241,12 +241,12 @@
       let topDirs = [];
       let topJs = {};
       try {
-        const { integrate } = await import('./js/layers/integrator.js?v=20260609b');
-        const { matchExtended } = await import('./js/layers/matcher.js?v=20260609b');
+        const { integrate } = await import('./js/layers/integrator.js?v=20260610c');
+        const { matchExtended } = await import('./js/layers/matcher.js?v=20260610c');
 
         const unifiedProfile = integrate();
 
-        const resp = await fetch('./mock/ideal-profiles.json?v=20260609b');
+        const resp = await fetch('./mock/ideal-profiles.json?v=20260610c');
         if (!resp.ok) throw new Error('加载 ideal-profiles.json 失败');
         const idealData = await resp.json();
 

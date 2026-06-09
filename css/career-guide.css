@@ -364,6 +364,21 @@
   min-width: 60px;
 }
 
+.cg-thinking-text {
+  display: inline-block;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-right: 6px;
+  opacity: 0;
+  animation: cgFadeIn 0.5s ease-out forwards;
+  vertical-align: middle;
+}
+
+@keyframes cgFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 0.8; }
+}
+
 .cg-dot {
   display: inline-block;
   width: 8px;

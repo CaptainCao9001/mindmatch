@@ -1,0 +1,215 @@
+/* ====================================================================
+ *  export.css — 导出报告打印样式
+ *  ==================================================================== */
+
+/* ========== 打印基础 ========== */
+@media print {
+  /* 隐藏操作栏、Toast、空状态 */
+  .report-actions,
+  .report-toast,
+  .report-empty {
+    display: none !important;
+  }
+
+  /* 页面设置 */
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+
+  /* 基础打印样式 */
+  body {
+    background: white !important;
+    color: #1a1a2e !important;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  /* 保留背景色（Chromium） */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ========== 封面打印 ========== */
+  .report-cover {
+    background: white !important;
+    border: 2px solid #7c3aed !important;
+    page-break-after: always;
+  }
+  .report-cover h1 {
+    background: none !important;
+    -webkit-text-fill-color: #7c3aed !important;
+    color: #7c3aed !important;
+    font-size: 24pt;
+  }
+  .report-cover .subtitle {
+    color: #6b6b80 !important;
+  }
+  .report-tag {
+    border: 1px solid #7c3aed !important;
+    color: #7c3aed !important;
+    background: rgba(124,58,237,0.05) !important;
+  }
+  .report-tag--game {
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+  }
+  .report-tag--game-incomplete {
+    border-color #6b6b80 !important;
+    color: #6b6b80 !important;
+  }
+
+  /* ========== 板块打印 ========== */
+  .report-section {
+    background: white !important;
+    border: 1px solid #e0e0e0 !important;
+    page-break-inside: avoid;
+    margin-bottom: 20pt;
+  }
+  .report-section-title {
+    color: #1a1a2e !important;
+    font-size: 16pt;
+  }
+
+  /* ========== 维度进度条打印 ========== */
+  .dimension-group-title {
+    color: #7c3aed !important;
+  }
+  .dimension-group--blue .dimension-group-title { color: #3b82f6 !important; }
+  .dimension-group--green .dimension-group-title { color: #10b981 !important; }
+  .dimension-group--red .dimension-group-title { color: #ef4444 !important; }
+
+  .dimension-name {
+    color: #1a1a2e !important;
+  }
+  .dimension-bar-bg {
+    background: #f0f0f0 !important;
+    border: 1px solid #e0e0e0;
+  }
+  .dimension-bar-fill--purple { background: #7c3aed !important; }
+  .dimension-bar-fill--blue { background: #3b82f6 !important; }
+  .dimension-bar-fill--green { background: #10b981 !important; }
+  .dimension-bar-fill--red { background: #ef4444 !important; }
+  .dimension-score {
+    color: #1a1a2e !important;
+  }
+
+  /* ========== 规则解读打印 ========== */
+  .translation-section {
+    border-bottom: 1px solid #e0e0e0 !important;
+  }
+  .translation-game-title {
+    color: #1a1a2e !important;
+  }
+  .translation-summary,
+  .translation-dimension-desc {
+    color: #4a4a60 !important;
+  }
+  .translation-dimension-name {
+    color: #7c3aed !important;
+  }
+
+  /* ========== 职业方向打印 ========== */
+  .direction-top1 {
+    background: white !important;
+    border: 2px solid #7c3aed !important;
+  }
+  .direction-top1-label {
+    color: #7c3aed !important;
+  }
+  .direction-top1-name {
+    color: #1a1a2e !important;
+  }
+  .direction-top1-score {
+    color: #10b981 !important;
+  }
+  .direction-occupation-tag {
+    background: #f0f0f0 !important;
+    border: 1px solid #e0e0e0 !important;
+    color: #1a1a2e !important;
+  }
+  .direction-list-item {
+    background: white !important;
+    border: 1px solid #e0e0e0 !important;
+  }
+  .direction-name {
+    color: #1a1a2e !important;
+  }
+  .direction-score {
+    color: #7c3aed !important;
+  }
+
+  /* ========== AI 洞察打印 ========== */
+  .insight-card {
+    background: white !important;
+    border: 1px solid #e0e0e0 !important;
+  }
+  .insight-card-game {
+    color: #7c3aed !important;
+  }
+  .insight-card-behavior {
+    color: #1a1a2e !important;
+  }
+  .insight-card-analysis {
+    color: #4a4a60 !important;
+  }
+  .insight-summary {
+    background: #f8f0ff !important;
+    border: 1px solid #e0d0ff !important;
+    color: #4a4a60 !important;
+  }
+  .behavior-narrative {
+    background: #f8f8f8 !important;
+    border: 1px solid #e0e0e0 !important;
+    color: #4a4a60 !important;
+  }
+
+  /* ========== 行动建议打印 ========== */
+  .experiment-item {
+    background: white !important;
+    border: 1px solid #e0e0e0 !important;
+    border-left: 3px solid #7c3aed !important;
+  }
+  .experiment-type {
+    color: #7c3aed !important;
+  }
+  .experiment-title {
+    color: #1a1a2e !important;
+  }
+  .experiment-desc {
+    color: #4a4a60 !important;
+  }
+  .experiment-rationale {
+    color: #6b6b80 !important;
+  }
+  .generic-suggestions {
+    background: #f0faf4 !important;
+    border: 1px solid #d0f0d0 !important;
+  }
+  .generic-suggestion {
+    color: #4a4a60 !important;
+  }
+  .generic-suggestion::before {
+    color: #10b981 !important;
+  }
+
+  /* ========== 链接打印 ========== */
+  a {
+    color: #7c3aed !important;
+    text-decoration: none;
+  }
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #6b6b80;
+  }
+}
+
+/* ========== 屏幕预览优化 ========== */
+@media screen {
+  body {
+    background: #121218;
+    color: #e0e0f0;
+  }
+}
