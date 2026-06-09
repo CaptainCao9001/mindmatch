@@ -222,9 +222,9 @@ export class ChatRenderer {
   // ---------- 进度条 ----------
 
   /**
-   * 更新进度条（阶段步进器）
-   * @param {number} phase - 当前阶段号 (1-7)
-   * @param {number} total - 总阶段数 (7)
+   * 更新进度条（4 阶段步进器）
+   * @param {number} phase - 当前阶段号 (1-4)
+   * @param {number} total - 总阶段数 (4)
    * @param {string} label - 当前阶段标签
    */
   showProgress(phase, total, label) {
@@ -232,22 +232,26 @@ export class ChatRenderer {
 
     const pct = total > 0 ? Math.round((phase / total) * 100) : 0;
 
-    // 生成阶段圆点
-    let dotsHTML = '';
-    for (let i = 1; i <= total; i++) {
-      if (i < phase) {
-        dotsHTML += '<span class="cg-step-dot cg-step-dot--done">●</span>';
-      } else if (i === phase) {
-        dotsHTML += '<span class="cg-step-dot cg-step-dot--active">◉</span>';
-      } else {
-        dotsHTML += '<span class="cg-step-dot cg-step-dot--pending">○</span>';
+    // 4 阶段名称
+    const stageNames = ['结果共鸣', '深度挖掘', '现实校准', '行动地图'];
+
+    // 生成阶段步骤
+    let stepsHTML = '';
+    for (let i = 0; i < total; i++) {
+      const num = i + 1;
+      let cls = '';
+      if (num < phase) cls = 'cg-step--done';
+      else if (num === phase) cls = 'cg-step--active';
+
+      if (i > 0) {
+        stepsHTML += '<span class="cg-step-arrow">→</span>';
       }
+      stepsHTML += `<span class="cg-step ${cls}"><span class="cg-step-icon">${num < phase ? '●' : num === phase ? '◉' : '○'}</span> ${stageNames[i]}</span>`;
     }
 
     this.progressBar.innerHTML = `
       <div class="cg-progress-steps">
-        ${dotsHTML}
-        <span class="cg-progress-label">阶段 ${phase}/${total} · ${label}</span>
+        ${stepsHTML}
       </div>
       <div class="cg-progress-track">
         <div class="cg-progress-fill" style="width:${pct}%"></div>

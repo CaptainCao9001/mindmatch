@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MindMatch — 职业方向探索</title>
   <meta name="description" content="通过引导式 AI 对话，探索你的职业方向。结合测评画像，给出个性化的发展建议。">
-  <script>window.__MM_VER__ = '20260609a';</script>
-  <link rel="stylesheet" href="css/base.css?v=20260609a">
-  <link rel="stylesheet" href="css/components.css?v=20260609a">
-  <link rel="stylesheet" href="css/career-guide.css?v=20260609a">
+  <script>window.__MM_VER__ = '20260609b';</script>
+  <link rel="stylesheet" href="css/base.css?v=20260609b">
+  <link rel="stylesheet" href="css/components.css?v=20260609b">
+  <link rel="stylesheet" href="css/career-guide.css?v=20260609b">
 </head>
 <body style="margin:0;background:#0d0d12;">
 
@@ -98,8 +98,8 @@
 
 <!-- ========== App Script ========== -->
 <script type="module">
-  import { ChatRenderer } from './js/agent/chat-renderer.js?v=20260609a';
-  import { sendToAgent, executeToolCalls } from './js/agent/tool-executor.js?v=20260609a';
+  import { ChatRenderer } from './js/agent/chat-renderer.js?v=20260609b';
+  import { sendToAgent, executeToolCalls } from './js/agent/tool-executor.js?v=20260609b';
 
   // ---------- Agent 状态（最小化前端状态） ----------
   let sessionId = null;          // Agent 会话 ID
@@ -241,12 +241,12 @@
       let topDirs = [];
       let topJs = {};
       try {
-        const { integrate } = await import('./js/layers/integrator.js?v=20260609a');
-        const { matchExtended } = await import('./js/layers/matcher.js?v=20260609a');
+        const { integrate } = await import('./js/layers/integrator.js?v=20260609b');
+        const { matchExtended } = await import('./js/layers/matcher.js?v=20260609b');
 
         const unifiedProfile = integrate();
 
-        const resp = await fetch('./mock/ideal-profiles.json?v=20260609a');
+        const resp = await fetch('./mock/ideal-profiles.json?v=20260609b');
         if (!resp.ok) throw new Error('加载 ideal-profiles.json 失败');
         const idealData = await resp.json();
 
