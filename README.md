@@ -6,7 +6,7 @@
 
 基于心理学量表与游戏化行为采集，帮你找到更适合自己的职业方向
 
-[🌐 在线体验](https://mindmatch-d0gz847n4e29e3181-1438477634.tcloudbaseapp.com) · [📄 项目文档](docs/competition/mindmatch-competition-doc.md)
+[🌐 在线体验](https://mindmatch-d0gz847n4e29e3181-1438477634.tcloudbaseapp.com) · [📄 项目文档](MindMatch/docs/competition/mindmatch-competition-doc.md)
 
 </div>
 
@@ -61,7 +61,7 @@ AI Agent 四阶段对话
 
 ```bash
 # 启动静态文件服务
-cd mindmatch-demo
+cd MindMatch
 python -m http.server 8090
 # 访问 http://localhost:8090
 ```
@@ -71,7 +71,7 @@ python -m http.server 8090
 **AI 功能本地调试**（需要 API Key）：
 
 ```bash
-# 新建 .env 文件（参考下方环境变量说明）
+cd MindMatch
 node agent-v2/main.js   # 端口 8101
 ```
 
@@ -87,22 +87,25 @@ HUNYUAN_API_KEY=your_key_here
 ## 项目结构
 
 ```
-mindmatch-demo/
-├── index.html              # 首页
-├── games/                  # 4 款游戏页面
-├── results.html            # 肖像页（14 维雷达图）
-├── match.html              # 职业匹配页
-├── career-guide.html       # AI Agent 对话入口
-├── js/
-│   ├── core/               # 基础设施（store / api / utils）
-│   ├── games/              # 游戏引擎 + 数据 + 策略
-│   ├── layers/             # 数据计算层（积分器 / 匹配 / 翻译）
-│   └── ui/                 # UI 渲染层
-├── agent-v2/               # AI Agent v2（本地开发版）
-├── cloudfunctions/         # SCF 云函数（生产部署版）
-│   ├── proxy/              # DeepSeek/混元 API 代理
-│   └── agent/              # Agent 对话云函数
-└── docs/competition/       # 竞赛文档 + 简历参考资料
+mindmatch/
+├── README.md
+├── .gitignore
+└── MindMatch/
+    ├── index.html              # 首页
+    ├── games/                  # 4 款游戏页面
+    ├── results.html            # 肖像页（14 维雷达图）
+    ├── match.html              # 职业匹配页
+    ├── career-guide.html       # AI Agent 对话入口
+    ├── js/
+    │   ├── core/               # 基础设施（store / api / utils）
+    │   ├── games/              # 游戏引擎 + 数据 + 策略
+    │   ├── layers/             # 数据计算层（积分器 / 匹配 / 翻译）
+    │   └── ui/                 # UI 渲染层
+    ├── agent-v2/               # AI Agent v2（本地开发版）
+    ├── cloudfunctions/         # SCF 云函数（生产部署版）
+    │   ├── proxy/              # DeepSeek/混元 API 代理
+    │   └── agent/              # Agent 对话云函数
+    └── docs/competition/       # 竞赛文档 + 简历参考资料
 ```
 
 ---
