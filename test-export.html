@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>测试用例</title></head>
+<body style="font-family:sans-serif;padding:24px">
+<h2>export-report.html 测试用例</h2>
+<p id="msg">生成中...</p>
+<script>
+// 模拟 integrator.js 产出的 profile（真实的 [0,1] 取值范围）
+// 包含长浮点数模拟旧数据
+const mockProfile = {
+  userId: 'test-user',
+  generatedAt: Date.now(),
+  dimensions: {
+    nAch: 0.1666666666666666,
+    nPow: 0.1666666666666666,
+    nAff: 0.3333333333333333,
+    TF: null,
+    GM: 0,
+    AU: 0.1666666666666666,
+    SE: 0,
+    EC: 0,
+    SV: 0,
+    CH: 0,
+    LS: 0,
+    wholistAnalytic: 0.1666666666666666,
+    presence: 0,
+    search: 0.1666666666666666,
+  },
+  raw: {
+    nAch: 1.667, nPow: 1.667, nAff: 3.333,
+    TF: null, GM: 0, AU: 1.667, SE: 0, EC: 0, SV: 0, CH: 0, LS: 0,
+    wholistAnalytic: -0.667,
+    presence: 0, search: 1.667,
+  },
+  meta: { totalDuration: 120000, completedGames: ['escapeRoom','careerAnchor','cognitiveStyle','meaningConstruction'], completedCount: 4, allCompleted: true },
+};
+
+const exportData = {
+  profile: mockProfile,
+  translation: null,
+  behaviorNarrative: null,
+  matchReport: {
+    directionRanking: [
+      { name: '创意塑造者', score: 78, topOccupations: ['UX设计师','产品经理','品牌策划'] },
+      { name: '系统建构者', score: 65 },
+      { name: '深度解读者', score: 52 },
+    ]
+  },
+  insight: {
+    gameBehaviors: [
+      { game: '密室逃脱', behaviors: ['快速决策','目标明确'], psychology: '在高压力场景下倾向于快速执行而非反复权衡，成就动机驱动行为。' },
+      { game: '职业锚', behaviors: ['自主性优先','经济稳定关注'], psychology: '对工作自主权敏感，同时兼顾经济安全的现实考虑。' },
+    ],
+    summary: '整体来看你是一个以成就为导向的行动派，在认知上偏向分析式思维，对工作的自主性和意义感有明确追求。'
+  },
+  experiment: {
+    experiments: [
+      { type: '体验性', title: '尝试跨界项目', description: '在接下来2周内，参与一个与你专业领域无关的小型协作项目。', rationale: '你的成就动机和跨界兴趣需要实际碰撞来验证。' },
+      { type: '信息性', title: '行业访谈', description: '找3位不同行业的人聊一聊，了解他们的日常。', rationale: '扩展认知边界，为职业方向提供更多参考。' },
+    ]
+  },
+  generatedAt: new Date().toISOString(),
+};
+
+localStorage.setItem('mindmatch_export_data', JSON.stringify(exportData));
+document.getElementById('msg').textContent = '数据已注入 localStorage，跳转到报告页...';
+setTimeout(() => { location.href = 'export-report.html'; }, 800);
+</script>
+</body>
+</html>

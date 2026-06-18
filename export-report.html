@@ -125,15 +125,33 @@
     }
     .dimension-bar-bg {
       flex: 1;
-      height: 8px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 4px;
+      height: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
       overflow: hidden;
     }
     .dimension-bar-fill {
       height: 100%;
-      border-radius: 4px;
+      border-radius: 6px;
       transition: width 0.8s ease;
+      min-width: 2px;
+    }
+    .dimension-bar-scale {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: rgba(255,255,255,0.2);
+      margin-top: 2px;
+      margin-left: 132px;
+      margin-bottom: 12px;
+    }
+    .dimension-empty {
+      width: 40px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
+      text-align: right;
+      flex-shrink: 0;
     }
     .dimension-bar-fill--purple { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
     .dimension-bar-fill--blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
@@ -561,7 +579,7 @@
           ${sortedDims.length > 0 ? `
             <div class="report-tags">
               ${sortedDims.map(([k, v]) => `
-                <span class="report-tag report-tag--dimension">${getDimensionLabel(k)} ${v}分</span>
+                <span class="report-tag report-tag--dimension">${getDimensionLabel(k)} ${Number(v).toFixed(2)}</span>
               `).join('')}
             </div>
           ` : ''}
@@ -599,21 +617,37 @@
 
       const barColors = ['dimension-bar-fill--purple', 'dimension-bar-fill--blue', 'dimension-bar-fill--green', 'dimension-bar-fill--red'];
 
+      const hasNull = groups.some(g => g.dims.some(d => dimensions[d] == null));
+
       return `
         <div class="report-section">
           <h2 class="report-section-title"><span class="icon">📊</span>14 维思维概览</h2>
+          <div class="dimension-bar-scale">
+            <span>0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1</span>
+          </div>
           ${groups.map((g, gi) => `
             <div class="dimension-group ${g.cls}">
               <div class="dimension-group-title">${g.name}</div>
               ${g.dims.map(d => {
-                const score = dimensions[d] || 0;
+                const val = dimensions[d];
+                if (val == null) {
+                  return `
+                    <div class="dimension-row">
+                      <span class="dimension-name" style="color:rgba(255,255,255,0.2)">${getDimensionLabel(d)}</span>
+                      <div class="dimension-bar-bg" style="background:rgba(255,255,255,0.02)"></div>
+                      <span class="dimension-empty">—</span>
+                    </div>
+                  `;
+                }
+                const pct = (val * 100).toFixed(1);
+                const display = val.toFixed(2);
                 return `
                   <div class="dimension-row">
                     <span class="dimension-name">${getDimensionLabel(d)}</span>
                     <div class="dimension-bar-bg">
-                      <div class="dimension-bar-fill ${barColors[gi]}" style="width: ${score}%"></div>
+                      <div class="dimension-bar-fill ${barColors[gi]}" style="width: ${pct}%"></div>
                     </div>
-                    <span class="dimension-score">${score}</span>
+                    <span class="dimension-score">${display}</span>
                   </div>
                 `;
               }).join('')}

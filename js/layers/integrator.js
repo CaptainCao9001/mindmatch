@@ -40,14 +40,14 @@ function initNullDims(dims) {
  * 标准化 G1/G2/G4 维度: raw [0, 10] → [0, 1]
  */
 function normalize01(raw) {
-  return Math.max(0, Math.min(1, raw / 10));
+  return Math.round(Math.max(0, Math.min(1, raw / 10)) * 10000) / 10000;
 }
 
 /**
  * 标准化 G3 维度: raw [-1, +1] → [0, 1]
  */
 function normalizeWA(raw) {
-  return Math.max(0, Math.min(1, (raw + 1) / 2));
+  return Math.round(Math.max(0, Math.min(1, (raw + 1) / 2)) * 10000) / 10000;
 }
 
 /**

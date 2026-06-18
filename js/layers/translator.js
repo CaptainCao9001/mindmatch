@@ -144,7 +144,8 @@ const GAME_NAMES = {
  * @returns {DimensionText|null}
  */
 function translateDimension(dimId, rawScore) {
-  const score = rawScore;
+  if (rawScore == null) return null;
+  const score = Math.round(rawScore * 100) / 100;
   const level = dimId === 'wholistAnalytic' ? getWALevel(score) : getLevel(score);
   if (level === null) return null;
 
