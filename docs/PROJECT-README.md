@@ -1,7 +1,8 @@
 # MindMatch — AI 职业方向探索平台
 
 > **版本**: v1.0-submission (2026-06-10)  
-> **线上地址**: https://mindmatch-d0gz847n4e29e3181-1438477634.tcloudbaseapp.com
+> **线上地址**: https://mindmatch-d0gz847n4e29e3181-1438477634.tcloudbaseapp.com  
+> **GitHub**: https://github.com/CaptainCao9001/mindmatch
 
 ---
 

@@ -10,6 +10,7 @@
 |------|------|
 | CloudBase 环境 ID | `mindmatch-d0gz847n4e29e3181` |
 | 线上地址 | `https://mindmatch-d0gz847n4e29e3181-1438477634.tcloudbaseapp.com` |
+| GitHub 仓库 | `https://github.com/CaptainCao9001/mindmatch` |
 | 云函数域名 | `https://mindmatch-d0gz847n4e29e3181.service.tcloudbase.com` |
 | 本地开发端口 | 前端 5500（Live Server）/ 代理 8100 |
 
