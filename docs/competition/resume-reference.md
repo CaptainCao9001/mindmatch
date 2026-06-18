@@ -9,6 +9,7 @@ MindMatch 是一款 **AI 驱动的职业方向测评 Web 应用**。用户通过
 - **项目类型**：个人独立项目
 - **开发周期**：2026.03 – 2026.06（约 3 个月）
 - **线上地址**：https://mindmatch-d0gz847n4e29e3181-1438477634.tcloudbaseapp.com
+- **GitHub**：https://github.com/CaptainCao9001/mindmatch
 - **代码规模**：50+ 源文件，纯 HTML/CSS/JS（ES Modules），零构建工具
 
 ---
