@@ -33,7 +33,8 @@ agent-scf-download/
 node_modules/
 **/node_modules/
 
-# ── 构建产物 ────────────────────────────────────────────────
+# ── 根目录残留 docs（已合并到 MindMatch/docs/）──────────────────
+/docs/
 dist/
 .cache/
 
