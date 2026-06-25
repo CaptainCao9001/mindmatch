@@ -31,27 +31,29 @@ tcb login
 ### 部署静态文件（HTML/CSS/JS）
 
 ```bash
-cd h:/program/mindmatch-demo
+cd mindmatch-demo/MindMatch
 
-# 单文件部署
-npx tcb hosting deploy match.html -e mindmatch-d0gz847n4e29e3181
+# 全量部署
+npx tcb hosting deploy . -e mindmatch-d0gz847n4e29e3181
 
-# 目录部署
+# 按目录部署
 npx tcb hosting deploy css/ -e mindmatch-d0gz847n4e29e3181
 npx tcb hosting deploy js/ -e mindmatch-d0gz847n4e29e3181
 
-# 全量部署（HTML + CSS + JS）
-npx tcb hosting deploy . -e mindmatch-d0gz847n4e29e3181
+# 单文件部署
+npx tcb hosting deploy match.html -e mindmatch-d0gz847n4e29e3181
 ```
 
 ### 部署云函数
 
 ```bash
-cd h:/program/mindmatch-demo
+cd mindmatch-demo/MindMatch
 
 # 1. 先同步 agent-v2 代码到 cloudfunctions/agent/
-#    cloudfunctions/agent/ 是 agent-v2/ 的部署副本
-#    修改 agent-v2/ 后需手动复制或同步
+cp agent-v2/*.mjs cloudfunctions/agent/
+cp agent-v2/*.js cloudfunctions/agent/
+cp agent-v2/*.cjs cloudfunctions/agent/
+cp -r agent-v2/prompt/ cloudfunctions/agent/prompt/
 
 # 2. 部署云函数
 npx tcb fn deploy agent -e mindmatch-d0gz847n4e29e3181
@@ -123,8 +125,7 @@ npx tcb hosting deploy css/match.css css/match.css -e mindmatch-d0gz847n4e29e318
 ### 快速替换命令
 
 ```bash
-# 以 20260610d → 20260610e 为例
-cd h:/program/mindmatch-demo
+cd mindmatch-demo/MindMatch
 # Windows PowerShell
 Get-ChildItem match.html,results.html,career-guide.html | ForEach-Object {
   (Get-Content $_.FullName -Raw) -replace '20260610d','20260610e' | Set-Content $_.FullName -NoNewline
@@ -140,9 +141,12 @@ Get-ChildItem match.html,results.html,career-guide.html | ForEach-Object {
 `agent-v2/` 是源码目录，`cloudfunctions/agent/` 是部署目录。修改 `agent-v2/` 后需同步：
 
 ```bash
+cd mindmatch-demo/MindMatch
+
 # 手动复制（注意排除 sessions 文件）
 cp agent-v2/*.mjs cloudfunctions/agent/
 cp agent-v2/*.js cloudfunctions/agent/
+cp agent-v2/*.cjs cloudfunctions/agent/
 cp -r agent-v2/prompt/ cloudfunctions/agent/prompt/
 ```
 
@@ -227,16 +231,17 @@ curl -s "https://mindmatch-d0gz847n4e29e3181-1438477634.tcloudbaseapp.com/css/ma
 ## 七、本地开发
 
 ```bash
-cd h:/program/mindmatch-demo
+cd mindmatch-demo/MindMatch
 
 # 启动 Agent v2 本地服务（端口 8100）
 node agent-v2/server.mjs
 
-# 启动前端（Live Server 或任意静态服务器，端口 5500）
-# 访问 http://localhost:5500/index.html
+# 启动前端（任意静态服务器，端口 8090）
+python -m http.server 8090
+# 访问 http://localhost:8090/index.html
 
 # 配置 API Key
-# 访问 http://localhost:5500/tools/setup-api.html
+# 访问 http://localhost:8090/tools/setup-api.html
 ```
 
 ### 本地 vs 云端差异
@@ -272,7 +277,8 @@ git show d4b8d74 --stat
 # 1. 切到目标版本
 git checkout v1.0-submission
 
-# 2. 重新部署
+# 2. 进入项目目录部署
+cd MindMatch
 npx tcb hosting deploy . -e mindmatch-d0gz847n4e29e3181
 npx tcb fn deploy agent -e mindmatch-d0gz847n4e29e3181
 npx tcb fn deploy proxy -e mindmatch-d0gz847n4e29e3181
