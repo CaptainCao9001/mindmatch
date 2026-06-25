@@ -92,20 +92,28 @@ mindmatch/
 ├── .gitignore
 └── MindMatch/
     ├── index.html              # 首页
-    ├── games/                  # 4 款游戏页面
-    ├── results.html            # 肖像页（14 维雷达图）
     ├── match.html              # 职业匹配页
+    ├── results.html            # 肖像页（14 维雷达图）
     ├── career-guide.html       # AI Agent 对话入口
+    ├── css/                    # 样式表
+    ├── games/                  # 4 款游戏页面 + 图片素材
     ├── js/
     │   ├── core/               # 基础设施（store / api / utils）
     │   ├── games/              # 游戏引擎 + 数据 + 策略
     │   ├── layers/             # 数据计算层（积分器 / 匹配 / 翻译）
-    │   └── ui/                 # UI 渲染层
+    │   ├── ui/                 # UI 渲染层
+    │   ├── agent/              # 前端 Agent 集成
+    │   └── data/               # 职业数据 + 技能路径
     ├── agent-v2/               # AI Agent v2（本地开发版）
     ├── cloudfunctions/         # SCF 云函数（生产部署版）
     │   ├── proxy/              # DeepSeek/混元 API 代理
     │   └── agent/              # Agent 对话云函数
-    └── docs/competition/       # 竞赛文档 + 简历参考资料
+    ├── server/                 # 本地开发代理
+    ├── tools/                  # 开发辅助工具
+    └── docs/
+        ├── competition/        # 竞赛文档 + 简历参考资料
+        ├── design/             # 设计方案 / 架构文档
+        └── *.md                # 项目说明 / 维护 / 部署指南
 ```
 
 ---
